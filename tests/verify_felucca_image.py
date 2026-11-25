@@ -73,7 +73,7 @@ report = json.loads((build / "build.json").read_text())
 for name, expected in report["sha256"].items():
     assert hashlib.sha256((build / name).read_bytes()).hexdigest() == expected
 identity, files = contents((build / "zivisynthi-felucca-smk37.fwsc").read_bytes())
-assert identity == report["identity"] == "SMK-37 Pro_99400"
+assert identity == report["identity"] == "SMK-37 Pro_99500"
 assert len(files[b"ota.bin"]) < 0x4F00
 flash = files[b"flash.bin"]
 assert len(flash) == 0x9D000

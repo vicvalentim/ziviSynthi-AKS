@@ -10,7 +10,7 @@ Create an empty repository on GitHub. Extract the package and open a terminal in
 git init -b main
 git add .
 git status --short
-git commit -m "Publish ziviSynthi AKS 3.9.5"
+git commit -m "Publish ziviSynthi AKS 3.9.6"
 git remote add origin https://github.com/USER/REPOSITORY.git
 git push -u origin main
 ```
@@ -28,7 +28,7 @@ In **Actions → Build firmware and editor → Run workflow**, select a target. 
 | `web-studio` | Standalone HTML | Protocol, live editing and presets in Node.js. |
 | `all` | All three sets | Runs the three jobs independently. |
 
-The **CI** workflow runs `make test` on pushes and pull requests. Maintainers publish a release from a tag at the same source revision used for its build. The Pro target has its own flash map, USB protocol and identity check. FM‑1 is available as a host simulator. Elite, standard SMK‑37 and MKE‑P37 require their own ports and hardware validation.
+The **CI** workflow runs `make test` on pushes and pull requests. The Pages workflow publishes v3.9.6 as a pre-release using the same source revision and verified assets. The Pro target has its own flash map, USB protocol and identity check. FM‑1 is available as a host simulator. Elite, standard SMK‑37 and MKE‑P37 require their own ports and hardware validation.
 
 ## Build dependencies
 
@@ -56,7 +56,7 @@ python -m pip install Pillow==13.0.0
 tools/build_github.sh all
 ```
 
-Use `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` or `JIELI_TOOLCHAIN` to reuse local dependencies. Results go to `dist/`. To embed the optional 3.9.4 rollback, run `FIRMWARE_ROLLBACK=/path/to/3.9.4.fwsc tools/build_github.sh smk37-pro`.
+Use `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` or `JIELI_TOOLCHAIN` to reuse local dependencies. Results go to `dist/`. To embed the optional 3.9.5 rollback, run `FIRMWARE_ROLLBACK=/path/to/3.9.5.fwsc tools/build_github.sh smk37-pro`.
 
 ## GitHub Pages
 
@@ -66,7 +66,7 @@ Use `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` or `JIELI_TOOLCHAIN` to reuse local 
 
 | Path | Content |
 |---|---|
-| `/` and `/en/` | Portuguese and English home pages with links to the editor, installation, guides and downloads |
+| `/` and `/pt/` | English and Portuguese home pages with links to the editor, installation, guides and downloads |
 | `/docs/` | Site documentation generated from the repository Markdown |
 | `/studio/#try` | Web Studio with Try available without hardware |
 | `/studio/#firmware-drawer` | SMK‑37 Pro firmware installer |
@@ -91,7 +91,7 @@ Open [the local site](http://127.0.0.1:8000/). The example URLs are only used fo
 
 1. Check the root catalog URLs and screenshot path at the release revision.
 2. Run **all** and deploy Pages from the same source revision. Publish the corresponding source alongside the FWSC. The Pages source archive includes the application and the patched base with its licenses.
-3. Draft **v3.9.5** with the [release notes](../releases/v3.9.5.md#english). Attach the FWSC, standalone HTML, manifest, JSON preset archive, corresponding source and checksums. Record the hardware validation status. Label the FM‑1 output as a development simulator if you attach it.
+3. Draft **v3.9.6** with the [release notes](../releases/v3.9.6.md). Attach the FWSC, standalone HTML, manifest, JSON preset archive, corresponding source and checksums. Record the hardware validation status. Label the FM‑1 output as a development simulator if you attach it.
 4. Once the release is public, submit the root `firmware.json` to the relevant firmware catalog.
 
 [GitHub Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) · [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) · [Catalog format](https://github.com/charlesvestal/fm1-base/blob/main/docs/FIRMWARE-JSON.md) · [Third-party notices](../../NOTICES.md#english)

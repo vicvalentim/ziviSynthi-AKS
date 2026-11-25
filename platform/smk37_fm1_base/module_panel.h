@@ -298,39 +298,29 @@ static unsigned splash_frame;
 
 static void splash_matrix(unsigned elapsed)
 {
-    static const struct { uint8_t x, y, bend, end; } paths[] = {
-        {7, 7, 55, 73}, {31, 19, 73, 91}, {55, 31, 85, 79}
+    // Each route connects a source row to a destination on a 16 × 16 board.
+    static const struct { uint8_t row, column; uint16_t color; } pins[] = {
+        {2, 3, PANEL_CYAN}, {11, 0, AMBER}, {11, 2, AMBER}, {7, 8, PANEL_GREEN},
+        {10, 13, PANEL_CYAN}, {11, 6, PANEL_GREEN}, {13, 2, PANEL_CYAN}
     };
-    static const uint16_t colours[] = {PANEL_CYAN, PANEL_GREEN, AMBER};
-    cv_begin(96, 99, BLACK);
-    for (int line = 24; line < 96; line += 24) {
-        cv_line(line - 2, 0, line - 2, 94, PANEL_GRID);
-        cv_line(0, line - 2, 94, line - 2, PANEL_GRID);
-    }
+    cv_begin(112, 112, BLACK);
+    int scan = (int)(elapsed * 16u / 1600u);
     for (int row = 0; row < 16; ++row) {
+        if (row == scan) cv_line(1, row * 7 + 3, 110, row * 7 + 3, GRAPHITE);
         for (int col = 0; col < 16; ++col) {
-            cv_rect(6 * col, 6 * row, 3, 3, SILVER);
-            cv_pset(1 + 6 * col, 1 + 6 * row, BLACK);
+            int x = col * 7 + 3, y = row * 7 + 3;
+            uint16_t hole = row < scan ? SILVER : GRAPHITE;
+            cv_rect(x - 1, y - 1, 3, 3, hole);
+            cv_pset(x, y, BLACK);
         }
     }
-
-    for (unsigned i = 0; i < sizeof paths / sizeof paths[0]; ++i) {
-        int x = paths[i].x, y = paths[i].y, bend = paths[i].bend, end = paths[i].end;
-        int length = (bend - y) + (end - x);
-        int run = clamp(((int)elapsed - (int)i * 720) * length / 1250, 0, length);
-        if (!run) continue;
-        int dy = clamp(run, 0, bend - y);
-        cv_line(x, y, x, y + dy, colours[i]);
-        if (run > dy) cv_line(x, bend, x + run - dy, bend, colours[i]);
-        cv_rect(x - 2, y - 2, 5, 5, WHITE);
-        if (run == length) {
-            cv_rect(end - 2, bend - 2, 5, 5, colours[i]);
-            int dot = (int)((elapsed / 28u + i * 24u) % (unsigned)length);
-            int dy_dot = clamp(dot, 0, bend - y);
-            cv_rect(x + dot - dy_dot - 1, y + dy_dot - 1, 3, 3, WHITE);
-        }
+    unsigned active = elapsed / 410u;
+    for (unsigned i = 0; i < active && i < sizeof pins / sizeof pins[0]; ++i) {
+        int x = pins[i].column * 7 + 3, y = pins[i].row * 7 + 3;
+        cv_rect(x - 2, y - 2, 5, 5, pins[i].color);
+        cv_pset(x, y, WHITE);
     }
-    cv_blit(73, 26);
+    cv_blit(64, 47);
 }
 
 void app_splash(void)
@@ -339,18 +329,16 @@ void app_splash(void)
     splash_frame = 0;
     splash_active = true;
     cv_begin(240, 240, BLACK);
-    cv_rect(9, 9, 222, 222, GRAPHITE);
-    cv_rect(10, 10, 220, 220, BLACK);
-    cv_rect(69, 22, 104, 107, PANEL_GRID);
-    cv_rect(70, 23, 102, 105, BLACK);
-    cv_rect(20, 20, 30, 2, BLUE);
-    cv_rect(190, 20, 30, 2, AMBER);
-    cv_rect(16, 134, 208, 58, IVORY);
-    cv_rect(16, 134, 208, 2, SILVER);
-    cv_rect(16, 189, 208, 3, BLUE);
-    cv_text((240 - text_w(&FONT_L, APP_NAME)) / 2, 145, &FONT_L, APP_NAME, INK);
-    const char model[] = "SMK-37 Pro / " ZIVI_VERSION;
-    cv_text((240 - text_w(&FONT_XS, model)) / 2, 202, &FONT_XS, model, WHITE);
+    cv_rect(11, 11, 218, 218, GRAPHITE);
+    cv_rect(12, 12, 216, 216, BLACK);
+    cv_rect(21, 22, 17, 2, AMBER);
+    cv_text(45, 18, &FONT_XS, "MATRIX SYNTHESIZER", SILVER);
+    cv_rect(59, 42, 122, 122, GRAPHITE);
+    cv_rect(63, 46, 114, 114, BLACK);
+    cv_rect(24, 179, 192, 1, GRAPHITE);
+    cv_text((240 - text_w(&FONT_L, APP_NAME)) / 2, 186, &FONT_L, APP_NAME, IVORY);
+    const char model[] = "SMK-37 PRO   /   3.9.6";
+    cv_text((240 - text_w(&FONT_XS, model)) / 2, 211, &FONT_XS, model, AMBER);
     cv_blit(0, 0);
 }
 

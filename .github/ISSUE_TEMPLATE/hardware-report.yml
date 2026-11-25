@@ -18,7 +18,7 @@ body:
     attributes:
       label: Firmware e identidade USB / Firmware and USB identity
       description: Se houve atualização, informe a versão anterior. / For updates, include the previous version.
-      placeholder: "3.9.5 / SMK-37 Pro_99400"
+      placeholder: "3.9.6 / SMK-37 Pro_99500"
     validations:
       required: true
   - type: textarea

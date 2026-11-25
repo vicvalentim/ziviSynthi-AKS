@@ -1,0 +1,273 @@
+ziviSynthi AKS · Painel AKS	ziviSynthi AKS · Web Studio
+3.9.6 pré-lançamento	3.9.6 pre-release
+Silenciar	Mute
+Conectar MIDI	Connect MIDI
+Instalar firmware	Install firmware
+Painel do instrumento	Instrument navigation
+Painel	Panel
+Matriz	Matrix
+Studio USB	USB Studio
+USB desconectado	USB disconnected
+Instrumento	Instrument
+Painel de síntese	Synth panel
+Acessos de sinal	Signal shortcuts
+Monitor da saída estéreo	Stereo output monitor
+Osciloscópio e espectro	Oscilloscope and spectrum
+Controles da saída do canal 1	Channel 1 output controls
+Controles da saída do canal 2	Channel 2 output controls
+Sinais de controle X e Y	X and Y control signals
+Teclado virtual	Virtual keyboard
+Roteamento das entradas USB	USB input routing
+Conexão com o SMK‑37 Pro	SMK‑37 Pro connection
+Ativar áudio	Enable audio
+Meter · coluna B da matriz	Meter · matrix column B
+Modo do medidor da matriz	Matrix meter mode
+Leitura normalizada do sintetizador no navegador	Normalized browser synth reading
+Afinação do Oscilador 1	Oscillator 1 pitch
+Forma do seno do Oscilador 1	Oscillator 1 sine shape
+Nível geral	Master level
+Mistura do seno e rampa do Oscilador 1	Oscillator 1 sine and ramp mix
+Frequência base do Oscilador 3	Oscillator 3 base frequency
+Corte	Cutoff
+Frequência de corte do filtro	Filter cutoff frequency
+Inicial	Init
+Pico de sinal no Meter B	Meter B peak
+Matriz de pinos	Pin matrix
+Bandeja de 21 pinos	21-pin tray
+Branco	White
+Vermelho	Red
+Verde	Green
+Retirar	Remove
+Região	Region
+Regiões da matriz	Matrix regions
+Guia de pinos A–P / 1–16	Pin guide A–P / 1–16
+Famílias de pinos	Pin types
+Branco · comum	White · standard
+Vermelho · precisão	Red · precision
+Verde · atenuador	Green · attenuation
+Branco e vermelho têm 2,7 kΩ nominais. O vermelho é o pino de precisão para afinação por tensão de controle. O verde de 68 kΩ é o atenuador. O editor usa nível nominal para branco e vermelho e atenuação digital de 50% para o verde.	White and red pins are nominally 2.7 kΩ. Red is the precision pin for CV pitch control. The 68 kΩ green pin attenuates the signal. The editor uses full digital gain for white and red and 50% for green.
+Uma linha fornece o sinal. A coluna recebe. H7 liga o ruído ao filtro. A12 liga o sinal da envoltória à saída 1. B11 monitora o trapézio e B15 monitora o Stick X. No medidor, 100% representa o fundo da escala digital.	Rows are sources, columns are destinations. H7 sends noise to the filter. A12 sends the envelope signal to output 1. B11 monitors the trapezoid and B15 monitors Stick X. On the meter, 100% is full digital scale.
+A bandeja usa os 21 pinos do conjunto fornecido pela EMS em um serviço documentado, com estoque comum às três famílias. Patches importados preservam suas rotas.	The tray follows a documented 21-pin EMS service set. All three pin types draw from the tray. Imported patches retain their routes.
+Folha técnica da matriz	Matrix technical drawing
+Notas técnicas dos pinos	Pin engineering notes
+Conjunto de serviço EMS	EMS service set
+Centralizar	Center
+Parado · 0 / 256 eventos	Stopped · 0 / 256 events
+Modo de execução	Performance mode
+Sem leitura do SMK	No SMK readback
+Comprimento	Length
+Divisão	Division
+Tocar no SMK	Play on SMK
+Gravar no SMK	Record on SMK
+Parar	Stop
+Páginas de 16 passos	16-step pages
+Editar passos ao vivo	Live step editing
+Posições da sequência	Step positions
+Passo	Step
+Nota MIDI	MIDI note
+Velocidade	Velocity
+Ligar ou silenciar passo	Toggle step
+Trecho	Clip
+De	From
+Até	To
+Copiar trecho	Copy clip
+Colar no passo em foco	Paste at selected step
+Apagar trecho	Clear clip
+Biblioteca de sequências	Sequence library
+Biblioteca	Library
+Nova entrada	New entry
+Nome	Name
+Salvar SEQ	Save sequence
+Salvar trecho	Save clip
+Carregar	Load
+Atualizar	Update
+Excluir da biblioteca	Delete from library
+Exportar JSON	Export JSON
+Importar JSON	Import JSON
+SEQ no SMK	SMK sequencer
+Ler SEQ do SMK	Read SEQ from SMK
+Enviar SEQ ao SMK	Send SEQ to SMK
+Gravar SEQ no slot selecionado	Save SEQ to selected slot
+Apagar sequência no editor	Clear sequence in editor
+Posição na sequência	Sequence position
+Ajustes e gráfico do KS	KS settings and graph
+Notas e posição da frase KS	KS phrase notes and playhead
+Teclado	Keyboard
+Sequência	Sequence
+Roteamento de afinação KS	KS pitch routing
+Modo EMS · KS na linha 16	EMS mode · KS on row 16
+Ativar ARP	Enable ARP
+Desativar ARP	Disable ARP
+Andamento	Tempo
+Ordem	Order
+Crescente	Ascending
+Decrescente	Descending
+Ordem tocada	Played order
+Aleatória	Random
+Segure as notas	Hold notes
+Tônica	Root
+Escala	Scale
+Notas da escala	Scale notes
+Teclado tátil	Touch keyboard
+Pads de transposição do KS	KS transpose pads
+A W S E D F T G Y H U J K tocam de C4 a C5.	A W S E D F T G Y H U J K play from C4 to C5.
+Presets de fábrica	Factory presets
+Escolher patch	Choose patch
+Patch editado	Edited patch
+Rampa filtrada	Filtered ramp
+Modulação em anel	Ring modulation
+Envelope e molas	Envelope and spring
+Filtro ressonante	Resonant filter
+Trapezoide cíclico	Cycling trapezoid
+KS · Sequência e teclado	KS · Sequence and keyboard
+Banco EMS · estúdio	EMS bank · studio
+Banco EMS · laboratório	EMS bank · laboratory
+Execução	Performance
+Texturas	Textures
+Sequências KS	KS sequences
+Handbook I · síntese e modulação	Handbook I · synthesis and modulation
+Handbook II · KS, efeitos e Prestopatch	Handbook II · KS, effects and Prestopatch
+Teclas e baixos	Keys and bass
+Exploração	Exploration
+Repor inicial	Reset to init
+Retirar pinos	Clear pins
+Meus presets	My presets
+Preset salvo	Saved preset
+Novo preset	New preset
+Salvar como novo	Save as new
+Excluir	Delete
+Controles digitais	Digital controls
+Perfil sonoro	Sound profile
+AKS calibrado	Calibrated AKS
+Legado 3.9.4	Legacy 3.9.4
+Edição numérica	Numeric editing
+Parâmetro	Parameter
+Valor	Value
+Aplicar valor	Apply value
+Entradas de áudio USB	USB audio inputs
+Mover os pinos IN 1/2 para USB L/R	Move IN 1/2 pins to USB L/R
+Pausar	Pause
+Retomar	Resume
+Vista	View
+Forma de onda	Waveform
+Espectro	Spectrum
+Filtro teórico	Filter response
+Canal	Channel
+Gráfico de sinal	Signal plot
+Saída estéreo	Stereo output
+Pico de saída	Output peak
+Frequências após modulação	Frequencies after modulation
+≈ recebe modulação pela matriz	≈ modulated through the matrix
+Curva nominal da envoltória	Nominal envelope curve
+Nível do envelope	Envelope level
+Conexão	Connection
+Entrada MIDI	MIDI input
+Selecionar porta	Select port
+Saída MIDI	MIDI output
+Autorizar USB MIDI	Allow USB MIDI
+Vincular SMK	Link SMK
+Desvincular SMK	Unlink SMK
+Cancelar reconexão	Cancel reconnect
+Patch ativo	Active patch
+Carregar do SMK	Load from SMK
+Aplicar patch e editar ao vivo	Apply patch and edit live
+Memória do SMK	SMK memory
+Carregar slot	Load slot
+Gravar preset do editor	Save editor preset
+Gravar estado do SMK	Save SMK state
+Conecte o teclado por USB.	Connect the keyboard over USB.
+Mapeamento de CC	CC mapping
+Controle	Control
+Número de CC	CC number
+Módulo do banco A	Bank A module
+Módulo do banco B	Bank B module
+Desligado	Off
+Giro dos knobs	Knob mode
+Absoluto	Absolute
+Relativo (SMK)	Relative (SMK)
+Controles do painel SMK	SMK panel controls
+Diagnóstico de desempenho	Performance diagnostics
+Iniciar medição	Start measurement
+Ler medição	Read measurement
+Inicie uma medição e toque no SMK antes de ler os contadores.	Start a measurement and play the SMK before reading counters.
+Porta USB MIDI	USB MIDI port
+Conecte o teclado por USB	Connect the keyboard over USB
+Identificar teclado	Identify keyboard
+Aguardando identificação	Waiting for device identification
+Versão de destino	Target version
+Pacote de firmware	Firmware package
+Selecionar pacote	Select package
+Arquivo .fwsc	.FWSC file
+Arquivo	File
+Aguardando pacote	Waiting for package
+Procedimento para o V016 original	Stock V016 recovery
+Exportar patch do editor	Export editor patch
+Preparar gravação	Prepare to flash
+Progresso da gravação	Flashing progress
+Use um cabo USB de dados e abra o editor no Chrome ou Edge do computador.	Use a USB data cable and open this editor in desktop Chrome or Edge.
+Confirmar gravação	Confirm firmware installation
+Conferi o modelo, a versão e minhas cópias.	I checked the model, version and my backups.
+Cancelar	Cancel
+Gravar firmware	Flash firmware
+Áudio inativo	Audio inactive
+Áudio ativo	Audio active
+Canal MIDI	MIDI channel
+Todos	All
+MIDI desconectado	MIDI disconnected
+Retomar áudio	Resume audio
+Patch do SMK	SMK patch
+Patch importado.	Patch imported.
+Patch inválido. As conexões atuais foram mantidas.	Invalid patch. Your current connections were kept.
+Web Audio indisponível neste navegador	Web Audio is unavailable in this browser.
+Áudio indisponível. Abra no Chrome ou Edge por HTTPS ou localhost.	Audio unavailable. Use Chrome or Edge over HTTPS or localhost.
+Web MIDI indisponível neste navegador	Web MIDI is unavailable in this browser.
+Nenhuma entrada MIDI disponível	No MIDI inputs available
+Todos os pinos retirados.	All pins cleared.
+A bandeja está vazia. Retire um pino para reutilizá-lo.	The tray is empty. Remove a pin to reuse it.
+Recebe modulação	Modulated
+Sem rota de modulação	No modulation route
+Único	Single
+Repetir	Repeat
+Teclado / KS	Keyboard / KS
+Limiar em C	Threshold at C
+Afinação fina	Fine tuning
+Nível do patch	Patch level
+Modo ENV	Envelope mode
+Disparo ENV	Envelope trigger
+Tempo da mola	Spring time
+Gravando	Recording
+Reproduzindo	Playing
+Parado	Stopped
+Armado	Armed
+Instalar Felucca	Install Felucca
+Atualizar firmware	Update firmware
+Reverter firmware	Roll back firmware
+Reinstalar firmware	Reinstall firmware
+Retomar gravação	Resume flashing
+Tamanho de arquivo .fwsc inválido.	Invalid .fwsc file size.
+Para restaurar o V016 original, use o caminho M‑VAVE indicado nesta seção.	Use the linked M‑VAVE procedure to restore stock V016.
+O pacote não pertence ao ziviSynthi AKS para SMK‑37 Pro.	This package is not a ziviSynthi AKS update for the SMK‑37 Pro.
+SHA‑256 desconhecido. Selecione um pacote publicado pelo projeto.	Unrecognized SHA‑256. Select a package published by the project.
+O mapa de flash ou o carregador não corresponde ao SMK‑37 Pro.	The flash map or loader does not match the SMK‑37 Pro.
+A origem e o pacote selecionado não permitem esta operação.	The device and selected package do not support this operation.
+Autorize o acesso a mensagens MIDI SysEx.	Allow MIDI SysEx access.
+Selecione a porta USB do SMK‑37 Pro e identifique o teclado.	Select the SMK‑37 Pro USB port and identify the keyboard.
+Identifique o teclado na porta selecionada.	Identify the keyboard on the selected port.
+Consultando o modelo e a versão pela porta USB…	Reading model and version over USB…
+O teclado não respondeu nesta porta. Confira a conexão USB.	The keyboard did not respond on this port. Check the USB connection.
+Identidade confirmada. Confira o pacote antes de gravar.	Identity verified. Check the package before flashing.
+Teclado identificado	Keyboard identified
+Verificar pacote	Check package
+Verificar USB	Check USB
+Modo de atualização	Update mode
+Origem incompatível	Incompatible source
+Confira o teclado e a versão de destino antes de gravar.	Check the keyboard and target version before flashing.
+Selecione o pacote .fwsc da versão desejada.	Select the .fwsc for the version you want.
+Preparando o carregador…	Preparing the loader…
+Verificando o pacote no teclado…	Verifying the package on the keyboard…
+Aguardando a porta do carregador…	Waiting for the loader port…
+Transferindo para o carregador…	Transferring to the loader…
+Gravando firmware…	Flashing firmware…
+Aguardando reinício e conferência da versão…	Waiting for reboot and version verification…
+Gravação USB	USB flashing
+Gravação concluída	Flashing complete

@@ -1,5 +1,10 @@
 # Histórico · Changelog
 
+## 3.9.6
+
+English-first bilingual site, a redesigned LCD splash, and a GitHub pre-release with reproducible downloads. / Site bilíngue com inglês como idioma inicial, abertura redesenhada no LCD e pré-release no GitHub com artefatos reproduzíveis.
+
+
 [Notas 3.9.5](docs/releases/v3.9.5.md) · [3.9.5 release notes](docs/releases/v3.9.5.md#english)
 
 | Versão / Version | Português | English |

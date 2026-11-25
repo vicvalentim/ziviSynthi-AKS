@@ -5,6 +5,7 @@ const { test } = require("node:test");
 const vm = require("node:vm");
 
 const html = readFileSync(process.env.ZIVI_EDITOR_HTML || process.argv[2] || "build/web/release.html", "utf8");
+const english = html.includes('<html lang="en">');
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]);
 const source = scripts[1];
 const { api, wiring, embedded } = vm.runInNewContext(
@@ -19,7 +20,7 @@ const full = "240,0,50,69,8,0,0,64,0,126,1,247";
 const [currentVersion, previousVersion] = Object.keys(embedded);
 const stock = "SMK-37 Pro_016";
 const current = wiring.productOf(payload(currentVersion));
-const previous = previousVersion ? wiring.productOf(payload(previousVersion)) : "SMK-37 Pro_99300";
+const previous = previousVersion ? wiring.productOf(payload(previousVersion)) : "SMK-37 Pro_99400";
 const ota = "ota-SMK-37 Pro_900";
 const u32 = n => [n & 255, (n >>> 8) & 255, (n >>> 16) & 255, n >>> 24];
 const frame = (cmd, body) => [240, ...wiring.pack7([0, 0x59, cmd, body.length, body.length >> 8, 0,
@@ -86,16 +87,16 @@ test("embedded packages have the exact published identities and hashes", async (
     const damaged = payload(currentVersion);
     damaged[3400] ^= 1;
     await assert.rejects(api.validate(damaged), /SHA‑256/);
-    await assert.rejects(api.validate(damaged.subarray(0, 960)), /Tamanho/);
+    await assert.rejects(api.validate(damaged.subarray(0, 960)), /Tamanho|Invalid \.fwsc file size/);
     const otherBoard = payload(currentVersion);
     otherBoard[47] = 1 + "X".charCodeAt(0);
-    await assert.rejects(api.validate(otherBoard), /não pertence/);
+    await assert.rejects(api.validate(otherBoard), /não pertence|is not a ziviSynthi AKS update/);
 });
 
 for (const [origin, version, action, fast] of [
-    [stock, currentVersion, "Instalar Felucca", false],
-    [previous, currentVersion, "Atualizar firmware", true],
-    ...(previousVersion ? [[current, previousVersion, "Reverter firmware", true]] : []),
+    [stock, currentVersion, english ? "Install Felucca" : "Instalar Felucca", false],
+    [previous, currentVersion, english ? "Update firmware" : "Atualizar firmware", true],
+    ...(previousVersion ? [[current, previousVersion, english ? "Roll back firmware" : "Reverter firmware", true]] : []),
 ]) {
     test(action + " only writes to the selected Pro and confirms the returning firmware", async () => {
         const target = await api.validate(payload(version));
@@ -126,7 +127,7 @@ test("an interrupted write can only resume with the original package", async () 
     assert.equal(api.operation(ota, target, null), "");
     assert.equal(api.operation(ota, other, pending), "");
     const session = new api.Session(access, initial.key);
-    await assert.rejects(session.perform(ota, other, pending, () => {}), /não permitem/);
+    await assert.rejects(session.perform(ota, other, pending, () => {}), /não permitem|do not support this operation/);
     assert.deepEqual(stats.upgrades, []);
     assert.equal(await session.perform(ota, target, pending, () => {}), current);
     assert.deepEqual(stats.upgrades, [ota]);

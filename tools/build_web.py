@@ -8,13 +8,17 @@ from pathlib import Path
 
 from build_presets import load as load_presets
 from build_vernier import load as load_verniers
+from localize_studio import localize_html, localize_js, read_strings
 
 project = Path(__file__).resolve().parents[1]
 web = project / "platform" / "web"
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("output", type=Path)
 parser.add_argument("--embed-firmware", action="append", nargs=2, metavar=("VERSION", "FWSC"), default=[])
+parser.add_argument("--language", choices=("en", "pt"), default="pt")
 args = parser.parse_args()
+english = args.language == "en"
+strings = read_strings(web / "en.tsv") if english else {}
 
 
 def read(name):
@@ -94,6 +98,13 @@ def vernier_catalog():
 
 
 html = read("index.html")
+if english:
+    html = localize_html(html, strings)
+
+
+def ui_script():
+    script = "".join(read(name) for name in ("visuals.js", "studio.js", "sequence.js", "firmware.js", "ui.js"))
+    return localize_js(script, strings) if english else script
 factory = {key: dict(entry.patch, play=entry.play, bank=entry.bank) for key, entry in load_presets(felucca=True).items()}
 calibration = (project / "app/core/aks_calibration.def").read_text(encoding="utf-8")
 aks_catalog = "const AKSCalibration = " + json.dumps({
@@ -140,8 +151,7 @@ parts = {
     "STYLE": embedded_fonts() + read("skin.css") + read("aks.css"),
     "DSP": dsp,
     "UI": "const ZIVI_WORKLET = " + worklet + ";\n" + panel_catalog() + vernier_catalog()
-          + firmware_assets() + firmware_transport() + read("visuals.js") + read("studio.js")
-          + read("sequence.js") + read("firmware.js") + read("ui.js"),
+          + firmware_assets() + firmware_transport() + ui_script(),
 }
 for name, source in parts.items():
     marker = "/* " + name + " */"

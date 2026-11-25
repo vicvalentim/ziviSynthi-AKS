@@ -5,6 +5,9 @@ on:
     branches: ['**']
   workflow_dispatch:
 
+env:
+  PRERELEASE_VERSION: '3.9.6'
+
 permissions:
   contents: read
 
@@ -55,6 +58,21 @@ jobs:
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: build/pages
+      - name: Collect verified pre-release downloads
+        if: github.repository == 'vicvalentim/ziviSynthi-AKS'
+        run: |
+          mkdir -p build/release
+          files=("zivisynthi-felucca-smk37-${PRERELEASE_VERSION}.fwsc" zivisynthi-aks-editor.html
+            zivisynthi-aks-presets.zip zivisynthi-aks-source.zip)
+          for file in "${files[@]}"; do cp "build/pages/$file" build/release/; done
+          cd build/release
+          sha256sum "${files[@]}" > SHA256SUMS.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: github.repository == 'vicvalentim/ziviSynthi-AKS'
+        with:
+          name: prerelease-assets
+          path: build/release/
+          if-no-files-found: error
 
   deploy:
     needs: build
@@ -68,3 +86,31 @@ jobs:
     steps:
       - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
         id: publish
+
+  prerelease:
+    if: github.repository == 'vicvalentim/ziviSynthi-AKS'
+    needs: deploy
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: prerelease-assets
+          path: build/release
+      - name: Publish the verified pre-release once
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="v${PRERELEASE_VERSION}"
+          if gh release view "$tag" --json isDraft,isPrerelease > "$RUNNER_TEMP/release.json" 2>/dev/null; then
+            jq -e '.isPrerelease and (.isDraft | not)' "$RUNNER_TEMP/release.json" >/dev/null
+            exit 0
+          fi
+          (cd build/release && sha256sum -c SHA256SUMS.txt)
+          gh release create "$tag" build/release/* --target "$GITHUB_SHA" \
+            --title "ziviSynthi AKS ${PRERELEASE_VERSION} · Pre-release" \
+            --notes-file "docs/releases/$tag.md" --prerelease --latest=false

@@ -721,7 +721,7 @@
                 processor.connect(audioContext.destination);
                 connectAnalyser();
                 syncAudio();
-                audioStatus.textContent = "Áudio ativo · " + audioContext.sampleRate.toLocaleString("pt-BR") + " Hz";
+                audioStatus.textContent = "Áudio ativo" + " · " + audioContext.sampleRate.toLocaleString("pt-BR") + " Hz";
                 audioButton.textContent = "Áudio ativo";
                 audioButton.disabled = true;
             } catch (error) {

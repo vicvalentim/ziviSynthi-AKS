@@ -54,35 +54,43 @@ def main():
     subprocess.run(["git", "diff", "--exit-code", "HEAD", "--"], cwd=ROOT, check=True)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     args.output.mkdir(parents=True, exist_ok=True)
-    studio = args.output / "studio"
-    studio.mkdir(exist_ok=True)
     source = args.output / SOURCE
     subprocess.run(["git", "archive", "--format=zip", "--prefix=ziviSynthi-aks/",
                     "--output", str(source.resolve()), "HEAD"], cwd=ROOT, check=True)
     with ZipFile(source, "a") as archive:
         archive.write(args.artifacts / BASE, BASE)
 
-    downloads = ('<div class="firmware-links" aria-label="Downloads da versão">\n'
-                 f'              <a href="../{package}" download>Baixar firmware (.fwsc)</a>\n'
-                 f'              <a href="../{PRESETS}" download>Baixar presets</a>\n'
-                 f'              <a href="../{SOURCE}" download>Código-fonte correspondente (GPL-3.0-only)</a>\n'
-                 '              <a href="../SHA256SUMS.txt">SHA-256</a>\n'
-                 '              <a href="../LICENSE">Licença / License</a>\n'
-                 '              <a href="../docs/NOTICES.html">Avisos / Notices</a>\n'
-                 '            </div>')
     project_url = escape(args.source, quote=True)
-    links = ('<a href="../">Início</a>\n'
-             '      <a href="../docs/">Documentação</a>\n'
-             f'      <a href="{project_url}">GitHub</a>')
-    page = html.replace(downloads_marker, downloads).replace(links_marker, links)
-    (studio / "index.html").write_text(page, encoding="utf-8")
-    subprocess.run([sys.executable, ROOT / "tools/build_web.py", args.output / EDITOR], check=True)
+    builder = [sys.executable, ROOT / "tools/build_web.py"]
+    english_studio = args.output / "studio/index.html"
+    english_studio.parent.mkdir(exist_ok=True)
+    subprocess.run([*builder, english_studio, "--language", "en", "--embed-firmware", version, packages[0]], check=True)
+    subprocess.run([*builder, args.output / EDITOR, "--language", "en"], check=True)
+    portuguese_studio = args.output / "pt/studio/index.html"
+    portuguese_studio.parent.mkdir(parents=True, exist_ok=True)
+    for path, source_html, back, home, other, english in (
+        (english_studio, english_studio.read_text(encoding="utf-8"), "../", "../", "../pt/studio/", True),
+        (portuguese_studio, html, "../../", "../", "../../studio/", False),
+    ):
+        labels = ("Firmware (.fwsc)", "Presets", "Corresponding source", "Notices") if english else (
+            "Firmware (.fwsc)", "Presets", "Código-fonte correspondente", "Avisos")
+        downloads = '<div class="firmware-links" aria-label="Downloads">' + "\n".join(
+            f'<a href="{back}{name}" download>{label}</a>'
+            for name, label in zip((package, PRESETS, SOURCE), labels[:3], strict=True)) + (
+            f'<a href="{back}SHA256SUMS.txt">SHA-256</a>'
+            f'<a href="{back}docs/NOTICES.html">{labels[3]}</a></div>')
+        links = (f'<a href="{home}">{"Home" if english else "Início"}</a>'
+                 f'<a href="{back}docs/#{"english" if english else "português"}">{"Docs" if english else "Documentação"}</a>'
+                 f'<a href="{project_url}">GitHub</a>'
+                 f'<a href="{other}" lang="{"pt-BR" if english else "en"}">{"Português" if english else "English"}</a>')
+        path.write_text(source_html.replace(downloads_marker, downloads).replace(links_marker, links), encoding="utf-8")
 
     for name in (package, PRESETS, "LICENSE", "NOTICES.md"):
         shutil.copyfile(args.artifacts / name, args.output / name)
     screenshot = args.output / manifest["screenshot"]
     screenshot.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / manifest["screenshot"], screenshot)
+    shutil.copytree(ROOT / "docs/img", args.output / "docs/img", dirs_exist_ok=True)
     manifest.update(site=args.site + "/", install=args.site + "/studio/#firmware-drawer", source=args.source)
     (args.output / "firmware.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

@@ -10,7 +10,7 @@ Crie um repositório vazio no GitHub. Extraia o pacote e abra o terminal em `rep
 git init -b main
 git add .
 git status --short
-git commit -m "Publish ziviSynthi AKS 3.9.5"
+git commit -m "Publish ziviSynthi AKS 3.9.6"
 git remote add origin https://github.com/USUARIO/REPOSITORIO.git
 git push -u origin main
 ```
@@ -28,7 +28,7 @@ Abra **Actions → Build firmware and editor → Run workflow** e selecione um a
 | `web-studio` | HTML autônomo | Protocolo, edição ao vivo e presets no Node.js. |
 | `all` | Os três conjuntos | Executa os três jobs independentemente. |
 
-O workflow **CI** executa `make test` em pushes e pull requests. O pipeline de build produz artefatos para revisão. A publicação em **Releases** é uma etapa do mantenedor, a partir de uma tag no mesmo commit que gerou os artefatos.
+O workflow **CI** executa `make test` em pushes e pull requests. O pipeline de build produz artefatos para revisão. A pré-release v3.9.6 é publicada pelo workflow Pages após a implantação, com os artefatos do mesmo commit.
 
 O alvo **SMK‑37 Pro** tem seu próprio mapa de flash, protocolo USB e verificação de identidade. O FM‑1 continua como simulador. O app e o atualizador têm guardas específicos do Pro. Um pacote instalável para Elite, SMK‑37 padrão ou MKE‑P37 depende de adaptação de hardware, identidade, mapa de flash e validação por variante.
 
@@ -56,7 +56,7 @@ python -m pip install Pillow==13.0.0
 tools/build_github.sh all
 ```
 
-Requisitos locais adicionais são Git, GNU Make, um compilador C11, curl e Node.js 24. Para reutilizar dependências, forneça `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` ou `JIELI_TOOLCHAIN`. Os artefatos saem em `dist/`. Para incorporar também a reversão 3.9.4 no HTML, execute `FIRMWARE_ROLLBACK=/caminho/para/3.9.4.fwsc tools/build_github.sh smk37-pro`.
+Requisitos locais adicionais são Git, GNU Make, um compilador C11, curl e Node.js 24. Para reutilizar dependências, forneça `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` ou `JIELI_TOOLCHAIN`. Os artefatos saem em `dist/`. Para incorporar também a reversão 3.9.5 no HTML, execute `FIRMWARE_ROLLBACK=/caminho/para/3.9.5.fwsc tools/build_github.sh smk37-pro`.
 
 ## GitHub Pages
 
@@ -66,7 +66,7 @@ Requisitos locais adicionais são Git, GNU Make, um compilador C11, curl e Node.
 
 | Caminho | Conteúdo |
 |---|---|
-| `/` e `/en/` | Páginas iniciais em português e inglês com acesso ao editor, à instalação, aos guias e aos downloads |
+| `/` e `/pt/` | Páginas iniciais em inglês e português com acesso ao editor, à instalação, aos guias e aos downloads |
 | `/docs/` | Documentação do site gerada a partir dos arquivos Markdown do repositório |
 | `/studio/#try` | Web Studio com modo Try disponível sem teclado |
 | `/studio/#firmware-drawer` | Instalador do firmware para o SMK‑37 Pro |
@@ -91,7 +91,7 @@ Abra [o site local](http://127.0.0.1:8000/). As URLs de exemplo servem à prévi
 
 1. Confira as URLs no catálogo da raiz e o endereço da captura no commit da release. O arquivo `LICENSE` estabelece GPL-3.0-only para a aplicação e os materiais autorais.
 2. Rode o alvo **all** no commit escolhido e publique o site pela branch padrão com esse mesmo conteúdo. Preserve o código-fonte correspondente ao distribuir o FWSC. O site oferece `zivisynthi-aks-source.zip` com a versão do aplicativo e a base modificada com suas licenças.
-3. Crie um rascunho para `v3.9.5` e use [as notas da versão](../releases/v3.9.5.md). Anexe o FWSC, o HTML, o manifesto, o ZIP dos bancos JSON, o código-fonte correspondente e os hashes dos arquivos distribuídos. Registre o estado dos testes físicos. O simulador pode ser anexado com sua descrição de alvo de desenvolvimento.
+3. Crie um rascunho para `v3.9.6` e use [as notas da versão](../releases/v3.9.6.md#português). Anexe o FWSC, o HTML, o manifesto, o ZIP dos bancos JSON, o código-fonte correspondente e os hashes dos arquivos distribuídos. Registre o estado dos testes físicos. O simulador pode ser anexado com sua descrição de alvo de desenvolvimento.
 4. Após publicar, encaminhe o `firmware.json` da raiz aos catálogos de firmware.
 
 [Formato de firmware.json](https://github.com/charlesvestal/fm1-base/blob/main/docs/FIRMWARE-JSON.md) · [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) · [Avisos de terceiros](../../NOTICES.md#português)

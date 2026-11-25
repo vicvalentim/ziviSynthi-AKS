@@ -1,19 +1,19 @@
 # ziviSynthi AKS
 
-[English](README.en.md)
+[Português](README.pt.md)
 
-Sintetizador de matriz 16 × 16 para o **M‑VAVE SMK‑37 Pro**, criado por **Victor Valentim** e inspirado no EMS Synthi AKS. Três osciladores, filtro ressonante, modulador em anel, envoltória trapezoidal e reverberação. Inclui sequenciador KS, SEQ de 64 passos, ARP, 128 timbres e quatro efeitos USB.
+A 16 × 16 pin-matrix synthesizer for the **M‑VAVE SMK‑37 Pro**, created by **Victor Valentim** and inspired by the EMS Synthi AKS. Three oscillators, a resonant filter, ring modulation, a trapezoid envelope and reverb. Includes a KS sequencer, a 64-step SEQ, ARP, 128 instrument presets and four USB effects.
 
-**3.9.5 pré-lançamento.** Compilação e atualizador verificados em host. A validação no teclado inclui gravação, saída analógica e Bluetooth e segue em aberto. [Avisos e créditos](NOTICES.md#português)
+**3.9.6 pre-release.** The build and updater have been verified on the host. Flashing, analog output and Bluetooth still need on-device validation. [Notices and credits](NOTICES.md#english)
 
-## Comece aqui
+## Start here
 
-| Atividade | Onde ir |
+| Task | Where to go |
 |---|---|
-| Experimentar ou instalar | Abra o site pelo link em **About** no GitHub. A página reúne o Web Studio, a documentação e os downloads. Clique em **Experimentar / Try** para tocar no navegador sem o teclado. Para gravar no Pro, use **Instalar firmware** com o teclado ligado por USB. [Guia de instalação](docs/usage/INSTALL.md) |
-| Tocar e editar | **K4** no Overview percorre os presets. **GLOBE** abre os módulos. **PITCH** e **MOD** operam Stick X/Y. [Manual](docs/usage/SMK37_FELUCCA_BANCADA.md) |
-| Compilar e contribuir | `make test` verifica o núcleo C e o editor. `make serve` abre o Studio em localhost. O alvo FM‑1 gera um simulador Linux. [Compilação e GitHub Actions](docs/development/GITHUB_RELEASE.md) |
+| Try or install | Open the [project site](https://vicvalentim.github.io/ziviSynthi-AKS/) for Web Studio, documentation and downloads. Click **Try Web Studio** to play in the browser without hardware. To flash the Pro, connect it over USB and choose **Install firmware**. [Installation](docs/usage/INSTALL.en.md) |
+| Play and edit | **K4** in Overview selects presets. **GLOBE** opens the modules. **PITCH** and **MOD** operate Stick X/Y. [Manual](docs/usage/SMK37_FELUCCA_BANCADA.en.md) |
+| Build and contribute | `make test` checks the C core and editor. `make serve` opens the Studio on localhost. The FM‑1 target builds a Linux simulator. [Build and GitHub Actions](docs/development/GITHUB_RELEASE.en.md) |
 
-![Matriz 16 × 16 no LCD simulado do SMK‑37 Pro](docs/img/smk37-pro-matrix.png)
+![16 × 16 matrix on the simulated SMK‑37 Pro display](docs/img/smk37-pro-matrix.png)
 
-[Documentação](docs/README.md#português) · [Notas da 3.9.5](docs/releases/v3.9.5.md) · [Histórico](CHANGELOG.md) · [GPL‑3.0‑only](LICENSE)
+[Documentation](docs/README.md#english) · [3.9.6 release notes](docs/releases/v3.9.6.md) · [Changelog](CHANGELOG.md) · [GPL‑3.0‑only](LICENSE)

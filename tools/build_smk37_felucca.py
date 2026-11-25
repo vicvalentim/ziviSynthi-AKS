@@ -271,9 +271,9 @@ static void muladd(uECC_word_t a,""")
             hashes = {name: hashlib.sha256((output / name).read_bytes()).hexdigest() for name in (*names, link_map)}
             compiler = toolchain / "pi32v2/bin/clang"
             report = {
-                "application": "ziviSynthi AKS · Felucca Pro 3.9.5",
+                "application": "ziviSynthi AKS · Felucca Pro 3.9.6",
                 "model": "SMK-37 Pro",
-                "identity": "SMK-37 Pro_99400",
+                "identity": "SMK-37 Pro_99500",
                 "fm1_base": FM1_COMMIT,
                 "felucca_bsp": BSP_COMMIT,
                 "codec_nominal_hz": 44118,
