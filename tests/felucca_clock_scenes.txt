@@ -1,0 +1,119 @@
+splash
+expect zsplash 1
+wait 900
+expect zsplashframe >1
+shot splash-09.png
+key37 12 down 100
+wait 120
+expect peak_db_min -30
+key37 12 up
+wait 2380
+shot splash-34.png
+wait 1500
+expect zsplash 1
+wait 160
+expect zsplash 0
+
+tap FBANK
+expect zview 6
+wait 120
+expect zled0 4227096
+shot banks-synth.png
+tap FBANK
+expect zview 0
+press GLO
+tap HOME
+release GLO
+expect zdaw 1
+expect zdawscene 0
+tap KBANK
+expect zdawscene 1
+spin K1 7
+wait 85
+shot banks-knobs.png
+tap FBANK
+expect zdawscene 2
+fader 0 81
+wait 85
+shot banks-faders.png
+press KBANK
+tap FBANK
+release KBANK
+expect zdawscene 0
+press GLO
+tap HOME
+release GLO
+expect zdaw 0
+
+tap SEL
+tap RIGHT
+spin PRESET 1
+press KBANK
+spin PRESET 45
+release KBANK
+expect zclockref 165
+press KBANK
+spin PRESET -45
+release KBANK
+expect zclockref 120
+midi C0 48
+midi FA
+expect zksmode 0
+midi F8
+wait 18
+midi F8
+expect zclock 1
+expect zsyncbpm 125
+expect zarpclockbpm 125
+expect zksmode 2
+midi FC
+expect zksmode 0
+expect zsyncrun 0
+
+tap SEL
+tap SEQ
+expect zview 5
+midi FA
+expect zseqplaying 0
+wait 18
+midi F8
+expect zseqplaying 1
+expect zseqclockbpm 125
+expect zksmode 0
+midi FC
+expect zseqplaying 0
+midi F2 02 00
+midi FB
+wait 18
+midi F8
+expect zsyncrun 1
+expect zsyncpos 13
+wait 8
+expect zseqindex 2
+wait 520
+expect zclock 0
+expect zsyncrun 0
+expect zseqplaying 0
+expect zseqclockbpm 0
+expect zarpclockbpm 0
+
+tap SEL
+tap RIGHT
+tap REC
+expect zledmode 1
+tap SEL
+tap ARP
+expect zview 4
+midi FA
+midi F8
+wait 18
+midi F8
+wait 45
+expect zled15 11033612
+expect zsyncrun 1
+expect zksmode 0
+midi FC
+wait 48
+expect zled15 2312224
+expect zmiss 0
+expect store_writes 0

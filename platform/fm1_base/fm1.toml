@@ -1,0 +1,7 @@
+name = "zivisynthi"
+usb_product = "ziviSynthiA SMK Host"
+description = "Simulador nativo do sintetizador monofônico ziviSynthiA SMK"
+author = "Victor Valentim"
+tags = ["synth"]
+o2 = ["synth_unit.c", "ks_unit.c", "modules_unit.c", "presets_unit.c"]
+ble = false

@@ -1,0 +1,64 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #1e2223;
+  color: #f4efe2;
+  --muted: #bdc3ba;
+  --line: #555f5d;
+  --accent: #ecc28a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: var(--accent); text-underline-offset: .22em; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+header { border-bottom: 1px solid var(--line); background: #272d2d; }
+nav, main, footer {
+  width: min(100% - 2.5rem, 68rem);
+  margin-inline: auto;
+}
+nav {
+  min-height: 4rem;
+  display: flex;
+  gap: .6rem 1.45rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-block: .75rem;
+}
+nav a { color: inherit; text-decoration: none; }
+nav a:hover { color: var(--accent); }
+nav .brand { margin-inline-end: auto; font-weight: 700; }
+main { padding-block: clamp(1.6rem, 5vw, 4rem); }
+h1 { margin: 0 0 .85rem; letter-spacing: -.045em; line-height: 1.05; }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.25rem, 6vw, 5rem);
+}
+.hero h1 { font-size: clamp(2.8rem, 8vw, 5.3rem); }
+.hero figure { margin: 0; }
+.hero img { display: block; width: 100%; max-width: 25rem; border: 1px solid var(--line); image-rendering: pixelated; }
+figcaption, .version, footer { color: var(--muted); font-size: .88rem; }
+figcaption { margin-top: .5rem; }
+.lead { max-width: 37rem; line-height: 1.55; font-size: clamp(1.08rem, 2.5vw, 1.35rem); }
+.actions, .downloads ul { display: flex; flex-wrap: wrap; gap: .65rem 1rem; }
+.actions a { border: 1px solid var(--line); padding: .65rem .9rem; text-decoration: none; color: inherit; }
+.actions .primary { background: var(--accent); border-color: var(--accent); color: #24221f; font-weight: 700; }
+.notice { color: var(--muted); line-height: 1.55; }
+.downloads { margin-top: clamp(2rem, 6vw, 4rem); padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.downloads h2 { margin: 0; }
+.downloads ul { padding: 0; list-style: none; }
+.docs { max-width: 58rem; line-height: 1.65; overflow-wrap: anywhere; }
+.docs h1 { font-size: clamp(2rem, 5vw, 3.4rem); }
+.docs h2, .docs h3 { margin-top: 1.8em; line-height: 1.22; }
+.docs td, .docs th { padding: .55rem .7rem; border-bottom: 1px solid var(--line); text-align: start; vertical-align: top; }
+.docs th { background: #2b3232; }
+.docs pre { background: #141819; padding: 1.25rem; overflow: auto; }
+.docs img { max-width: 100%; height: auto; }
+.table-scroll { overflow-x: auto; }
+footer { border-top: 1px solid var(--line); padding-block: 1.15rem; }
+@media (max-width: 720px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero img { max-width: min(100%, 20rem); }
+  nav .brand { flex: 1 0 100%; }
+}

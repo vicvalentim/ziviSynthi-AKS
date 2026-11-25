@@ -1,0 +1,98 @@
+[
+  {
+    "key": "hb01-loudness", "name": "01 · Intensidade", "display": "01 INTENSIDADE",
+    "play": "Compare o nível de saída com o controle de amplitude do Oscilador 1.",
+    "routes": "A3 C3 B3",
+    "controls": {"osc1Hz": 261.63, "sineLevel": 0.8, "level": 0.44}
+  },
+  {
+    "key": "hb02-envelope", "name": "02 · Ciclo da envoltória", "display": "02 CICLO ENV",
+    "play": "Ouça Attack, On, Decay e Off. O monitor B acompanha o trapezoide.",
+    "routes": "D3 A12 C12 B11",
+    "controls": {"osc1Hz": 261.63, "envMode": 2, "attackMs": 123, "onMs": 220, "decayMs": 320, "offMs": 470, "level": 0.78}
+  },
+  {
+    "key": "hb03-pitch", "name": "03 · Percepção de altura", "display": "03 ALTURA",
+    "play": "Altere a frequência base do seno e compare a altura no teclado.",
+    "routes": "I8 A3 C3 B3",
+    "controls": {"osc1Hz": 293.66, "sineLevel": 0.77, "level": 0.52}
+  },
+  {
+    "key": "hb04-timbre", "name": "04 · Forma de onda", "display": "04 FORMA DE ONDA",
+    "play": "Use Shape e os níveis de seno e rampa para comparar o timbre.",
+    "routes": "I8 A3 C3 B3",
+    "controls": {"osc1Hz": 392, "mix": 0.67, "shape": 0.62, "level": 0.58}
+  },
+  {
+    "key": "hb05-spectrum", "name": "05 · Espectro harmônico", "display": "05 ESPECTRO",
+    "play": "Compare a rampa no canal esquerdo com o pulso no direito usando o espectro.",
+    "routes": "I8 J8 A3 C4 B3",
+    "controls": {"out2Level": 0.661, "osc1Hz": 440, "osc2Hz": 440, "mix": 1, "osc2Pulse": 0.87, "osc2Tri": 0, "osc2Shape": 0.22, "level": 0.52}
+  },
+  {
+    "key": "hb06-white", "name": "06 · Ruído aberto", "display": "06 RUIDO ABERTO",
+    "play": "Experimente cor positiva e negativa com o mesmo nível de ruído.",
+    "routes": "A7 C7 B7",
+    "controls": {"noiseColor": 0.42, "noiseLevel": 0.7, "level": 0.45}
+  },
+  {
+    "key": "hb06-dark", "name": "06 · Ruído escuro", "display": "06 RUIDO ESCURO",
+    "play": "Ouça a diferença de espectro e confira a cor do gerador.",
+    "routes": "A7 C7 B7",
+    "controls": {"noiseColor": -0.88, "noiseLevel": 0.82, "out2Tone": -0.16, "level": 0.68}
+  },
+  {
+    "key": "hb07-filtered", "name": "07 · Ruído filtrado", "display": "07 RUIDO FILTRO",
+    "play": "Mova corte e Response até distinguir a faixa de ruído da ressonância.",
+    "routes": "H7 A10 C10 B10",
+    "controls": {"cutoff": 1170, "response": 0.72, "noiseLevel": 0.86, "level": 0.84}
+  },
+  {
+    "key": "hb08-pitch", "name": "08 · Trapezoide na altura", "display": "08 TRAP FREQ",
+    "play": "O trapezoide faz a frequência subir e descer a cada ciclo.",
+    "routes": "H3 D10 A12 C12 B11 I11/2",
+    "controls": {"osc1Hz": 223, "mix": 0.78, "cutoff": 1660, "envMode": 2, "attackMs": 365, "onMs": 90, "decayMs": 280, "offMs": 360, "trapLevel": 0.52, "level": 0.88}
+  },
+  {
+    "key": "hb08-filter", "name": "08 · Trapezoide no filtro", "display": "08 TRAP FILTRO",
+    "play": "Altere o nível do trapezoide e ouça o contorno do corte.",
+    "routes": "H3 D10 A12 C12 B11 N11/2",
+    "controls": {"osc1Hz": 131, "mix": 0.93, "cutoff": 310, "response": 0.68, "envMode": 2, "attackMs": 160, "onMs": 230, "decayMs": 348, "offMs": 290, "trapLevel": 0.97, "level": 0.92}
+  },
+  {
+    "key": "hb08-output", "name": "08 · Trapezoide na saída", "display": "08 TRAP SAIDA",
+    "play": "Ouça a diferença entre ENV SIGNAL à esquerda e o ganho CV em P à direita.",
+    "routes": "H3 D10 A12 C10 P11 B11",
+    "controls": {"out2Level": 0, "osc1Hz": 207, "mix": 0.83, "cutoff": 765, "envMode": 2, "attackMs": 160, "onMs": 110, "decayMs": 600, "offMs": 470, "out1Level": 0.83, "out2Tone": 0.14, "level": 0.91}
+  },
+  {
+    "key": "hb09a-vibrato", "name": "09a · Vibrato por VCO 2", "display": "09A VIBRATO",
+    "play": "O Oscilador 2 em baixa frequência modula a altura do Oscilador 1.",
+    "routes": "I8 I4/2 D3 A12 C12 B12",
+    "controls": {"osc1Hz": 440, "osc2Hz": 5.35, "osc2Tri": 0.045, "osc2Pulse": 0, "mix": 0.06, "attackMs": 25, "decayMs": 320, "level": 0.84}
+  },
+  {
+    "key": "hb09b-noise-fm", "name": "09b · Afinação com ruído e trapezoide", "display": "09B RUIDO FM",
+    "play": "Reduza Noise Level até a altura reaparecer no final do ataque.",
+    "routes": "J8 J7/2 J11/2 D4 A12 C12 B11",
+    "controls": {"osc2Hz": 412, "osc2Tri": 0.61, "osc2Pulse": 0.25, "noiseLevel": 0.22, "noiseColor": -0.5, "trapLevel": 0.095, "attackMs": 4, "decayMs": 340, "level": 0.93}
+  },
+  {
+    "key": "hb09c-joystick", "name": "09c · Ataque com joystick", "display": "09C STICK & ANEL",
+    "play": "PITCH muda a altura e MOD varia a repetição do ataque em anel.",
+    "routes": "E5 F3 I5/2 I15/2 K16/2 A13 C13 B13",
+    "controls": {"osc1Hz": 206, "lfo": 6, "osc3Shape": 0.13, "osc3Pulse": 0.51, "sineLevel": 0.85, "ringLevel": 0.82, "level": 0.61}
+  },
+  {
+    "key": "hb09d-decay", "name": "09d · Decaimento variável", "display": "09D DECAY CV",
+    "play": "A triangular de OSC 3 alterna a duração da cauda do ruído.",
+    "routes": "D7 L6/2 A12 C12 B11",
+    "controls": {"lfo": 0.37, "osc3Tri": 0.72, "envMode": 2, "attackMs": 3, "onMs": 85, "decayMs": 385, "offMs": 240, "noiseColor": 0.12, "noiseLevel": 0.86, "level": 0.85}
+  },
+  {
+    "key": "hb09e-spring", "name": "09e · Mola modulada em pulsos", "display": "09E MOLA PULSOS",
+    "play": "Variações do pulso de OSC 3 atuam no anel e na mistura das molas.",
+    "routes": "E5 F3 G13 M5/2 A14 C14 B13",
+    "controls": {"osc1Hz": 246.94, "lfo": 8.5, "osc3Pulse": 0.82, "osc3Shape": 0.15, "ringLevel": 0.63, "reverbMix": 0.37, "reverbTime": 1.05, "level": 0.65}
+  }
+]

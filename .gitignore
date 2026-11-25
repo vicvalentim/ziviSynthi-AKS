@@ -1,0 +1,13 @@
+/build/
+/dist/
+/.deps/
+__pycache__/
+*.py[cod]
+.DS_Store
+/artefatos/
+/.venv/
+*.fwsc
+*.elf
+*.map
+*.wav
+*.log

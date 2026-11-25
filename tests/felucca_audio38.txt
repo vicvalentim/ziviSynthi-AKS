@@ -1,0 +1,51 @@
+# Bluetooth audio page, physical USB routes and onboard presets.
+wait 300
+tap SAVE
+tap RIGHT
+bta add Headphones
+tap PLAY
+wait 1400
+expect bta 2
+tap EDIT
+wait 400
+expect bta 7
+shot bluetooth-audio.png
+tap FX
+tap LEFT
+wait 100
+expect bta 0
+tap SAVE
+
+tap HOME
+tap LEFT
+expect zbank 10
+pad 0 down 100
+pad 0 up
+expect zpreset 132
+expect zusbmatrix 1
+tap HOME
+tap SEL
+tap RIGHT
+tap FX
+expect zview 8
+shot usb-routing.png
+pad 0 down 100
+pad 0 up
+tap FX
+expect zview 2
+
+tap SEL
+tap HOME
+tap KBANK
+expect zview 7
+tap REC
+expect store_writes 1
+reboot
+wait 300
+expect zusbmatrix 0
+tap HOME
+tap KBANK
+tap EDIT
+expect zusbmatrix 1
+shot user-flash.png
+expect zmiss 0

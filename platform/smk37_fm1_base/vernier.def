@@ -1,0 +1,6 @@
+VERNIER(audio, {0.0, 1.0}, {0.6, 261.0}, {0.8, 2088.0}, {1.0, 10000.0})
+VERNIER(low, {0.0, 0.02}, {0.8, 63.0}, {1.0, 500.0})
+// Filter base cutoff at 5 produces about 261 Hz at full Response in the DSP.
+VERNIER(filter, {0.0, 5.0}, {0.5, 150.855}, {1.0, 10000.0})
+// The three-pole loop is marginal at feedback 8, with maximum feedback 9.1.
+TAPER(response, 0.87912087912)

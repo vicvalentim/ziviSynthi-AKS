@@ -1,0 +1,52 @@
+name: Build firmware and editor
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Target
+        type: choice
+        required: true
+        default: smk37-pro
+        options:
+          - smk37-pro
+          - fm-1-host
+          - web-studio
+          - all
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(inputs.target == 'all' && '["smk37-pro","fm-1-host","web-studio"]' || format('["{0}"]', inputs.target)) }}
+    env:
+      BUILD_TARGET: ${{ matrix.target }}
+      ZIVI_JIELI_ARCHIVE_URL: ${{ vars.ZIVI_JIELI_ARCHIVE_URL }}
+      ZIVI_AC79_GIT_URL: ${{ vars.ZIVI_AC79_GIT_URL }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "24"
+      - name: Install font generator dependency
+        if: matrix.target != 'web-studio'
+        run: python -m pip install Pillow==13.0.0
+      - name: Compile and check artifacts
+        run: tools/build_github.sh "$BUILD_TARGET"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: zivisynthi-aks-${{ matrix.target }}
+          path: dist/${{ matrix.target }}/
+          if-no-files-found: error

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "id": "zivisynthi-felucca",
+  "name": "ziviSynthi AKS",
+  "author": "Victor Valentim",
+  "license": "GPL-3.0-only",
+  "tagline": "A pin-matrix synthesizer for the M-VAVE SMK-37 Pro",
+  "description": "An independent firmware inspired by the EMS Synthi AKS, with a 16 × 16 patch matrix, three oscillators, a KS-style sequencer, a step sequencer and a bidirectional Web MIDI editor.",
+  "tags": ["synth", "sequencer", "midi"],
+  "screenshot": "docs/img/smk37-pro-matrix.png",
+  "hardware": {
+    "models": ["SMK-37 Pro"],
+    "flash": ["EB6014", "856014", "B36014"],
+    "features": ["bluetooth-midi", "bluetooth-midi-devices", "bluetooth-audio", "usb-audio-in", "usb-audio-out", "velocity", "pressure", "screen-reader"]
+  },
+  "credits": "Victor Valentim. Built on fm1-base by Charles Vestal and felucca-bsp by Hügelton Instruments and contributors. Inspired by the EMS Synthi AKS."
+}

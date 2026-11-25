@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ziviSynthiA · SMK-37 Pro Open</title>
+<style>
+  :root { color-scheme: light; font: 17px/1.5 system-ui, sans-serif; background: #edece6; color: #20272a; }
+  body { margin: 0; }
+  main { max-width: 38rem; margin: 7vh auto; padding: clamp(1.25rem, 5vw, 2.5rem); background: #fff; border: 1px solid #939a96; }
+  h1, p { margin: 0 0 1rem; }
+  h1 { line-height: 1.15; }
+  label, progress { display: block; }
+  label { margin: 1.25rem 0; }
+  button { font: inherit; padding: .45rem .9rem; margin-right: .45rem; }
+  progress { margin: 1.25rem 0 .75rem; width: 100%; }
+  #status { min-height: 3em; }
+</style>
+<main>
+  <h1>ziviSynthiA · SMK-37 Pro Open</h1>
+  <p>@@VERSION@@ · versão de bancada</p>
+  <p>Origem aceita: SMK37 Open V01 oficial para o Pro ou uma compilação verificada do ziviSynthiA 0.8.0-alpha1, 0.8.1-alpha1 ou 0.8.2-alpha1. Use Chrome ou Edge no computador e conecte o teclado por USB.</p>
+  <label><input id="backup" type="checkbox"> Fiz backup dos dados e confirmei o modelo SMK-37 Pro no teclado.</label>
+  <button id="connect" disabled>Verificar dispositivo</button>
+  <button id="install" disabled>Instalar firmware</button>
+  <button id="disconnect" disabled>Desconectar</button>
+  <progress id="progress" max="100" value="0"></progress>
+  <p id="status" role="status">Verificando o firmware incluído…</p>
+</main>
+<script>
+@@WEB_UPDATE@@
+</script>
+<script id="package" type="application/json">@@PACKAGE@@</script>
+<script>
+'use strict';
+const connect = document.getElementById('connect');
+const install = document.getElementById('install');
+const disconnect = document.getElementById('disconnect');
+const backup = document.getElementById('backup');
+const status = document.getElementById('status');
+const progress = document.getElementById('progress');
+const meta = JSON.parse(document.getElementById('package').textContent);
+const knownBuilds = new Map([
+  ['SMK-37 Pro_8900800', '0c704e434b9f1b04e466b7d5c26ea97194507fdbba96cffb633f40d17bba8995'],
+  ['SMK-37 Pro_8900801', 'f4b866bbc68d9df56f62a9d64348959d74bf7ab6f03d87dbe68b800fd428695a'],
+  ['SMK-37 Pro_8900802', '41338dff36dc884c25f895132e08d76883ec67de61268efc9d89116a00fef4a1']
+]);
+function knownSource(device) {
+  return !device.migration && !device.resume && /^[0-9a-f]{64}$/.test(device.current || '') &&
+    (device.identity === 'SMK-37 Pro_8000001' || knownBuilds.get(device.identity) === device.current);
+}
+const messages = {
+  '准备升级程序': 'Preparando o carregador. Mantenha a alimentação e o cabo USB conectados.',
+  '等待升级设备重新连接': 'Aguardando a reconexão do carregador.',
+  '写入固件': 'Gravando o firmware. Mantenha a alimentação e o cabo USB conectados.',
+  '重启并核对新版本': 'Aguardando o reinício e conferindo a versão instalada.',
+  '更新完成': 'Firmware instalado e confirmado após o reinício.'
+};
+let pkg, updater, access, connected, ready = false, busy = false;
+function refresh() {
+  connect.disabled = !pkg || busy;
+  backup.disabled = busy;
+  disconnect.disabled = busy || !ready;
+  install.disabled = !ready || !backup.checked || busy;
+}
+backup.addEventListener('change', refresh);
+function deviceChanged() {
+  if (busy || !ready || !updater.link?.lost) return;
+  ready = false;
+  status.textContent = 'USB desconectado. Verifique o dispositivo novamente.';
+  refresh();
+}
+disconnect.addEventListener('click', async () => {
+  ready = false;
+  busy = true;
+  refresh();
+  try {
+    await updater?.disconnect();
+    status.textContent = 'Desconectado. Nenhum firmware foi gravado.';
+  } catch (error) {
+    status.textContent = 'Falha ao fechar a conexão. ' + error.message;
+  } finally {
+    busy = false;
+    refresh();
+  }
+});
+connect.addEventListener('click', async () => {
+  busy = true;
+  ready = false;
+  refresh();
+  try {
+    await updater?.disconnect();
+    access?.removeEventListener('statechange', deviceChanged);
+    access = await navigator.requestMIDIAccess({sysex: true});
+    access.addEventListener('statechange', deviceChanged);
+    updater = new FM1Web.Updater(access, pkg, (phase, value) => {
+      status.textContent = messages[phase] || phase;
+      if (value === null) progress.removeAttribute('value');
+      else progress.value = value;
+    });
+    const device = await updater.connect();
+    if (device.same) {
+      status.textContent = 'Esta compilação já está instalada.';
+      await updater.disconnect();
+    } else if (knownSource(device)) {
+      ready = true;
+      connected = device;
+      status.textContent = 'Origem verificada (' + device.identity + '). Confira o backup para habilitar a instalação.';
+    } else {
+      await updater.disconnect();
+      status.textContent = 'Origem detectada: ' + device.identity + '. Use o Workbench da M-VAVE para instalar o Open V01 oficial primeiro.';
+    }
+  } catch (error) {
+    status.textContent = 'Falha ao verificar o dispositivo. ' + error.message;
+  } finally {
+    busy = false;
+    refresh();
+  }
+});
+install.addEventListener('click', async () => {
+  if (!ready || !backup.checked || busy) return;
+  if (!window.confirm('Instalar a versão de bancada no SMK-37 Pro agora?')) return;
+  busy = true;
+  ready = false;
+  refresh();
+  try {
+    const current = await updater.connect();
+    if (!knownSource(current) || current.identity !== connected.identity || current.current !== connected.current) {
+      await updater.disconnect();
+      throw new Error('O firmware de origem mudou. Verifique o dispositivo novamente.');
+    }
+    await updater.install();
+  } catch (error) {
+    status.textContent = 'A instalação ainda requer verificação. ' + error.message;
+  } finally {
+    busy = false;
+    refresh();
+  }
+});
+(async () => {
+  try {
+    if (!window.isSecureContext || !globalThis.crypto?.subtle || !navigator.requestMIDIAccess) {
+      throw new Error('Abra a página em Chrome ou Edge com Web MIDI habilitado.');
+    }
+    pkg = await FM1Web.prepare(meta);
+    status.textContent = 'Pacote conferido. Conecte o SMK-37 Pro para verificar o firmware de origem.';
+  } catch (error) {
+    status.textContent = error.message;
+  }
+  refresh();
+})();
+</script>
+</html>

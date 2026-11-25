@@ -1,0 +1,32 @@
+# Preset cíclico, envelopes e captura de sinal do simulador.
+wait 100
+tap GLO
+expect zmodule 1
+spin PRESET 2
+expect zpreset 2
+expect zenvmode 2
+spin SELECT 18
+expect zparam 18
+wait 220
+shot m5-envelope.png
+tap FX
+expect zscope 1
+tap ARP
+wait 120
+expect ztrace 128
+expect zhz 440
+expect peak_db_min -45
+shot m5-scope.png
+tap EDIT
+expect zhold 1
+wait 500
+expect ztrace 128
+shot m5-scope-hold.png
+tap FX
+expect zscope 0
+tap GLO
+expect zmodule 0
+shot m5-matrix.png
+tap SEQ
+shot m5-ks.png
+expect store_writes 0

@@ -1,0 +1,53 @@
+# Sequência de três notas, com pausas e dinâmica, acompanhada ao vivo à direita.
+wait 100
+tap SEQ
+tap SAVE
+expect zksgate 1
+expect zksmode 0
+master 4096
+tap REC
+expect zksmode 1
+wait 79
+midi 90 3C 7F
+wait 173
+midi 80 3C 00
+wait 54
+midi 90 40 61
+wait 237
+shot ks-record.png
+midi 80 40 00
+wait 36
+midi 90 43 74
+wait 180
+midi 80 43 00
+wait 88
+expect zksevents 6
+tap REC
+expect zksmode 0
+wav ks-performance.wav
+tap PLAY
+expect zksmode 2
+wait 65
+expect zksnote 60
+expect zksvel 127
+expect znote -1
+peakreset
+midi 90 30 6E
+wait 110
+expect znote 48
+expect peak_db_min -24
+shot ks-play.png
+midi 80 30 00
+wait 750
+expect zksmode 2
+midi 90 37 6E
+wait 280
+midi 80 37 00
+tap HOME
+expect zksmode 0
+expect zksvel 0
+expect zksevents 6
+wait 160
+wavstop
+shot ks-stop.png
+expect store_writes 0

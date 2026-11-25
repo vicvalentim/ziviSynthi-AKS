@@ -1,0 +1,349 @@
+wait 300
+master 2048
+expect zmaster 2048
+tap HOME
+spin PRESET 4
+expect zcursor 5
+tap EDIT
+expect zpreset 8
+spin K8 2
+expect zmaster 2240
+fader 0 64
+fader 1 32
+fader 2 96
+fader 3 77
+wait 300
+expect zsynthgain 2064
+expect zusbgain 1032
+expect zcut >2000
+expect zrev 77
+expect zpreset -1
+tap SEL
+tap RIGHT
+spin K8 -2
+expect zmaster 2048
+spin K4 4
+wait 180
+expect zusbgain 1288
+tap SEL
+tap SAVE
+tap PLAY
+wait 1100
+ble connect
+tap PLAY
+wait 550
+tap EDIT
+wait 400
+expect ble_dev 4
+midi BLE-DEV 90 3C 70
+expect znote 60
+tap LEFT
+wait 50
+expect znote -1
+tap SAVE
+press GLO
+tap HOME
+release GLO
+expect zdaw 1
+out
+pad 7 down 112
+wait 60
+expect zled7 4227096
+pad 7 press 67
+expect_out USB 90 2B 70
+expect_out TRS 90 2B 70
+expect_out BLE 90 2B 70
+expect_out USB A0 2B 43
+pad 7 up
+wait 60
+expect_out USB 80 2B 00
+expect zled7 1054768
+fader 2 79
+expect_out USB B0 48 4F
+spin K8 1
+expect zmaster 2144
+press KBANK
+spin K8 2
+release KBANK
+expect_out USB B0 1F 42
+expect zmaster 2144
+press GLO
+tap HOME
+release GLO
+expect zdaw 0
+tap SEL
+tap RIGHT
+spin K3 2
+expect zroute 2
+out
+key37 12 down 95
+expect_out USB 90 3C 5F
+expect_no_out TRS 90 3C 5F
+key37 12 up
+spin PRESET 1
+midi B0 00 04
+midi C0 0F
+midi FA
+midi F8
+wait 21
+midi F8
+expect zclock 1
+expect zksmode 2
+wait 530
+expect zclock 0
+expect zksmode 0
+wait 200
+expect zmiss 0
+expect store_writes 0
+out
+tap FBANK
+midi 92 45 63
+expect_out TRS 92 45 63
+expect_no_out USB 92 45 63
+tap FBANK
+expect_out TRS B2 40 00
+expect_out TRS B2 7B 00
+# Two independent controller banks plus the pad bank chord.
+tap SEL
+press GLO
+tap HOME
+release GLO
+expect zdaw 1
+out
+pad 0 down 100
+expect_out USB 90 24 64
+press KBANK
+press FBANK
+release KBANK
+release FBANK
+pad 0 press 61
+expect_out USB A0 24 3D
+pad 0 up
+expect_out USB 80 24 00
+pad 0 down 100
+expect_out USB 90 34 64
+pad 0 up
+expect_out USB 80 34 00
+tap KBANK
+spin K1 2
+expect_out USB B0 18 42
+press EDIT
+spin K8 2
+release EDIT
+expect_out USB B0 1F 44
+tap FBANK
+fader 2 81
+expect_out USB B0 4E 51
+tap REC
+expect_out USB B0 73 7F
+expect_out USB B0 73 00
+tap PLAY
+expect_out USB FA
+tap PLAY
+expect_out USB FC
+# SCALE keeps Note Off at the pitch chosen on the key's initial strike.
+press GLO
+tap HOME
+release GLO
+expect zdaw 0
+tap SEL
+spin K2 1
+expect zscale 1
+out
+key37 13 down 110
+expect_out USB 90 3C 6E
+spin K1 1
+expect zscaleroot 1
+key37 13 up
+expect_out USB 80 3C 00
+tap EDIT
+expect zscale 0
+spin K3 4
+expect zscale 0
+spin K2 -1
+expect zscale 31
+pad 7 down 110
+expect zscaleroot 7
+pad 7 up
+wait 60
+expect zled7 11033612
+shot felucca-scale-notes.png
+tap ARP
+expect zview 4
+expect zarp 0
+tap ARP
+expect zview 2
+tap SEL
+expect zview 0
+tap ARP
+expect zview 4
+expect zarp 0
+spin K1 16
+expect zarpbpm 136
+spin K4 1
+expect zarpdivision 3
+pad 2 down 110
+expect zarpdivision 2
+pad 2 up
+tap EDIT
+expect zarp 1
+tap ARP
+expect zview 0
+expect zarp 1
+tap GLO
+expect zmodule 1
+press REC
+expect zattackheld 1
+release REC
+expect zattackheld 0
+tap ARP
+expect zview 4
+expect zattackheld 0
+tap SEQ
+expect zview 5
+tap LFO
+expect zview 0
+expect zksview 1
+press FX
+expect zksrandom 1
+release FX
+expect zksrandom 0
+tap ARP
+expect zview 4
+expect zksrandom 0
+wait 60
+shot felucca-arp.png
+tap ARP
+expect zview 0
+expect zksview 1
+tap REC
+wait 750
+expect zksevents 0
+key37 12 down 110
+key37 19 down 110
+wait 850
+key37 12 up
+key37 19 up
+tap REC
+expect zksevents >5
+expect zmiss 0
+shot felucca-seq-ks.png
+# STEP opens with SEQ. Shortening the loop keeps edits outside its active length.
+tap SEQ
+expect zview 5
+expect zseqlength 4
+spin K1 30
+expect zseqlength 34
+tap RIGHT
+expect zseqcursor 17
+pad 0 down 110
+expect zseqvel 100
+pad 0 up
+spin K2 2
+expect zseqkey 62
+spin K1 -32
+expect zseqlength 2
+expect zseqcursor 2
+pad 15 down 115
+expect zseqcursor 2
+pad 15 up
+spin K1 32
+expect zseqlength 34
+tap RIGHT
+expect zseqcursor 17
+expect zseqkey 62
+expect zseqvel 100
+spin K1 -32
+tap REC
+key37 12 down 105
+key37 12 up
+expect zseqcursor 1
+key37 19 down 107
+key37 19 up
+expect zseqcursor 2
+expect zseqkey 60
+expect zseqvel 105
+tap REC
+tap PLAY
+expect zseqplaying 1
+wait 280
+shot felucca-seq-step.png
+tap PLAY
+expect zseqplaying 0
+tap LFO
+expect zview 0
+expect zksview 1
+expect zksevents >5
+expect zmiss 0
+
+
+# Choose a factory phrase via the preset bank and open its editable steps.
+midi B0 00 00
+midi C0 2E
+expect zpreset 50
+expect zksevents 16
+tap SEQ
+expect zseqlength 8
+expect zseqvel >0
+tap KBANK
+expect zksevents >0
+# The same pattern can receive a generated performance from the ARP.
+tap SEL
+tap EDIT
+spin K2 1
+expect zscale 1
+tap ARP
+pad 8 down 80
+pad 8 up
+expect zhold 1
+pad 9 down 80
+pad 9 up
+expect zfree 1
+spin PRESET -100
+expect zchance 0
+wait 330
+expect zarpkey -1
+spin PRESET 100
+expect zchance 100
+tap REC
+expect zseqrecording 1
+wait 120
+tap REC
+expect zseqrecording 0
+expect zseqplaying 1
+tap SEQ
+tap PLAY
+expect zseqplaying 0
+expect zseqvel 100
+tap ARP
+tap ENV
+expect zfree 0
+# PAD light brightness, OFF and recovery use the same settings page as audio.
+tap SEL
+tap RIGHT
+expect zledmode 0
+wheel pitch -8192
+press KBANK
+spin K1 -32
+release KBANK
+expect zstick -500
+press KBANK
+spin K1 32
+release KBANK
+expect zstick -1000
+wheel pitch 0
+shot desempenho-394.png
+tap REC
+expect zledmode 1
+tap REC
+expect zledmode 2
+tap RIGHT
+wait 200
+expect zled0 0
+tap RIGHT
+tap REC
+expect zledmode 0
+tap RIGHT
+wait 150
+expect zled0 11033612
+expect zmiss 0

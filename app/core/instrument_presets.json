@@ -1,0 +1,85 @@
+[
+  {
+    "key": "baixo-pulso-sul", "name": "Baixo Pulso Sul", "display": "PULSO SUL",
+    "play": "Toque na oitava grave e use o F3 para abrir o filtro.",
+    "routes": "I8 J8 H3 H4/2 D10 A12 C12 B12 N9/2",
+    "controls": {"osc1Hz": 55, "osc2Hz": 55.34, "osc2Pulse": 0.72, "osc2Tri": 0.22, "osc2Shape": 0.34, "mix": 0.7, "cutoff": 780, "response": 0.34, "attackMs": 7, "decayMs": 150, "envLevel": 0.93}
+  },
+  {
+    "key": "lead-espiral", "name": "Lead Espiral", "display": "ESPIRAL",
+    "play": "Toque uma linha em legato e experimente o pitch bend.",
+    "routes": "I8 J8 H3 H4/2 D10 A12 G12 C14 B12 N6/2 C12/2",
+    "controls": {"osc1Hz": 220, "osc2Hz": 220.7, "mix": 0.62, "lfo": 4.6, "cutoff": 2650, "response": 0.39, "attackMs": 14, "decayMs": 230, "reverbMix": 0.65, "reverbLevel": 0.93, "out1Level": 0.88, "envLevel": 0.93, "filterDrive": 1.72, "level": 0.95}
+  },
+  {
+    "key": "teclas-de-vidro", "name": "Teclas de Vidro", "display": "VIDRO",
+    "play": "Use ataques curtos no meio do teclado. O decaimento aparece entre as notas.",
+    "routes": "I8 J8 E3 F4 D13 A12 G12 C14 B12 C12/2",
+    "controls": {"osc1Hz": 330, "osc2Hz": 441.2, "mix": 0.08, "ringLevel": 0.54, "envMode": 1, "attackMs": 3, "onMs": 32, "decayMs": 520, "reverbTime": 2.6, "reverbMix": 0.74, "reverbLevel": 0.85, "out1Level": 0.82, "envLevel": 1, "level": 0.82}
+  },
+  {
+    "key": "nevoa-estereo", "name": "Névoa Estéreo", "display": "NEVOA",
+    "play": "Sustente uma nota para ouvir o filtro e a mola abrirem.",
+    "routes": "I8 J8 H3/2 H4/2 H7/2 D10 A12 G12 C14 B12 N6/2 C12/2",
+    "controls": {"out2Level": 0.988, "level": 1, "osc1Hz": 130.81, "osc2Hz": 131.25, "mix": 0.48, "noiseLevel": 0.16, "noiseColor": -0.57, "lfo": 0.35, "cutoff": 1060, "attackMs": 390, "decayMs": 1150, "response": 0.36, "reverbMix": 0.83, "reverbTime": 3.1, "reverbLevel": 1, "out1Level": 1.0, "envLevel": 1, "filterDrive": 1.8}
+  },
+  {
+    "key": "orgao-oitavado", "name": "Órgão Oitavado", "display": "ORGAO",
+    "play": "Use melodias curtas para destacar as duas oitavas do patch.",
+    "routes": "I8 J8 D3 D4/2 A12 G12 C14 B12",
+    "controls": {"osc1Hz": 220, "osc2Hz": 440, "mix": 0.13, "osc2Pulse": 0.24, "osc2Tri": 0.72, "attackMs": 12, "decayMs": 92, "reverbMix": 0.31, "reverbLevel": 1, "out1Level": 0.66, "envLevel": 0.93}
+  },
+  {
+    "key": "sinal-de-farol-instrumento", "name": "Sinal de Farol", "display": "FAROL",
+    "play": "Mantenha uma tecla pressionada para escutar a modulação lenta.",
+    "routes": "I8 H3 D10 A12 G12 C14 B10 N6 N9/2 C12/2",
+    "controls": {"osc1Hz": 164.81, "mix": 0.78, "lfo": 0.26, "cutoff": 710, "response": 0.62, "attackMs": 116, "decayMs": 680, "reverbMix": 0.76, "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93, "filterDrive": 1.65, "level": 0.9}
+  },
+  {
+    "key": "mola-percussiva", "name": "Mola Percussiva", "display": "MOLA",
+    "play": "Toque staccato e alterne a força do ataque.",
+    "routes": "I8 H3/2 H7 D10 A12 G12 C14 B12 N11/2 C12/2",
+    "controls": {"level": 1, "osc1Hz": 110, "mix": 0.36, "noiseLevel": 0.68, "noiseColor": 0.33, "cutoff": 1150, "response": 0.54, "envMode": 1, "attackMs": 3, "onMs": 22, "decayMs": 110, "reverbMix": 0.7, "reverbTime": 1.27, "reverbLevel": 1, "out1Level": 0.82, "envLevel": 1, "filterDrive": 1.65}
+  },
+  {
+    "key": "arco-modulado", "name": "Arco Modulado", "display": "ARCO",
+    "play": "Sustente notas médias e mova o F4 para mudar a proporção da mola.",
+    "routes": "I8 J8 H3 H4/2 D10 A12 G12 C14 B12 I6/2 N11/2 C12/2",
+    "controls": {"osc1Hz": 196, "osc2Hz": 198.1, "mix": 0.67, "lfo": 3.2, "cutoff": 1370, "response": 0.23, "attackMs": 210, "decayMs": 760, "reverbMix": 0.61, "reverbTime": 2.85, "reverbLevel": 1, "out1Level": 0.96, "envLevel": 0.93, "level": 0.87}
+  },
+  {
+    "key": "passos-ks", "name": "Passos KS", "display": "PASSOS KS",
+    "play": "Pressione SEQ e PLAY no SMK para iniciar a frase. Use o F3 para variar o corte.",
+    "routes": "H3 H4/2 D10 A12 G12 C14 B12 N9/2 C12/2",
+    "ksRoutes": "I J",
+    "controls": {"osc1Hz": 82.41, "osc2Hz": 165.5, "mix": 0.71, "cutoff": 970, "response": 0.33, "attackMs": 7, "decayMs": 123, "reverbMix": 0.53, "reverbLevel": 1, "out1Level": 0.92, "envLevel": 0.93, "filterDrive": 1.55, "level": 0.9},
+    "lengthMs": 1800,
+    "notes": [[0, 48, 113, 125], [215, 55, 90, 85], [435, 58, 104, 140], [660, 60, 119, 112], [900, 48, 109, 160], [1130, 63, 94, 77], [1350, 55, 105, 140], [1570, 46, 102, 158]]
+  },
+  {
+    "key": "orbita-ks", "name": "Órbita KS", "display": "ORBITA KS",
+    "play": "Pressione SEQ e PLAY. O loop alterna notas longas e pausas curtas.",
+    "routes": "H3/2 H4 D10 A12 G12 C14 B12 N6/2 C12/2",
+    "ksRoutes": "I J",
+    "controls": {"osc1Hz": 185, "osc2Hz": 278.5, "mix": 0.27, "lfo": 0.6, "cutoff": 1480, "response": 0.4, "attackMs": 71, "decayMs": 390, "reverbMix": 0.82, "reverbTime": 2.8, "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93, "filterDrive": 1.45, "level": 0.87},
+    "lengthMs": 4200,
+    "notes": [[0, 57, 111, 580], [690, 60, 94, 410], [1270, 64, 103, 284], [1750, 67, 109, 690], [2580, 55, 102, 520], [3330, 62, 107, 560]]
+  },
+  {
+    "key": "on-the-run-ks", "name": "On the Run - KS 165", "display": "ON THE RUN",
+    "play": "Pressione Play no KS para iniciar o loop. F3 altera o corte e F4, a mola.",
+    "routes": "H3 H4/2 D10 G12 A12 C14 N6/2 N11/2 F7 D13/2 B12",
+    "ksRoutes": "I J E",
+    "controls": {
+      "level": 1, "mix": 0.93, "shape": 0.54, "lfo": 0.29,
+      "cutoff": 980, "osc1Hz": 440, "osc2Hz": 441.5, "osc2Pulse": 0.94,
+      "osc2Tri": 0.08, "osc2Shape": 0.37, "osc3Tri": 0.23, "osc3Pulse": 0,
+      "response": 0.57, "filterDrive": 2.15, "envMode": 1, "attackMs": 2,
+      "onMs": 20, "decayMs": 46, "trapLevel": 0.24, "noiseLevel": 0.46,
+      "noiseColor": 0.78, "ringLevel": 0.67, "reverbMix": 0.16, "reverbLevel": 1,
+      "reverbTime": 1.3, "envLevel": 0.93, "out1Level": 0.83, "out2Level": 1
+    },
+    "lengthMs": 727,
+    "notes": [[0, 40, 110, 60], [91, 43, 106, 60], [182, 45, 108, 60], [273, 43, 105, 60], [364, 50, 110, 60], [455, 48, 103, 60], [545, 50, 108, 60], [636, 52, 106, 60]]
+  }
+]

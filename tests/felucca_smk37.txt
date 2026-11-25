@@ -1,0 +1,70 @@
+# Board-aware fm1-base simulator, with the alternate ziviSynthiA backend.
+wait 100
+expect zmiss 0
+expect znote -1
+master 4096
+wav felucca-pro.wav
+key37 0 down 110
+wait 50
+expect znote 48
+expect peak_db_min -35
+key37 0 up
+key37 36 down 118
+wait 60
+expect znote 84
+key37 36 up
+wait 50
+expect znote -1
+tap HOME
+expect zview 1
+tap LEFT
+expect zbank 10
+tap LEFT
+expect zbank 9
+tap LEFT
+tap LEFT
+tap LEFT
+tap LEFT
+expect zbank 5
+tap LEFT
+expect zbank 4
+pad 15 down 127
+wait 25
+expect zpreset 65
+expect zksevents >0
+pad 15 up
+tap HOME
+tap SEQ
+tap LFO
+tap PLAY
+wait 200
+expect zksmode 2
+expect zmiss 0
+tap PLAY
+wait 40
+expect zksmode 0
+midi B0 00 00
+midi C0 01
+wait 30
+expect zpreset 5
+midi 90 45 7F
+wait 50
+expect znote 69
+midi B0 40 7F
+midi 80 45 00
+wait 50
+expect znote 69
+midi B0 40 00
+wait 50
+expect znote -1
+tap SEL
+wait 40
+expect zview 2
+shot felucca-scale.png
+tap SAVE
+wait 40
+expect zview 3
+wait 2000
+expect zmiss 0
+expect store_writes 0
+wavstop

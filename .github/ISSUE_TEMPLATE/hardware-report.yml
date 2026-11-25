@@ -1,0 +1,36 @@
+name: Relato de bancada / Hardware report
+description: Registre a instalação ou o teste. / Report installation or test results.
+title: "[Hardware] "
+body:
+  - type: dropdown
+    id: model
+    attributes:
+      label: Modelo no equipamento / Model shown on device
+      options:
+        - SMK-37 Pro
+        - SMK-37 Elite
+        - FM-1
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Firmware e identidade USB / Firmware and USB identity
+      description: Se houve atualização, informe a versão anterior. / For updates, include the previous version.
+      placeholder: "3.9.5 / SMK-37 Pro_99400"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Configuração e passos / Setup and steps
+      description: Inclua sistema, navegador, rota de áudio ou MIDI e patch. / Include OS, browser, audio or MIDI route and patch.
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: Resultado observado e esperado / Observed and expected behavior
+    validations:
+      required: true

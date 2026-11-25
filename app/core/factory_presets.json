@@ -1,0 +1,90 @@
+[
+  {
+    "key": "pulso-em-transito",
+    "name": "Pulso em trânsito",
+    "display": "TRANSIT PULSE",
+    "play": "Pressione Play. Varie o corte e o Response para abrir o pulso.",
+    "routes": "H4 D10 A12 E7 F11 C13/2 G12 C14 B12 C12/2",
+    "ksRoutes": "J",
+    "controls": {
+      "level": 0.85, "cutoff": 1550, "osc2Hz": 350, "osc2Shape": 0.32,
+      "osc2Pulse": 0.86, "osc2Tri": 0.14, "response": 0.47, "filterDrive": 1.55,
+      "noiseLevel": 0.38, "noiseColor": 0.93, "ringLevel": 0.8, "attackMs": 2.5,
+      "decayMs": 21, "reverbTime": 0.7, "reverbMix": 0.85,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    },
+    "lengthMs": 1664,
+    "notes": [[0, 52, 112, 71], [104, 64, 89, 49], [208, 55, 101, 74], [312, 62, 94, 61], [416, 57, 113, 80], [520, 67, 83, 58], [624, 64, 101, 70], [728, 55, 95, 59], [832, 52, 119, 80], [936, 67, 76, 47], [1040, 59, 108, 79], [1144, 62, 86, 53], [1248, 57, 112, 68], [1352, 64, 96, 74], [1456, 55, 101, 66], [1560, 50, 90, 54]]
+  },
+  {
+    "key": "chimbal-de-ruido",
+    "name": "Chimbal de ruído",
+    "display": "NOISE HATS",
+    "play": "Pressione Play para ouvir o padrão. Decay muda a abertura do chimbal.",
+    "routes": "D7 A12 G12 C14 B12 C12/2",
+    "controls": {
+      "level": 0.83, "noiseLevel": 0.78, "noiseColor": 1, "envMode": 1,
+      "attackMs": 2, "onMs": 3, "decayMs": 39, "reverbTime": 0.32,
+      "reverbMix": 0.95, "out1Tone": 0.53,
+      "reverbLevel": 1, "out1Level": 0.576, "envLevel": 0.93
+    },
+    "lengthMs": 1664,
+    "notes": [[0, 60, 120, 25], [104, 60, 56, 22], [208, 60, 97, 24], [320, 60, 70, 22], [416, 60, 114, 25], [632, 60, 90, 24], [728, 60, 58, 22], [832, 60, 122, 25], [1040, 60, 93, 24], [1152, 60, 66, 22], [1248, 60, 113, 25], [1352, 60, 58, 22], [1568, 60, 104, 23]]
+  },
+  {
+    "key": "maquina-lenta",
+    "name": "Máquina lenta",
+    "display": "SLOW MACHINE",
+    "play": "Inicia ao carregar. Use Attack para reforçar o pulso e Off para espaçar os ciclos.",
+    "routes": "H3 H4/2 H7/2 N6/2 D10 A12 G12 C14 I8 J8 B12 C12/2",
+    "controls": {
+      "level": 0.86, "mix": 0.62, "osc1Hz": 116, "osc2Hz": 58, "osc2Pulse": 0.32,
+      "osc2Tri": 0.61, "noiseLevel": 0.15, "noiseColor": -0.88, "cutoff": 580,
+      "lfo": 0.42, "response": 0.49, "filterDrive": 2.2, "envMode": 2,
+      "attackMs": 62, "onMs": 38, "decayMs": 420, "offMs": 166,
+      "reverbTime": 1.48, "reverbMix": 0.92,
+      "reverbLevel": 1, "out1Level": 0.605, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "vento-em-orbita",
+    "name": "Vento em órbita",
+    "display": "ORBIT WIND",
+    "play": "Mantenha uma tecla pressionada para abrir a textura. Varie o corte e a frequência do Oscilador 3.",
+    "routes": "H7 N6/2 D10 A12 G12 C14 B12 C12/2",
+    "controls": {
+      "level": 0.81, "noiseLevel": 0.92, "noiseColor": 0.12, "cutoff": 1650,
+      "lfo": 0.23, "response": 0.77, "filterDrive": 2.7, "attackMs": 215,
+      "decayMs": 580, "reverbTime": 2.45, "reverbMix": 0.93,
+      "reverbLevel": 0.95,
+      "out1Level": 0.617, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "baixo-ressonante",
+    "name": "Baixo ressonante",
+    "display": "RESONANT BASS",
+    "play": "Toque notas curtas. N11 abre o filtro no ataque e a velocidade define a intensidade.",
+    "routes": "I8 J8 H3 H4/2 N11/2 D10 A12 B12 C12",
+    "controls": {
+      "level": 0.9, "mix": 0.73, "osc1Hz": 125, "osc2Hz": 62.5, "osc2Shape": 0.41,
+      "osc2Pulse": 0.25, "osc2Tri": 0.74, "cutoff": 318, "response": 0.65,
+      "filterDrive": 2.3, "attackMs": 3, "decayMs": 72,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "campanulas-de-molas",
+    "name": "Campânulas de molas",
+    "display": "SPRING BELLS",
+    "play": "Toque notas espaçadas para ouvir a cauda estéreo. Oscilador 2 muda as bandas laterais do anel.",
+    "routes": "I8 J8 E3 F4 D13 A12 G12 C14 B13 C12/2",
+    "controls": {
+      "level": 0.85, "osc1Hz": 627, "osc2Hz": 391, "osc2Shape": 0.45,
+      "osc2Pulse": 0.07, "osc2Tri": 0.86, "ringLevel": 0.89, "envMode": 1,
+      "attackMs": 3, "onMs": 26, "decayMs": 540, "reverbMix": 0.93,
+      "reverbTime": 2.7, "reverbLevel": 0.92,
+      "out1Level": 0.667, "envLevel": 0.93
+    }
+  }
+]

@@ -1,0 +1,32 @@
+# Compartilha o banco M6 com o painel e pré-carrega o KS sem pressionar teclas.
+wait 100
+tap GLO
+spin PRESET 4
+expect zpreset 4
+expect zksevents 32
+shot preset-transit.png
+tap SEQ
+tap PLAY
+wait 45
+expect zksmode 2
+expect zksnote 64
+expect peak_db_min -38
+shot preset-sequence.png
+tap HOME
+expect zksmode 0
+tap GLO
+spin PRESET 1
+expect zpreset 5
+expect zksevents 26
+# Relógio fraturado no banco Laboratório. O KS modula diretamente o corte.
+spin PRESET 10
+expect zpreset 15
+expect zksevents 26
+shot preset-lab-clock.png
+tap SEQ
+tap PLAY
+wait 70
+expect zksmode 2
+expect peak_db_min -42
+tap HOME
+expect store_writes 0

@@ -1,0 +1,291 @@
+[
+  {
+    "key": "baixo-pulso-seco",
+    "name": "Baixo de pulso seco",
+    "display": "DRY PULSE BASS",
+    "play": "Toque notas curtas no registro grave.",
+    "routes": "J8 H4 D10 A12 B10 N9/2 C12",
+    "controls": {
+      "osc1Hz": 55,
+      "osc2Hz": 110,
+      "osc2Pulse": 0.86,
+      "osc2Tri": 0.18,
+      "osc2Shape": 0.29,
+      "cutoff": 540,
+      "response": 0.24,
+      "decayMs": 110,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "sub-seno",
+    "name": "Sub de seno",
+    "display": "SINE SUB",
+    "play": "Use a região grave e sustente as notas.",
+    "routes": "I8 D3 A12 B10 C12",
+    "controls": {
+      "osc1Hz": 55,
+      "level": 0.86,
+      "attackMs": 9,
+      "decayMs": 160,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "baixo-duplo",
+    "name": "Baixo de oitavas",
+    "display": "OCTAVE BASS",
+    "play": "Alterne a velocidade para mover discretamente o filtro.",
+    "routes": "I8 J8 H3/2 H4 D10 A12 N9/2 C12",
+    "controls": {
+      "osc1Hz": 55,
+      "osc2Hz": 110,
+      "mix": 0.3,
+      "osc2Pulse": 0.72,
+      "osc2Tri": 0.42,
+      "cutoff": 355,
+      "response": 0.27,
+      "decayMs": 125,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "baixo-corte",
+    "name": "Baixo de corte rápido",
+    "display": "FILTER STAB",
+    "play": "Toque staccato para ouvir o salto de corte.",
+    "routes": "I8 H3 D10 A12 N11/2 N9 C12",
+    "controls": {
+      "osc1Hz": 82.41,
+      "mix": 0.74,
+      "cutoff": 640,
+      "response": 0.6,
+      "decayMs": 120,
+      "filterDrive": 1.48,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "lead-de-seno",
+    "name": "Lead de seno e pulso",
+    "display": "SINE PULSE LEAD",
+    "play": "Use o pitch bend em frases sustentadas.",
+    "routes": "I8 J8 D3 D4/2 A12 G12 C14",
+    "controls": {
+      "osc1Hz": 440,
+      "osc2Hz": 441.4,
+      "shape": 0.58,
+      "osc2Pulse": 0.6,
+      "osc2Tri": 0.26,
+      "reverbMix": 0.36,
+      "decayMs": 230,
+      "reverbLevel": 1, "out1Level": 0.571, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "lead-dente",
+    "name": "Lead dente de serra",
+    "display": "SAW LEAD",
+    "play": "Explore o ataque na região média e aguda.",
+    "routes": "I8 H3 N6/2 D10 A12 B10 C12",
+    "controls": {
+      "mix": 0.9,
+      "lfo": 4.7,
+      "cutoff": 1390,
+      "response": 0.55,
+      "attackMs": 7,
+      "decayMs": 105,
+      "level": 0.88,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "lead-cobre-lento",
+    "name": "Cobre de ataque lento",
+    "display": "SOFT BRASS",
+    "play": "Sustente a nota para deixar a envoltória abrir o filtro.",
+    "routes": "I8 J8 H3 H4/2 D10 A12 N11/2 G12 C14",
+    "controls": {
+      "osc1Hz": 220,
+      "osc2Hz": 441,
+      "osc2Pulse": 0.46,
+      "mix": 0.55,
+      "cutoff": 490,
+      "attackMs": 76,
+      "decayMs": 270,
+      "reverbMix": 0.31,
+      "reverbLevel": 1, "out1Level": 0.7, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "palheta-dupla",
+    "name": "Palheta dupla",
+    "display": "DOUBLE REED",
+    "play": "Toque frases legato e varie o corte.",
+    "routes": "I8 J8 H4 H3/2 D10 A12 C12",
+    "controls": {
+      "osc1Hz": 220,
+      "osc2Hz": 219.25,
+      "mix": 0.35,
+      "osc2Shape": 0.21,
+      "osc2Pulse": 0.76,
+      "osc2Tri": 0.33,
+      "cutoff": 1430,
+      "response": 0.37,
+      "attackMs": 22,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "corda-percutida",
+    "name": "Corda percutida",
+    "display": "PLUCKED WIRE",
+    "play": "Toque pulsos curtos e observe a cauda estéreo.",
+    "routes": "I8 J8 H3/2 H4 D10 A12 G12 C14 C12/2",
+    "controls": {
+      "osc1Hz": 440,
+      "osc2Hz": 883,
+      "mix": 0.91,
+      "cutoff": 2050,
+      "response": 0.26,
+      "envMode": 1,
+      "onMs": 11,
+      "decayMs": 125,
+      "reverbMix": 0.79,
+      "reverbTime": 1.4,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "flauta-triangular",
+    "name": "Flauta triangular",
+    "display": "TRIANGLE FLUTE",
+    "play": "Use notas longas. O ruído forma uma camada discreta no ataque.",
+    "routes": "J8 D4 D7/2 A12 C12",
+    "controls": {
+      "osc2Hz": 440,
+      "osc2Pulse": 0,
+      "osc2Tri": 0.91,
+      "noiseLevel": 0.19,
+      "noiseColor": 0.45,
+      "attackMs": 61,
+      "decayMs": 146,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "estalido",
+    "name": "Estalido de papel",
+    "display": "PAPER SNAP",
+    "play": "Use uma nota para cada batida.",
+    "routes": "H7 D10 A12 B10 C12",
+    "controls": {
+      "noiseColor": 0.55,
+      "cutoff": 5300,
+      "response": 0.22,
+      "envMode": 1,
+      "attackMs": 2,
+      "onMs": 3,
+      "decayMs": 47,
+      "filterDrive": 1.8,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "pele-grave",
+    "name": "Pele grave",
+    "display": "LOW DRUM",
+    "play": "Dispare em notas graves para ouvir a queda de frequência.",
+    "routes": "I8 I11/2 D3 A12 B12 C12",
+    "controls": {
+      "osc1Hz": 77,
+      "envMode": 1,
+      "onMs": 3,
+      "attackMs": 2,
+      "decayMs": 134,
+      "trapLevel": 0.16,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "caixa-de-mola",
+    "name": "Caixa de mola",
+    "display": "SPRING SNARE",
+    "play": "Dê espaço entre os ataques para ouvir a mola.",
+    "routes": "H7 H4/2 D10 A12 G12 C14 C12/2",
+    "controls": {
+      "osc2Hz": 181,
+      "noiseColor": 0.16,
+      "noiseLevel": 0.75,
+      "cutoff": 1780,
+      "envMode": 1,
+      "onMs": 4,
+      "attackMs": 2,
+      "decayMs": 94,
+      "reverbMix": 0.77,
+      "reverbTime": 0.75,
+      "reverbLevel": 1, "out1Level": 0.652, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "prato-anelado",
+    "name": "Prato em anel",
+    "display": "RING CYMBAL",
+    "play": "Dispare no teclado. O anel soma duas fontes agudas.",
+    "routes": "E3 F4 H13 H7/2 D10 A12 G12 C14 C12/2",
+    "controls": {
+      "osc1Hz": 3890,
+      "osc2Hz": 2713,
+      "mix": 0.65,
+      "osc2Pulse": 0.88,
+      "osc2Tri": 0.21,
+      "noiseLevel": 0.27,
+      "envMode": 1,
+      "onMs": 15,
+      "decayMs": 218,
+      "reverbMix": 0.67,
+      "cutoff": 6700,
+      "filterDrive": 2.7,
+      "level": 0.9,
+      "reverbLevel": 1, "out1Level": 0.9, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "tom-filtro",
+    "name": "Tom filtrado",
+    "display": "RESONANT TOM",
+    "play": "Varie a força dos golpes para deslocar a ressonância.",
+    "routes": "H7 D10 A12 B10 N9/2 D3/2 C12",
+    "controls": {
+      "noiseLevel": 0.64,
+      "cutoff": 138,
+      "response": 0.72,
+      "filterDrive": 2.45,
+      "envMode": 1,
+      "onMs": 6,
+      "decayMs": 149,
+      "osc1Hz": 136,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "sino-estereo",
+    "name": "Sino estéreo",
+    "display": "STEREO BELL",
+    "play": "Toque notas espaçadas e acompanhe os batimentos nas saídas.",
+    "routes": "I8 J8 E3 F4 D13 A12 G12 C14 C12/2",
+    "controls": {
+      "osc1Hz": 294,
+      "osc2Hz": 695,
+      "osc2Pulse": 0.35,
+      "osc2Tri": 0.63,
+      "envMode": 1,
+      "attackMs": 3,
+      "onMs": 17,
+      "decayMs": 720,
+      "reverbTime": 2.25,
+      "reverbMix": 0.88,
+      "reverbLevel": 1, "out1Level": 0.925, "envLevel": 0.93
+    }
+  }
+]

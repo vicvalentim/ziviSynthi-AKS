@@ -1,0 +1,22 @@
+# Painel de módulos, patch de molas e ataque manual sem Note-On.
+wait 100
+tap GLO
+expect zmodule 1
+tap SAVE
+expect zenvmode 1
+spin SELECT 16
+expect zparam 16
+shot m4-envelope.png
+master 4096
+wav m4-spring.wav
+tap ARP
+wait 30
+expect peak_db_min -29
+shot m4-manual-attack.png
+wait 1200
+wavstop
+spin SELECT 8
+shot m4-spring.png
+tap GLO
+expect zmodule 0
+expect store_writes 0

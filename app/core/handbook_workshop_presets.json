@@ -1,0 +1,107 @@
+[
+  {
+    "key": "hb09f-double-filter", "name": "09f · LFO e trapezoide no filtro", "display": "09F FILTRO DUPLO",
+    "play": "Sustente uma nota e compare a varredura pelo LFO e pelo trapezoide.",
+    "routes": "I8 H3 N6/2 N11/2 D10 A12 C12 B11",
+    "controls": {"osc1Hz": 440, "mix": 0.92, "cutoff": 672, "response": 0.64, "lfo": 1.7, "osc3Tri": 0.37, "trapLevel": 0.52, "attackMs": 78, "decayMs": 610, "level": 0.93}
+  },
+  {
+    "key": "hb09g-pan", "name": "09g · Movimento entre saídas", "display": "09G MOVIMENTO",
+    "play": "O ganho esquerdo é modulado pelo LFO. O canal direito pulsa com a envoltória.",
+    "routes": "A3 C12 D3 O6 B11",
+    "controls": {"out1Level": 0.55, "osc1Hz": 234, "mix": 0.11, "lfo": 0.52, "envMode": 2, "attackMs": 460, "onMs": 120, "decayMs": 500, "offMs": 490, "level": 0.68, "out2Level": 1}
+  },
+  {
+    "key": "hb10-chimes", "name": "10 · Sinos e carrilhões", "display": "10 CARRILHOES",
+    "play": "Toque notas espaçadas e refine o intervalo entre OSC 1 e OSC 2.",
+    "routes": "I8 J8 E3 F4 H13 D10 A12 G12 C14 C12/2 B12",
+    "controls": {"out1Level": 0.764, "osc1Hz": 680, "osc2Hz": 1043, "mix": 0.05, "osc2Pulse": 0.24, "osc2Tri": 0.77, "cutoff": 2600, "response": 0.26, "filterDrive": 1.7, "envMode": 1, "attackMs": 2, "onMs": 6, "decayMs": 510, "reverbMix": 0.67, "reverbLevel": 0.92, "reverbTime": 2.7, "level": 0.97}
+  },
+  {
+    "key": "hb11-spring", "name": "11 · Som direto e mola", "display": "11 REVERBERACAO",
+    "play": "Compare o canal seco com a mola. F4 muda a proporção de reverb.",
+    "routes": "I8 D3 A12 G12 C14 B14",
+    "controls": {"osc1Hz": 329.63, "mix": 0.15, "envMode": 1, "attackMs": 4, "onMs": 51, "decayMs": 438, "reverbMix": 0.61, "reverbTime": 3.25, "reverbLevel": 0.95, "out1Level": 0.373, "level": 0.94}
+  },
+  {
+    "key": "hb12a-realtime", "name": "12a · Teclado em tempo real", "display": "12A TECLADO",
+    "play": "Toque em diferentes velocidades. O CV de dinâmica atua nos dois ganhos.",
+    "routes": "I8 D3 A12 C12 O9 P9 B12",
+    "controls": {"out2Level": 0.18, "out1Level": 0.18, "osc1Hz": 440, "sineLevel": 0.94, "envMode": 1, "attackMs": 4, "onMs": 58, "decayMs": 354, "level": 0.92}
+  },
+  {
+    "key": "hb12b-ks", "name": "12b · KS e I16", "display": "12B KS I16",
+    "play": "Play inicia uma frase autoral. A linha 16 é a afinação do KS em modo EMS.",
+    "routes": "I16 D3 A12 C12 B12",
+    "controls": {"osc1Hz": 440, "mix": 0.13, "attackMs": 4, "decayMs": 223, "level": 0.87},
+    "lengthMs": 1000,
+    "notes": [[0, 48, 111, 78], [125, 52, 91, 68], [250, 55, 101, 85], [375, 59, 115, 70], [500, 55, 98, 72], [625, 52, 107, 83], [750, 50, 106, 61], [875, 57, 118, 90]],
+    "ksMatrix": true
+  },
+  {
+    "key": "hb13-duet", "name": "13 · Sequência e acompanhamento", "display": "13 KS E TECLADO",
+    "play": "Inicie o KS. Toque o acompanhamento ao vivo no canal direito.",
+    "routes": "I16 D3 A12 J8 C4 P9 B12",
+    "controls": {"osc1Hz": 330, "osc2Hz": 526, "osc2Tri": 0.77, "osc2Pulse": 0.2, "mix": 0.8, "attackMs": 4, "decayMs": 170, "level": 0.91, "out2Level": 0, "in2Level": 0.78},
+    "lengthMs": 1440,
+    "notes": [[0, 45, 115, 125], [180, 52, 91, 82], [360, 48, 108, 110], [540, 57, 95, 120], [720, 43, 112, 140], [900, 50, 103, 80], [1080, 47, 108, 105], [1260, 55, 88, 92]],
+    "ksMatrix": true
+  },
+  {
+    "key": "hb14a-ring", "name": "14a · Teclado no anel", "display": "14A TECLADO ANEL",
+    "play": "O teclado fornece altura ao Oscilador 1 e CV à entrada F do anel. Ouça a resposta em registros diferentes de Lá 4.",
+    "routes": "I8 E3 F8 A13 C13 B13",
+    "controls": {"osc1Hz": 475, "mix": 0.12, "ringLevel": 0.96, "level": 0.88}
+  },
+  {
+    "key": "hb14b-ring-noise", "name": "14b · Ruído no anel", "display": "14B ANEL RUIDO",
+    "play": "Use ataques curtos. O ruído substitui um lado do anel.",
+    "routes": "E7 F8 F3/2 I8 D13 A12 C12 G12 C14/2",
+    "controls": {"osc1Hz": 2000, "mix": 0.32, "noiseLevel": 0.73, "noiseColor": 0.51, "envMode": 1, "attackMs": 2, "onMs": 9, "decayMs": 135, "reverbMix": 0.69, "reverbTime": 0.8, "level": 0.95}
+  },
+  {
+    "key": "hb15-tape-study", "name": "15 · Retorno inspirado em fita", "display": "15 RETORNO TIPO FITA",
+    "play": "A reverberação realimentada serve de estudo interno do retorno.",
+    "routes": "I8 D3 A12 G12 G14/2 C14 C12/2 B14",
+    "controls": {"out1Level": 0.654, "osc1Hz": 289, "mix": 0.19, "envMode": 1, "attackMs": 5, "onMs": 21, "decayMs": 171, "reverbTime": 2.0, "reverbMix": 0.86, "reverbLevel": 0.76, "level": 0.82}
+  },
+  {
+    "key": "hb16-filter", "name": "16 · Tratamento por filtro", "display": "16 FILTRO DE FONTE",
+    "play": "OSC 1 fornece a fonte de teste. OSC 3 movimenta o filtro.",
+    "routes": "I8 H3 N6/2 A10 C10 B10",
+    "controls": {"osc1Hz": 142, "mix": 0.98, "cutoff": 852, "response": 0.59, "lfo": 0.65, "osc3Tri": 0.55, "level": 0.83}
+  },
+  {
+    "key": "hb16-threshold", "name": "16 · Disparo por limiar", "display": "16 LIMIAR EM C",
+    "play": "OSC 3 no canal C dispara a envoltória do ruído. Use LFO para medir os intervalos.",
+    "routes": "D7 A12 C5 C12/2 B11",
+    "controls": {"lfo": 2.15, "osc3Pulse": 0.32, "osc3Shape": 0.18, "noiseLevel": 0.78, "noiseColor": 0.58, "triggerMode": 1, "envMode": 1, "attackMs": 3, "onMs": 16, "decayMs": 232, "level": 0.85}
+  },
+  {
+    "key": "hb16-ring", "name": "16 · Fonte por portadora", "display": "16 ANEL E VCO",
+    "play": "Compare o som direto com as bandas laterais modulando as frequências bases.",
+    "routes": "I8 E3 F4 A13 C13 B13",
+    "controls": {"osc1Hz": 445, "osc2Hz": 68, "mix": 0.27, "osc2Tri": 0.38, "osc2Pulse": 0.47, "osc2Shape": 0.21, "ringLevel": 0.71, "level": 0.73}
+  },
+  {
+    "key": "hb17-battle", "name": "17 · Prestopatch Battle", "display": "17 BATTLE",
+    "play": "Mova MOD para o filtro e PITCH para as molas. Ajuste Shape de OSC 3.",
+    "routes": "H7 D10 A12 G12 C14 C12/2 N6/2 N16/2 L5/2 M15/2 B11",
+    "controls": {"out1Level": 0.753, "noiseLevel": 0.95, "noiseColor": 0.05, "cutoff": 1940, "response": 0.62, "filterDrive": 1.6, "lfo": 0.64, "osc3Tri": 0.45, "osc3Pulse": 0.85, "envMode": 2, "attackMs": 7, "onMs": 120, "decayMs": 248, "offMs": 260, "reverbMix": 0.74, "reverbLevel": 0.95, "reverbTime": 2.2, "level": 0.98}
+  },
+  {
+    "key": "hb18-keyboard", "name": "18 · Prestopatch Keyboard", "display": "18 KEYBOARD",
+    "play": "Inicie a sequência e toque a voz independente à direita.",
+    "routes": "J16 D4 H12 G10 A14 N5/2 E7 F16 G13 I8 C3 P9 I6/2 M11/2 L15/2",
+    "controls": {"in2Level": 0.267, "osc1Hz": 420, "osc2Hz": 447, "osc2Pulse": 0.8, "osc2Tri": 0.21, "lfo": 3.3, "osc3Tri": 0.025, "osc3Pulse": 0.28, "noiseLevel": 0.38, "ringLevel": 0.54, "cutoff": 2340, "response": 0.49, "filterDrive": 1.45, "reverbMix": 0.26, "reverbLevel": 0.96, "level": 0.94, "out2Level": 0, "sineLevel": 0.68, "decayMs": 135},
+    "lengthMs": 1120,
+    "notes": [[0, 40, 115, 90], [140, 52, 88, 64], [280, 43, 92, 76], [560, 60, 108, 58], [700, 43, 113, 105], [840, 55, 98, 78], [980, 50, 105, 59]],
+    "ksMatrix": true
+  },
+  {
+    "key": "hb19-guitar", "name": "19 · Prestopatch Guitar", "display": "19 GUITAR ESTUDO",
+    "play": "OSC 1 substitui a entrada de guitarra. Explore filtro, mola e retorno do anel.",
+    "routes": "I8 H3 F3 A10 E13 A13/2 D10 G10 C12 C14 N6/2 M5/2 B10",
+    "controls": {"osc1Hz": 441, "mix": 0.82, "cutoff": 1420, "response": 0.45, "lfo": 0.51, "osc3Tri": 0.29, "osc3Pulse": 0.14, "ringLevel": 0.53, "envMode": 1, "attackMs": 3, "onMs": 37, "decayMs": 292, "reverbMix": 0.73, "reverbTime": 1.8, "level": 0.86, "out1Level": 0.546}
+  }
+]

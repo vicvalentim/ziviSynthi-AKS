@@ -1,0 +1,98 @@
+[
+  {
+    "key": "keys-sub-fuligem", "name": "Sub de fuligem", "display": "SUB FULIGEM",
+    "play": "Toque grave. OSC 2 acrescenta uma oitava sombreada abaixo da rampa.",
+    "routes": "I8 J8 D3 D4/2 A12 C12 B12",
+    "controls": {"osc1Hz": 220, "osc2Hz": 110, "mix": 0.31, "osc2Pulse": 0.14, "osc2Tri": 0.7, "attackMs": 7, "decayMs": 119, "level": 0.85}
+  },
+  {
+    "key": "keys-acid-rampa", "name": "Ácido de rampa", "display": "ACIDO RAMPA",
+    "play": "Destaque a velocidade nas notas curtas. F3 desloca o filtro ressonante.",
+    "routes": "I8 H3 N11/2 D10 A12 C12 N15/2 B10",
+    "controls": {"osc1Hz": 323, "mix": 1, "cutoff": 460, "response": 0.81, "filterDrive": 1.74, "envMode": 1, "attackMs": 2, "onMs": 34, "decayMs": 152, "trapLevel": 0.87, "level": 0.94}
+  },
+  {
+    "key": "keys-baixo-quinta", "name": "Baixo de quinta pulsada", "display": "BAIXO QUINTA",
+    "play": "As duas bases formam uma quinta. F3 escolhe quanto das harmônicas passa.",
+    "routes": "I8 J8 H3 H4/2 D10 A12 C12 B12",
+    "controls": {"osc1Hz": 163, "osc2Hz": 244.5, "mix": 0.79, "osc2Pulse": 0.78, "osc2Tri": 0.18, "osc2Shape": 0.21, "cutoff": 2200, "response": 0.32, "filterDrive": 1.28, "attackMs": 4, "decayMs": 126, "level": 0.9}
+  },
+  {
+    "key": "keys-baixo-martelo", "name": "Baixo martelo", "display": "BAIXO MARTELO",
+    "play": "Ataque metálico em notas curtas. Abra o filtro quando subir no teclado.",
+    "routes": "I8 J8 E3 F4 D13 H12 A10 C10 B13 N11/2",
+    "controls": {"osc1Hz": 440, "osc2Hz": 332, "sineLevel": 0.85, "osc2Pulse": 0.9, "osc2Shape": 0.16, "ringLevel": 0.88, "cutoff": 1520, "response": 0.43, "filterDrive": 2.04, "envMode": 1, "onMs": 36, "decayMs": 148, "level": 0.94}
+  },
+  {
+    "key": "keys-duplo-orgao", "name": "Órgão de dois registros", "display": "ORGAO DOIS TONS",
+    "play": "Sustente acordes arpejados. O instrumento retém uma nota por vez.",
+    "routes": "I8 J8 D3 D4/2 A12 G12 C14 B12",
+    "controls": {"osc1Hz": 440, "osc2Hz": 887, "osc2Tri": 0.69, "osc2Pulse": 0.19, "sineLevel": 0.79, "attackMs": 8, "decayMs": 108, "reverbMix": 0.34, "reverbLevel": 0.99, "out1Level": 0.61, "level": 0.85}
+  },
+  {
+    "key": "keys-clavicordio-aluminio", "name": "Clavicórdio de alumínio", "display": "CLAVI ALUMINIO",
+    "play": "Toque staccato. O pulso adiciona brilho ao ataque.",
+    "routes": "I8 J8 D3 D4/2 A12 C12/2 G12 C14/2 B12",
+    "controls": {"out1Level": 0.724, "osc1Hz": 440, "osc2Hz": 1107, "mix": 0.78, "osc2Pulse": 0.58, "osc2Tri": 0.05, "osc2Shape": 0.11, "envMode": 1, "attackMs": 3, "onMs": 2, "decayMs": 215, "reverbMix": 0.38, "reverbTime": 0.82, "level": 0.89}
+  },
+  {
+    "key": "keys-marimba-oca", "name": "Marimba oca", "display": "MARIMBA OCA",
+    "play": "Toque alternando acentos; o segundo oscilador dá a batida da madeira.",
+    "routes": "I8 J8 D3 D4/2 A12 G12 C14 C12/2 B12",
+    "controls": {"out1Level": 0.695, "osc1Hz": 442, "osc2Hz": 1769, "osc2Tri": 0.39, "sineLevel": 0.97, "envMode": 1, "attackMs": 3, "onMs": 12, "decayMs": 294, "reverbMix": 0.78, "reverbTime": 0.98, "level": 0.92}
+  },
+  {
+    "key": "keys-cobre-rasgado", "name": "Cobre rasgado", "display": "COBRE RASGADO",
+    "play": "Segure a nota e use MOD para abrir o corte. F3 ajusta o ponto de partida.",
+    "routes": "I8 H3 H7/2 N11/2 N16/2 D10 A12 C12 B10",
+    "controls": {"osc1Hz": 416, "mix": 1, "cutoff": 915, "response": 0.61, "filterDrive": 1.64, "noiseLevel": 0.24, "noiseColor": -0.39, "envMode": 0, "attackMs": 155, "decayMs": 410, "trapLevel": 0.71, "level": 0.94}
+  },
+  {
+    "key": "keys-flauta-sopro", "name": "Flauta de sopro", "display": "FLAUTA SOPRO",
+    "play": "Alongue o ataque. A camada de ruído aparece quando a envoltória abre.",
+    "routes": "I8 D3 H7 N11/2 D10/2 A12 G12 C14 B12",
+    "controls": {"osc1Hz": 659, "sineLevel": 0.83, "cutoff": 1150, "noiseLevel": 0.27, "noiseColor": 0.54, "attackMs": 111, "decayMs": 426, "trapLevel": 0.68, "reverbMix": 0.32, "out1Level": 0.577, "reverbLevel": 0.98, "level": 0.83}
+  },
+  {
+    "key": "keys-corda-em-fases", "name": "Corda em fases", "display": "CORDA EM FASES",
+    "play": "Mantenha a nota para ouvir o batimento lento e a cauda das molas.",
+    "routes": "I8 J8 D3 D4 A12 G12 C14 C12/2 B12",
+    "controls": {"out1Level": 0.586, "osc1Hz": 440, "osc2Hz": 442.75, "mix": 0.38, "osc2Pulse": 0.23, "osc2Tri": 0.49, "attackMs": 292, "decayMs": 1370, "reverbMix": 0.89, "reverbTime": 3.28, "level": 0.87}
+  },
+  {
+    "key": "keys-lead-setima", "name": "Lead de sétima", "display": "LEAD SETIMA",
+    "play": "PITCH desloca somente OSC 2 pela matriz. Use intervalos com o filtro semiaberto.",
+    "routes": "I8 J8 J15/2 H3 H4 D10 A12 C12 B10",
+    "controls": {"osc1Hz": 442, "osc2Hz": 786, "mix": 0.66, "osc2Pulse": 0.43, "osc2Tri": 0.44, "cutoff": 2280, "response": 0.26, "attackMs": 14, "decayMs": 311, "level": 0.88}
+  },
+  {
+    "key": "keys-celesta-ligada", "name": "Celesta ligada", "display": "CELESTA LIGADA",
+    "play": "Toque ligados curtos. O anel alimenta um filtro arredondado e uma mola longa.",
+    "routes": "I8 J8 E3 F4 H13 D10 A12 G12 C14 C12/2 B12",
+    "controls": {"out1Level": 0.633, "osc1Hz": 625, "osc2Hz": 943.4, "sineLevel": 0.85, "osc2Pulse": 0.1, "osc2Tri": 0.88, "ringLevel": 0.79, "cutoff": 3990, "response": 0.16, "filterDrive": 1.65, "envMode": 1, "attackMs": 7, "onMs": 3, "decayMs": 622, "reverbMix": 0.84, "reverbTime": 3.65, "level": 0.95}
+  },
+  {
+    "key": "keys-surdo-casca", "name": "Surdo de casca", "display": "SURDO DE CASCA",
+    "play": "Use a oitava grave. O trapezoide produz a queda de altura da pele.",
+    "routes": "I8 I11/2 D3 D7/2 A12 C12 B11",
+    "controls": {"osc1Hz": 101, "sineLevel": 0.99, "noiseLevel": 0.18, "noiseColor": -0.72, "trapLevel": 0.37, "envMode": 1, "attackMs": 2, "onMs": 0, "decayMs": 155, "level": 0.95}
+  },
+  {
+    "key": "keys-caixa-arame", "name": "Caixa de arame", "display": "CAIXA DE ARAME",
+    "play": "Ajuste F3 e o Decay para variar entre borda metálica e esteira.",
+    "routes": "H7 H3/2 N11/2 D10 A12 C12/2 G12 C14 B12",
+    "controls": {"out1Level": 0.62, "osc1Hz": 180, "mix": 0.18, "noiseLevel": 0.83, "noiseColor": 0.63, "cutoff": 2650, "response": 0.36, "filterDrive": 1.56, "envMode": 1, "attackMs": 2, "onMs": 5, "decayMs": 138, "reverbMix": 0.72, "reverbTime": 0.57, "level": 0.94}
+  },
+  {
+    "key": "keys-chapeu-pedra", "name": "Chapéu de pedra", "display": "CHAPEU PEDRA",
+    "play": "Toque notas muito curtas. O filtro doma os harmônicos do anel.",
+    "routes": "E3 F4 H13 H7/2 D10 A12 C12 B12",
+    "controls": {"osc1Hz": 4886, "osc2Hz": 3287, "osc2Pulse": 0.67, "osc2Tri": 0.32, "mix": 0.74, "noiseLevel": 0.52, "cutoff": 5890, "response": 0.55, "filterDrive": 1.77, "envMode": 1, "attackMs": 2, "onMs": 4, "decayMs": 67, "level": 0.95}
+  },
+  {
+    "key": "keys-piano-vernet", "name": "Piano verniz", "display": "PIANO VERNIZ",
+    "play": "Varie a velocidade para alongar o decaimento. O segundo registro fica no ataque.",
+    "routes": "I8 J8 D3 D4/2 A12 G12 C14 C12/2 L9/2 B12",
+    "controls": {"out1Level": 0.73, "osc1Hz": 440, "osc2Hz": 891, "mix": 0.21, "osc2Pulse": 0.25, "osc2Tri": 0.43, "attackMs": 3, "onMs": 26, "decayMs": 235, "envMode": 1, "reverbMix": 0.69, "reverbTime": 1.53, "level": 0.88}
+  }
+]

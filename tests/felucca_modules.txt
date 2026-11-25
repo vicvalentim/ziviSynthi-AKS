@@ -1,0 +1,71 @@
+splash
+shot felucca-splash.png
+wait 200
+master 2048
+tap GLO
+expect zmodule 1
+expect zrack 1
+expect zosc1hz 440
+wait 56
+shot felucca-modules-osc1.png
+spin K1 4
+expect zosc1hz >450
+expect zpreset -1
+spin K8 1
+expect zmaster 2144
+tap RIGHT
+expect zrack 2
+tap LEFT
+expect zrack 1
+pad 5 down 100
+pad 5 up
+expect zrack 6
+wait 60
+shot felucca-modules-filter.png
+spin K1 8
+expect zcut >1200
+pad 6 down 100
+pad 6 up
+expect zrack 7
+expect ztrigger 0
+spin K8 1
+expect ztrigger 1
+expect zmaster 2144
+press EDIT
+spin K8 1
+release EDIT
+expect zmaster 2240
+expect ztrigger 1
+spin K1 5
+expect zattacktime 9
+spin K2 1
+expect zrackk2 8280
+spin K3 1
+expect zrackk3 1900
+spin K4 1
+expect zrackk4 20700
+spin PRESET -3
+expect zrackk5 97
+spin SELECT -2
+expect zrackk6 98
+spin ALGO 1
+expect zrackk7 100
+wait 60
+shot felucca-modules-envelope.png
+tap FX
+expect zscope 1
+spin K8 -1
+expect zmaster 2144
+tap EDIT
+expect zscopefrozen 1
+tap FX
+expect zscope 0
+tap RIGHT
+expect zrack 8
+spin K8 -1
+expect zmaster 2048
+tap GLO
+expect zmodule 0
+expect zmiss 0
+wait 60
+shot felucca-skin-matrix.png

@@ -1,0 +1,12 @@
+{
+  "3.9.5": { "id": "SMK-37 Pro_99400", "sha256": "e0d7fd2df50833953c55bcb0a70caf5d59705859807d08d2e28ba5dd0d738b2d" },
+  "3.9.4": { "id": "SMK-37 Pro_99300", "sha256": "e78c30d0ea22500bd78045dc5f7bf866052682bb86720f21d82c7b34514d839c" },
+  "3.9.3": { "id": "SMK-37 Pro_99200", "sha256": "0bed0a5ef50b8199f05ef213892ebbade962028512f507c05cffb9619a6f9238" },
+  "3.9.2": { "id": "SMK-37 Pro_99100", "sha256": "4ba9fcd8f66cb520d5ddc0d8cee42f725003aa6e26778220893765055b0de260" },
+  "3.9.1": { "id": "SMK-37 Pro_99100", "sha256": "a95b0f642e47682115d2128a3c1e88fd411508314685bb745654b285de8f79a1" },
+  "3.9"  : { "id": "SMK-37 Pro_99000", "sha256": "c6c7d247399e161bed84e825bb1ef5e82dd6fef3b8a0289b67f18fc85ba1b033" },
+  "3.8"  : { "id": "SMK-37 Pro_98900", "sha256": "8fc95233f466167e1f964a4b2575b4ffae2388ede5642a2b508ce047ac3ca4d7" },
+  "3.7"  : { "id": "SMK-37 Pro_98700", "sha256": "92e377fe58f3a7406f3b4357ccacfa53cfc232993d6136126dfe327ecbb8c7b0" },
+  "3.6"  : { "id": "SMK-37 Pro_98600", "sha256": "95a3b663bf12a793474fbda9eba28e52d5668250e36c62e0b8067d1ea150986b" },
+  "3.5"  : { "id": "SMK-37 Pro_98600", "sha256": "3c385c8e6dcb7f86ff3c2170168213e25a10ead23a26f92919a7930ff46c1027" }
+}

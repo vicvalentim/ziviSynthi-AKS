@@ -1,0 +1,128 @@
+[
+  {
+    "key": "sub-de-carvao",
+    "name": "Sub de carvão",
+    "display": "CARBON SUB",
+    "play": "Toque notas curtas. A velocidade abre a camada filtrada. Suba o corte para destacar o pulso.",
+    "routes": "I8 J8 D3 H4 N11/2 D10/2 A12 B12 C12",
+    "controls": {
+      "level": 0.9, "mix": 0.04, "osc1Hz": 55, "osc2Hz": 110,
+      "osc2Pulse": 0.31, "osc2Tri": 0.6, "osc2Shape": 0.32, "cutoff": 320,
+      "response": 0.29, "filterDrive": 1.8, "attackMs": 2, "decayMs": 128,
+      "trapLevel": 0.72,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "vidro-percutido",
+    "name": "Vidro percutido",
+    "display": "STRUCK GLASS",
+    "play": "Toque notas espaçadas. Suba o Response para aumentar o brilho ressonante.",
+    "routes": "I8 J8 H3 H4/2 N11/2 D10 A12 G12 C14 B10 C12/2",
+    "controls": {
+      "level": 0.91, "osc1Hz": 488, "osc2Hz": 975, "mix": 0.76,
+      "osc2Pulse": 0.32, "osc2Tri": 0.43, "osc2Shape": 0.69, "cutoff": 1840,
+      "response": 0.73, "filterDrive": 2.45, "envMode": 1, "attackMs": 2,
+      "onMs": 8, "decayMs": 138, "trapLevel": 0.27, "reverbTime": 1.3,
+      "reverbMix": 0.94,
+      "reverbLevel": 1, "out1Level": 0.684, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "orgao-de-pinos",
+    "name": "Órgão de pinos",
+    "display": "PIN ORGAN",
+    "play": "Sustente uma nota. Os três osciladores soam na fundamental, na oitava e na quinta composta.",
+    "routes": "I8 J8 K8 D3 D4/2 D6/2 A12 G12 C14 B12 C12/2",
+    "controls": {
+      "level": 0.75, "mix": 0.04, "osc1Hz": 155, "osc2Hz": 310,
+      "lfo": 465, "osc2Tri": 0.76, "osc2Pulse": 0.1, "osc3Tri": 0.6,
+      "attackMs": 16, "decayMs": 96, "reverbTime": 0.77, "reverbMix": 0.9,
+      "reverbLevel": 1, "out1Level": 0.624, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "fio-de-cobre",
+    "name": "Fio de cobre",
+    "display": "COPPER LEAD",
+    "play": "Sustente notas para ouvir o vibrato. Use a roda de pitch e varie o corte durante a frase.",
+    "routes": "I8 J8 I6/2 J6/2 H3 H4/2 N11/2 D10 A12 G12 C14 B12 C12/2",
+    "controls": {
+      "level": 0.88, "mix": 0.87, "osc1Hz": 440, "osc2Hz": 443,
+      "osc2Pulse": 0.55, "osc2Tri": 0.27, "osc2Shape": 0.34, "lfo": 5.15,
+      "osc3Tri": 0.0075, "cutoff": 1740, "response": 0.51, "filterDrive": 2.25,
+      "trapLevel": 0.25, "attackMs": 14, "decayMs": 94, "reverbTime": 1.03,
+      "reverbMix": 0.92,
+      "reverbLevel": 1, "out1Level": 0.646, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "neblina-harmonica",
+    "name": "Neblina harmônica",
+    "display": "HARMONIC MIST",
+    "play": "Mantenha uma nota por alguns segundos. Ataque e decay longos deixam aparecer o batimento.",
+    "routes": "I8 J8 H3 H4/2 H7/2 N6/2 D10 A12 G12 C14 B10 C12/2",
+    "controls": {
+      "level": 0.88, "mix": 0.66, "osc1Hz": 222, "osc2Hz": 220,
+      "osc2Shape": 0.57, "osc2Pulse": 0.54, "osc2Tri": 0.43,
+      "lfo": 0.28, "osc3Tri": 0.29, "noiseLevel": 0.063, "noiseColor": -0.57,
+      "cutoff": 1350, "response": 0.4, "filterDrive": 2.3, "attackMs": 780,
+      "decayMs": 1450, "reverbMix": 0.98, "reverbTime": 2.2, "reverbLevel": 0.89,
+      "out1Level": 0.619, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "relogio-fraturado",
+    "name": "Relógio fraturado",
+    "display": "FRACTURED CLOCK",
+    "play": "Pressione Play. As notas do KS alteram o corte em degraus. Varie Speed e Response.",
+    "routes": "H3 H4/2 H7/2 D10 A12 G12 C14 B10 C12/2",
+    "ksRoutes": "N J/2",
+    "controls": {
+      "level": 0.89, "mix": 0.85, "osc1Hz": 131, "osc2Hz": 261,
+      "osc2Pulse": 0.57, "osc2Tri": 0.28, "osc2Shape": 0.29, "noiseLevel": 0.17,
+      "noiseColor": 0.75, "cutoff": 815, "response": 0.7, "filterDrive": 2.25,
+      "envMode": 1, "attackMs": 2, "onMs": 13, "decayMs": 63,
+      "reverbTime": 0.49, "reverbMix": 0.87,
+      "reverbLevel": 1, "out1Level": 0.674, "envLevel": 0.93
+    },
+    "lengthMs": 1568,
+    "notes": [[0, 57, 118, 68], [112, 74, 90, 42], [225, 88, 102, 69],
+              [336, 60, 83, 41], [448, 78, 120, 75], [565, 69, 75, 45],
+              [672, 84, 100, 59], [784, 54, 115, 78], [896, 76, 94, 53],
+              [1008, 65, 98, 62], [1120, 84, 112, 72], [1344, 59, 113, 82],
+              [1465, 92, 84, 56]]
+  },
+  {
+    "key": "pele-sintetica",
+    "name": "Pele sintética",
+    "display": "SYNTHETIC SKIN",
+    "play": "Pressione Play. O trapezoide sobe e desce a afinação a cada batida. Ajuste Decay para um bumbo mais longo.",
+    "routes": "I11/2 D3 D7/2 A12 G12 C14 B12 C12/2",
+    "controls": {
+      "level": 0.87, "osc1Hz": 52, "mix": 0.05, "noiseLevel": 0.12,
+      "noiseColor": -0.85, "trapLevel": 0.92, "envMode": 1, "attackMs": 2,
+      "onMs": 0, "decayMs": 159, "reverbMix": 1, "reverbTime": 0.33,
+      "reverbLevel": 1,
+      "out1Level": 0.543, "envLevel": 0.93
+    },
+    "lengthMs": 1824,
+    "notes": [[0, 48, 119, 94], [228, 48, 82, 73], [456, 48, 113, 86],
+              [798, 48, 95, 79], [912, 48, 122, 114], [1254, 48, 88, 81],
+              [1368, 48, 108, 88], [1596, 48, 105, 93]]
+  },
+  {
+    "key": "molas-em-retorno",
+    "name": "Molas em retorno",
+    "display": "SPRING RETURN",
+    "play": "Toque uma nota breve e escute o retorno. Ligue e desligue G14 para comparar as caudas.",
+    "routes": "I8 E3 F4 D13 A12 G12 G14/2 C14 B14 C12/2",
+    "controls": {
+      "level": 0.96, "osc1Hz": 366, "osc2Hz": 543, "mix": 0.34,
+      "osc2Tri": 0.69, "osc2Pulse": 0.14, "osc2Shape": 0.56, "ringLevel": 0.89,
+      "envMode": 1, "attackMs": 2.5, "onMs": 12, "decayMs": 296,
+      "reverbMix": 1, "reverbLevel": 0.96, "reverbTime": 1.82,
+      "out1Level": 0.895, "envLevel": 1
+    }
+  }
+]

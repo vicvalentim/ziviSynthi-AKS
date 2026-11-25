@@ -1,0 +1,1013 @@
+[
+  {
+    "key": "linha-de-oitavas",
+    "name": "Linha de oitavas",
+    "display": "OCTAVE LINE",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "H3 D10 A12 N11/2 C12",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 3,
+      "decayMs": 70,
+      "level": 0.75,
+      "osc1Hz": 220,
+      "mix": 0.82,
+      "cutoff": 440,
+      "response": 0.35,
+      "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        36,
+        88,
+        58
+      ],
+      [
+        250,
+        48,
+        101,
+        58
+      ],
+      [
+        500,
+        43,
+        114,
+        58
+      ],
+      [
+        750,
+        48,
+        89,
+        58
+      ],
+      [
+        1000,
+        39,
+        102,
+        58
+      ],
+      [
+        1250,
+        51,
+        115,
+        58
+      ],
+      [
+        1500,
+        46,
+        90,
+        58
+      ],
+      [
+        1750,
+        51,
+        103,
+        58
+      ]
+    ]
+  },
+  {
+    "key": "linha-sincopada",
+    "name": "Linha sincopada",
+    "display": "SYNCOPATED LINE",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "D3 A12 J4/2 C12",
+    "ksRoutes": "I J",
+    "controls": {
+      "attackMs": 4,
+      "decayMs": 84,
+      "level": 0.75,
+      "osc1Hz": 196,
+      "osc2Hz": 349,
+      "osc2Pulse": 0.6,
+      "mix": 0.36,
+      "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        43,
+        97,
+        63
+      ],
+      [
+        375,
+        43,
+        110,
+        63
+      ],
+      [
+        625,
+        46,
+        123,
+        63
+      ],
+      [
+        875,
+        50,
+        98,
+        63
+      ],
+      [
+        1000,
+        48,
+        111,
+        63
+      ],
+      [
+        1375,
+        46,
+        124,
+        63
+      ],
+      [
+        1750,
+        41,
+        99,
+        63
+      ]
+    ]
+  },
+  {
+    "key": "tripla-pulsacao",
+    "name": "Tripla pulsação",
+    "display": "TRIPLE PULSE",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "H3 D10 A12 G12 C14 C12/2",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 5,
+      "decayMs": 98,
+      "level": 0.75,
+      "osc1Hz": 350,
+      "cutoff": 1160,
+      "lfo": 0.71,
+      "reverbMix": 0.67,
+      "reverbLevel": 1, "out1Level": 0.96, "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        52,
+        106,
+        68
+      ],
+      [
+        375,
+        59,
+        119,
+        68
+      ],
+      [
+        750,
+        55,
+        94,
+        68
+      ],
+      [
+        1125,
+        62,
+        107,
+        68
+      ],
+      [
+        1500,
+        57,
+        120,
+        68
+      ],
+      [
+        1875,
+        64,
+        95,
+        68
+      ]
+    ]
+  },
+  {
+    "key": "figuras-em-espelho",
+    "name": "Figuras em espelho",
+    "display": "MIRROR FIGURES",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "E3 F4 D13 A12 G12 C14 C12/2",
+    "ksRoutes": "I J/2",
+    "controls": {
+      "attackMs": 6,
+      "decayMs": 112,
+      "level": 0.75,
+      "osc1Hz": 620,
+      "osc2Hz": 866,
+      "mix": 0.19,
+      "osc2Tri": 0.6,
+      "reverbMix": 0.72,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        60,
+        115,
+        73
+      ],
+      [
+        250,
+        64,
+        90,
+        73
+      ],
+      [
+        500,
+        67,
+        103,
+        73
+      ],
+      [
+        750,
+        71,
+        116,
+        73
+      ],
+      [
+        1000,
+        72,
+        91,
+        73
+      ],
+      [
+        1250,
+        71,
+        104,
+        73
+      ],
+      [
+        1500,
+        67,
+        117,
+        73
+      ],
+      [
+        1750,
+        64,
+        92,
+        73
+      ]
+    ]
+  },
+  {
+    "key": "duplo-ciclo",
+    "name": "Duplo ciclo",
+    "display": "TWO CYCLES",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "J8 D3 A12 C4",
+    "ksRoutes": "I J/2",
+    "controls": {
+      "attackMs": 7,
+      "decayMs": 126,
+      "level": 0.75,
+      "osc1Hz": 233,
+      "osc2Hz": 440,
+      "mix": 0.45,
+      "osc2Pulse": 0.35,
+      "osc2Tri": 0.57,
+      "envLevel": 0.93, "out2Level": 0.263
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        48,
+        124,
+        78
+      ],
+      [
+        125,
+        52,
+        99,
+        78
+      ],
+      [
+        375,
+        55,
+        112,
+        78
+      ],
+      [
+        750,
+        57,
+        125,
+        78
+      ],
+      [
+        1000,
+        48,
+        100,
+        78
+      ],
+      [
+        1250,
+        55,
+        113,
+        78
+      ],
+      [
+        1500,
+        62,
+        88,
+        78
+      ],
+      [
+        1750,
+        64,
+        101,
+        78
+      ]
+    ]
+  },
+  {
+    "key": "ritmo-ferroso",
+    "name": "Ritmo ferroso",
+    "display": "IRON RHYTHM",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "E3 F4 H13 D10 A12 B10 C12",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 8,
+      "decayMs": 140,
+      "level": 0.88,
+      "osc1Hz": 990,
+      "osc2Hz": 1327,
+      "mix": 0.89,
+      "osc2Pulse": 0.71,
+      "cutoff": 1920,
+      "response": 0.44,
+      "filterDrive": 1.64,
+      "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        62,
+        95,
+        83
+      ],
+      [
+        250,
+        52,
+        108,
+        83
+      ],
+      [
+        375,
+        57,
+        121,
+        83
+      ],
+      [
+        625,
+        55,
+        96,
+        83
+      ],
+      [
+        1000,
+        59,
+        109,
+        83
+      ],
+      [
+        1125,
+        48,
+        122,
+        83
+      ],
+      [
+        1500,
+        64,
+        97,
+        83
+      ],
+      [
+        1875,
+        50,
+        110,
+        83
+      ]
+    ]
+  },
+  {
+    "key": "mola-cadenciada",
+    "name": "Mola cadenciada",
+    "display": "SPRING CADENCE",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "D3 A12 G12 G14/2 C14 C12/2",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 9,
+      "decayMs": 154,
+      "level": 0.75,
+      "osc1Hz": 360,
+      "mix": 0.12,
+      "reverbMix": 0.89,
+      "reverbTime": 2.6,
+      "reverbLevel": 1, "out1Level": 0.92, "envLevel": 0.93, "out2Level": 0.967
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        52,
+        104,
+        88
+      ],
+      [
+        250,
+        59,
+        117,
+        88
+      ],
+      [
+        625,
+        64,
+        92,
+        88
+      ],
+      [
+        1000,
+        68,
+        105,
+        88
+      ],
+      [
+        1375,
+        66,
+        118,
+        88
+      ],
+      [
+        1750,
+        59,
+        93,
+        88
+      ]
+    ]
+  },
+  {
+    "key": "bateria-de-ruido",
+    "name": "Bateria de ruído",
+    "display": "NOISE BEATS",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "H7 D10 A12 B10 C12",
+    "ksRoutes": "N/2",
+    "controls": {
+      "attackMs": 3,
+      "decayMs": 168,
+      "level": 1,
+      "noiseColor": 0.58,
+      "cutoff": 1930,
+      "response": 0.73,
+      "noiseLevel": 0.78,
+      "filterDrive": 2.28,
+      "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        44,
+        113,
+        93
+      ],
+      [
+        250,
+        65,
+        88,
+        93
+      ],
+      [
+        500,
+        57,
+        101,
+        93
+      ],
+      [
+        875,
+        67,
+        114,
+        93
+      ],
+      [
+        1000,
+        46,
+        89,
+        93
+      ],
+      [
+        1250,
+        72,
+        102,
+        93
+      ],
+      [
+        1500,
+        53,
+        115,
+        93
+      ],
+      [
+        1875,
+        63,
+        90,
+        93
+      ]
+    ]
+  },
+  {
+    "key": "quatro-pontos",
+    "name": "Quatro pontos",
+    "display": "FOUR POINTS",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "D4 A12 G12 C14 C12/2",
+    "ksRoutes": "J",
+    "controls": {
+      "attackMs": 4,
+      "decayMs": 182,
+      "level": 0.75,
+      "osc2Hz": 390,
+      "osc2Pulse": 0.39,
+      "osc2Tri": 0.85,
+      "reverbMix": 0.73,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        60,
+        122,
+        98
+      ],
+      [
+        500,
+        63,
+        97,
+        98
+      ],
+      [
+        1000,
+        67,
+        110,
+        98
+      ],
+      [
+        1500,
+        70,
+        123,
+        98
+      ]
+    ]
+  },
+  {
+    "key": "contrapasso",
+    "name": "Contrapasso",
+    "display": "COUNTERSTEP",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "H3/2 H4 D10 A12 C12",
+    "ksRoutes": "I J/2",
+    "controls": {
+      "attackMs": 5,
+      "decayMs": 196,
+      "level": 0.82,
+      "osc1Hz": 183,
+      "osc2Hz": 314,
+      "osc2Pulse": 0.62,
+      "cutoff": 740,
+      "response": 0.46,
+      "envLevel": 0.93, "filterDrive": 1.42
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        38,
+        93,
+        103
+      ],
+      [
+        125,
+        45,
+        106,
+        103
+      ],
+      [
+        500,
+        50,
+        119,
+        103
+      ],
+      [
+        625,
+        41,
+        94,
+        103
+      ],
+      [
+        1000,
+        48,
+        107,
+        103
+      ],
+      [
+        1125,
+        53,
+        120,
+        103
+      ],
+      [
+        1500,
+        36,
+        95,
+        103
+      ],
+      [
+        1875,
+        43,
+        108,
+        103
+      ]
+    ]
+  },
+  {
+    "key": "cadencia-mineral",
+    "name": "Cadência mineral",
+    "display": "MINERAL CADENCE",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "E3 F4 D13 A12 G12 C14 C12/2",
+    "ksRoutes": "I J",
+    "controls": {
+      "attackMs": 6,
+      "decayMs": 210,
+      "level": 0.75,
+      "osc1Hz": 748,
+      "osc2Hz": 951,
+      "osc2Pulse": 0.19,
+      "reverbMix": 0.76,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        64,
+        102,
+        108
+      ],
+      [
+        375,
+        65,
+        115,
+        108
+      ],
+      [
+        500,
+        61,
+        90,
+        108
+      ],
+      [
+        750,
+        68,
+        103,
+        108
+      ],
+      [
+        1125,
+        70,
+        116,
+        108
+      ],
+      [
+        1375,
+        61,
+        91,
+        108
+      ],
+      [
+        1750,
+        63,
+        104,
+        108
+      ]
+    ]
+  },
+  {
+    "key": "vigilia",
+    "name": "Vigília",
+    "display": "VIGIL",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "D3 A12 G12 C14 F9/2 C12/2",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 7,
+      "decayMs": 224,
+      "level": 0.75,
+      "osc1Hz": 194,
+      "lfo": 0.26,
+      "mix": 0.19,
+      "reverbMix": 0.87,
+      "reverbTime": 3.0,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        47,
+        111,
+        113
+      ],
+      [
+        625,
+        52,
+        124,
+        113
+      ],
+      [
+        1000,
+        54,
+        99,
+        113
+      ],
+      [
+        1625,
+        59,
+        112,
+        113
+      ]
+    ]
+  },
+  {
+    "key": "sinal-de-farol",
+    "name": "Sinal de farol",
+    "display": "BEACON SIGNAL",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "D3 A12 B12 C12",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 8,
+      "decayMs": 238,
+      "level": 0.75,
+      "osc1Hz": 575,
+      "mix": 0.26,
+      "lfo": 0.08,
+      "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        60,
+        120,
+        110
+      ],
+      [
+        125,
+        75,
+        95,
+        118
+      ],
+      [
+        375,
+        60,
+        108,
+        118
+      ],
+      [
+        750,
+        67,
+        121,
+        118
+      ],
+      [
+        1000,
+        62,
+        96,
+        110
+      ],
+      [
+        1125,
+        77,
+        109,
+        118
+      ],
+      [
+        1375,
+        62,
+        122,
+        118
+      ],
+      [
+        1750,
+        69,
+        97,
+        118
+      ]
+    ]
+  },
+  {
+    "key": "passos-de-vidro",
+    "name": "Passos de vidro",
+    "display": "GLASS STEPS",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "E3 F4 H13/2 D10 A12 C12",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 9,
+      "decayMs": 252,
+      "level": 0.85,
+      "osc1Hz": 828,
+      "osc2Hz": 1047,
+      "osc2Pulse": 0.32,
+      "cutoff": 2680,
+      "envLevel": 0.93, "filterDrive": 1.5
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        67,
+        91,
+        123
+      ],
+      [
+        375,
+        74,
+        104,
+        123
+      ],
+      [
+        625,
+        79,
+        117,
+        123
+      ],
+      [
+        1000,
+        78,
+        92,
+        123
+      ],
+      [
+        1375,
+        75,
+        105,
+        123
+      ],
+      [
+        1750,
+        71,
+        118,
+        123
+      ]
+    ]
+  },
+  {
+    "key": "marcha-dente",
+    "name": "Marcha dente de serra",
+    "display": "SAW MARCH",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "H3 D10 A12 N11/2 B10 C12",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 3,
+      "decayMs": 266,
+      "level": 0.75,
+      "osc1Hz": 240,
+      "mix": 0.93,
+      "cutoff": 705,
+      "response": 0.32,
+      "envLevel": 0.93
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        39,
+        100,
+        128
+      ],
+      [
+        250,
+        39,
+        113,
+        128
+      ],
+      [
+        500,
+        46,
+        88,
+        128
+      ],
+      [
+        750,
+        51,
+        101,
+        128
+      ],
+      [
+        1000,
+        37,
+        114,
+        128
+      ],
+      [
+        1250,
+        37,
+        89,
+        128
+      ],
+      [
+        1500,
+        44,
+        102,
+        128
+      ],
+      [
+        1750,
+        49,
+        115,
+        128
+      ]
+    ]
+  },
+  {
+    "key": "retorno-orbital",
+    "name": "Retorno orbital",
+    "display": "ORBITAL RETURN",
+    "play": "Use SEQ e PLAY. Varie o alcance e a transposição no KS.",
+    "routes": "H3/2 H4 H7/2 D10 A12 G12 C14 C12/2",
+    "ksRoutes": "I",
+    "controls": {
+      "attackMs": 4,
+      "decayMs": 280,
+      "level": 0.83,
+      "osc1Hz": 408,
+      "osc2Hz": 615,
+      "osc2Pulse": 0.42,
+      "cutoff": 1140,
+      "response": 0.51,
+      "reverbMix": 0.89,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93, "filterDrive": 1.5
+    },
+    "lengthMs": 2000,
+    "notes": [
+      [
+        0,
+        57,
+        109,
+        133
+      ],
+      [
+        375,
+        60,
+        122,
+        133
+      ],
+      [
+        750,
+        64,
+        97,
+        133
+      ],
+      [
+        1000,
+        69,
+        110,
+        133
+      ],
+      [
+        1250,
+        76,
+        123,
+        133
+      ],
+      [
+        1625,
+        72,
+        98,
+        133
+      ],
+      [
+        1875,
+        64,
+        111,
+        110
+      ]
+    ]
+  }
+]

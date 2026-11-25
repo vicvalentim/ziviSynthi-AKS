@@ -1,0 +1,71 @@
+# Exercita zoom, janela e pads simulados sem gravar o armazenamento.
+wait 100
+splashshot boot.png
+shot overview.png
+expect zrow 12
+expect zcol 1
+expect zpin 1
+expect zzoom 0
+master 4096
+wav performance.wav
+key 7 down
+wait 150
+expect znote 60
+expect peak_db_min -24
+tap EDIT
+wait 40
+expect zpin 0
+spin SELECT 2
+expect zcol 3
+tap EDIT
+expect zpin 0
+spin SELECT -2
+expect zcol 1
+peakreset
+wait 100
+expect peak_db_max -70
+tap FX
+wait 40
+expect zzoom 1
+press SEL
+key 12 down
+wait 40
+expect zrow 12
+expect zcol 1
+expect zpin 1
+expect znote 60
+key 12 up
+release SEL
+wait 40
+expect znote 60
+expect peak_db_min -24
+shot edit.png
+spin SELECT 1
+spin ALGO 1
+wait 40
+tap EDIT
+wait 40
+expect zcol 2
+expect zpin 2
+expect zmonitor >10
+shot monitor-b.png
+key 7 up
+wait 200
+expect znote -1
+peakreset
+midi 90 45 7F
+wait 180
+expect znote 69
+expect peak_db_min -30
+midi 80 45 00
+wait 250
+expect znote -1
+tap HOME
+tap FX
+wait 40
+expect zzoom 0
+expect zrow 12
+expect zcol 1
+expect zpin 1
+wavstop
+expect store_writes 0

@@ -1,0 +1,292 @@
+[
+  {
+    "key": "nevoa-lateral",
+    "name": "Névoa lateral",
+    "display": "SIDE MIST",
+    "play": "Sustente uma tecla para abrir a camada filtrada e ouvir a imagem estéreo.",
+    "routes": "I8 J8 H3/2 H4 H7/2 D10 A12 G12 C14 N6/2 C12/2",
+    "controls": {
+      "osc1Hz": 220,
+      "osc2Hz": 440.8,
+      "mix": 0.24,
+      "lfo": 0.31,
+      "cutoff": 680,
+      "reverbMix": 0.8,
+      "attackMs": 430,
+      "decayMs": 2200,
+      "reverbLevel": 1, "out1Level": 0.687, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "mola-profunda",
+    "name": "Mola profunda",
+    "display": "DEEP SPRING",
+    "play": "Use um toque breve e espere a reverberação decair.",
+    "routes": "I8 D3 G12 G14/2 C14 A12 C12/2 A14/2",
+    "controls": {
+      "osc1Hz": 164.81,
+      "mix": 0.58,
+      "envMode": 1,
+      "onMs": 23,
+      "decayMs": 270,
+      "reverbTime": 2.95,
+      "reverbMix": 0.9,
+      "reverbLevel": 0.83, "out1Level": 0.65, "envLevel": 0.93, "out2Level": 1.0
+    }
+  },
+  {
+    "key": "vento-marrom",
+    "name": "Vento marrom",
+    "display": "BROWN WIND",
+    "play": "Mantenha uma nota e mova a roda para explorar a textura.",
+    "routes": "H7 D10 A12 G12 C14 N6/2 N9/2 C12/2",
+    "controls": {
+      "noiseColor": -0.8,
+      "lfo": 0.09,
+      "cutoff": 590,
+      "response": 0.48,
+      "attackMs": 360,
+      "decayMs": 1800,
+      "reverbMix": 0.76,
+      "level": 1,
+      "filterDrive": 1.83,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "vento-branco",
+    "name": "Vento branco",
+    "display": "WHITE WIND",
+    "play": "O filtro desloca o ruído em ciclos lentos.",
+    "routes": "H7 D10 A12 G12 C14 N6 C12/2",
+    "controls": {
+      "noiseColor": 0.68,
+      "lfo": 0.17,
+      "cutoff": 1050,
+      "response": 0.61,
+      "attackMs": 197,
+      "decayMs": 1040,
+      "reverbMix": 0.66,
+      "reverbLevel": 1, "out1Level": 0.659, "envLevel": 0.93, "level": 0.9
+    }
+  },
+  {
+    "key": "anel-cristal",
+    "name": "Anel de cristal",
+    "display": "CRYSTAL RING",
+    "play": "Toque notas médias. Varie a velocidade para abrir o ganho.",
+    "routes": "I8 J8 E3 F4 D13 A12 G12 C14 C12/2",
+    "controls": {
+      "osc1Hz": 587.33,
+      "osc2Hz": 821,
+      "shape": 0.48,
+      "osc2Pulse": 0.22,
+      "osc2Tri": 0.6,
+      "attackMs": 18,
+      "decayMs": 820,
+      "reverbMix": 0.92,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "anel-ferro",
+    "name": "Anel de ferro",
+    "display": "IRON RING",
+    "play": "A modulação em anel responde bem a intervalos de oitava no teclado.",
+    "routes": "I8 J8 E3 F4 H13 D10 A12 C12 B10",
+    "controls": {
+      "osc1Hz": 266,
+      "osc2Hz": 418,
+      "mix": 0.88,
+      "osc2Pulse": 0.8,
+      "cutoff": 815,
+      "response": 0.57,
+      "attackMs": 9,
+      "decayMs": 318,
+      "envLevel": 0.93, "filterDrive": 1.7, "level": 0.9
+    }
+  },
+  {
+    "key": "anel-submerso",
+    "name": "Anel submerso",
+    "display": "SUBMERGED RING",
+    "play": "Toque devagar e deixe o deslocamento do filtro completar o ciclo.",
+    "routes": "I8 E3 F4 H13 D10 A12 G12 C14 N6/2 C12/2",
+    "controls": {
+      "osc1Hz": 110,
+      "osc2Hz": 197,
+      "mix": 0.28,
+      "lfo": 0.33,
+      "cutoff": 460,
+      "response": 0.38,
+      "reverbMix": 0.83,
+      "attackMs": 95,
+      "decayMs": 1370,
+      "level": 1,
+      "filterDrive": 2.02,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "estrelas-assimetricas",
+    "name": "Estrelas assimétricas",
+    "display": "ASYM STARS",
+    "play": "Use a roda MOD para mudar a assimetria do primeiro oscilador.",
+    "routes": "I8 E3 F4 D13 A12 G12 C14 C12/2",
+    "controls": {
+      "osc1Hz": 660,
+      "osc2Hz": 389.9,
+      "shape": 0.78,
+      "osc2Tri": 0.77,
+      "osc2Pulse": 0.28,
+      "reverbMix": 0.89,
+      "reverbTime": 2.6,
+      "reverbLevel": 1, "out1Level": 0.714, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "osciladores-em-fase",
+    "name": "Batimentos lentos",
+    "display": "SLOW BEATING",
+    "play": "Segure uma tecla e acompanhe a diferença de afinação.",
+    "routes": "I8 J8 D3 D4 A12 C12 G12/2 C14",
+    "controls": {
+      "out2Level": 0.884, "osc1Hz": 220,
+      "osc2Hz": 221.3,
+      "mix": 0.08,
+      "osc2Tri": 0.81,
+      "attackMs": 157,
+      "decayMs": 2030,
+      "reverbMix": 0.71,
+      "reverbLevel": 1, "out1Level": 1.0, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "pulsos-em-fuga",
+    "name": "Pulsos em fuga",
+    "display": "DRIFT PULSES",
+    "play": "Sustente notas e mova o corte para evidenciar as duas frequências.",
+    "routes": "I8 J8 H3/2 D4 D10 C12 N6/2 A12",
+    "controls": {
+      "osc1Hz": 220,
+      "osc2Hz": 333.33,
+      "mix": 0.87,
+      "osc2Pulse": 0.73,
+      "osc2Shape": 0.13,
+      "lfo": 0.71,
+      "cutoff": 1060,
+      "response": 0.43,
+      "attackMs": 44,
+      "decayMs": 930,
+      "envLevel": 0.93
+    }
+  },
+  {
+    "key": "repetidor-seno",
+    "name": "Repetidor senoidal",
+    "display": "SINE REPEATER",
+    "play": "O trapézio reinicia sozinho após OFF. Compare com o disparo manual.",
+    "routes": "I8 D3 A12 G12 C14 B11 C12/2",
+    "controls": {
+      "osc1Hz": 392,
+      "envMode": 2,
+      "attackMs": 37,
+      "onMs": 125,
+      "decayMs": 311,
+      "offMs": 325,
+      "reverbMix": 0.75,
+      "reverbTime": 2.4,
+      "reverbLevel": 1, "out1Level": 0.82, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "repetidor-ruido",
+    "name": "Repetidor de ruído",
+    "display": "NOISE REPEATER",
+    "play": "Ouça a abertura cíclica e experimente alterar OFF.",
+    "routes": "H7 D10 A12 N6/2 G12 C14 C12/2",
+    "controls": {
+      "noiseColor": 0.19,
+      "cutoff": 1340,
+      "response": 0.49,
+      "lfo": 0.21,
+      "envMode": 2,
+      "attackMs": 84,
+      "onMs": 160,
+      "decayMs": 430,
+      "offMs": 280,
+      "reverbMix": 0.68,
+      "reverbLevel": 1, "out1Level": 0.734, "envLevel": 0.93, "level": 0.92
+    }
+  },
+  {
+    "key": "portadora-lenta",
+    "name": "Portadora lenta",
+    "display": "LOW CARRIER",
+    "play": "Segure uma nota e ouça os pulsos de amplitude do anel.",
+    "routes": "I8 E3 F6 D13 A12 G12 C14 C12/2",
+    "controls": {
+      "osc1Hz": 175,
+      "lfo": 2.1,
+      "osc3Shape": 0.41,
+      "ringLevel": 0.82,
+      "attackMs": 167,
+      "decayMs": 880,
+      "reverbMix": 0.74,
+      "reverbLevel": 1, "out1Level": 0.677, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "batimento-estereo",
+    "name": "Batimento estéreo",
+    "display": "STEREO BEAT",
+    "play": "A nota abre dois osciladores ligeiramente desencontrados.",
+    "routes": "I8 J8 D3/2 D4/2 A12 C12 P9",
+    "controls": {
+      "out2Level": 0.82, "osc1Hz": 261.63,
+      "osc2Hz": 263.6,
+      "mix": 0.22,
+      "osc2Tri": 0.82,
+      "osc2Pulse": 0.11,
+      "attackMs": 111,
+      "decayMs": 1230,
+      "envLevel": 0.93, "out1Level": 0.85
+    }
+  },
+  {
+    "key": "espiral-de-mola",
+    "name": "Espiral de mola",
+    "display": "SPRING SPIRAL",
+    "play": "Use notas longas e observe a profundidade modulada.",
+    "routes": "I8 D3 A12 G12 C14 M6/2 N14/2 C12/2",
+    "controls": {
+      "osc1Hz": 329.63,
+      "lfo": 0.73,
+      "mix": 0.34,
+      "attackMs": 164,
+      "decayMs": 1480,
+      "reverbTime": 3.1,
+      "reverbMix": 0.6,
+      "reverbLevel": 1, "out1Level": 0.96, "envLevel": 0.93
+    }
+  },
+  {
+    "key": "ressonancia-estatica",
+    "name": "Ressonância estática",
+    "display": "STATIC FILTER",
+    "play": "O filtro auto-oscila. Controle o volume no K8.",
+    "routes": "H7 D10 A12 B10 G12 C14 D7/2 C12/2",
+    "controls": {
+      "noiseLevel": 0.53,
+      "noiseColor": -0.19,
+      "cutoff": 710,
+      "response": 0.967,
+      "filterDrive": 2.2,
+      "attackMs": 98,
+      "decayMs": 620,
+      "out1Level": 0.637,
+      "reverbMix": 0.79,
+      "reverbLevel": 1, "envLevel": 0.93
+    }
+  }
+]

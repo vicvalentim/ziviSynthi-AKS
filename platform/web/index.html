@@ -1,0 +1,588 @@
+<!doctype html>
+<!-- ziviSynthi AKS original code and assets: GPL-3.0-only. Third-party materials retain their licenses. -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#1b1e20">
+<title>ziviSynthi AKS · Painel AKS</title>
+<style>/* STYLE */</style>
+</head>
+<body>
+<main class="instrument">
+  <header class="top">
+    <div class="identity">
+      <div>
+      <h1>ziviSynthi AKS</h1>
+      <p>SMK‑37 Pro <span aria-hidden="true">·</span> 3.9.5 pré-lançamento</p>
+      </div>
+    </div>
+    <div>
+      <div class="actions">
+        <button id="try" class="primary" type="button" aria-controls="keys">Experimentar / <span lang="en">Try</span></button>
+        <button id="panic" type="button" aria-pressed="false">Silenciar</button>
+        <button id="midi" type="button">Conectar MIDI</button>
+        <a class="install-link" href="#firmware-drawer" data-open-panel>Instalar firmware</a>
+      </div>
+      <output id="try-status" role="status"></output>
+    </div>
+  </header>
+
+  <nav class="workspace-nav" aria-label="Painel do instrumento">
+    <div>
+      <a href="#faceplate">Painel</a>
+      <a href="#patch-panel">Matriz</a>
+      <a href="#ks-heading">KS / SEQ</a>
+      <a href="#preset-drawer" data-open-panel>Presets</a>
+      <a href="#smk-tools">Studio USB</a>
+      <!-- PAGES_PROJECT_LINKS -->
+    </div>
+    <span id="smk-connection" data-link="idle">USB desconectado</span>
+  </nav>
+
+  <div class="aks-case" aria-label="Instrumento">
+    <div class="case-handle" aria-hidden="true"></div>
+    <section class="faceplate" id="faceplate" aria-label="Painel de síntese">
+      <div class="speaker speaker-left" aria-hidden="true"></div>
+      <div class="speaker speaker-right" aria-hidden="true"></div>
+      <nav class="jack-strip" aria-label="Acessos de sinal">
+        <a href="#analysis-heading" title="Monitor da saída estéreo"><i aria-hidden="true"></i><span>Phones</span></a>
+        <a href="#analysis-heading" title="Osciloscópio e espectro"><i aria-hidden="true"></i><span>Scope</span></a>
+        <a href="#bank-9" title="Controles da saída do canal 1"><i aria-hidden="true"></i><span>Out 1</span></a>
+        <a href="#bank-9" title="Controles da saída do canal 2"><i aria-hidden="true"></i><span>Out 2</span></a>
+        <a href="#stick-heading" title="Sinais de controle X e Y"><i aria-hidden="true"></i><span>CV X / Y</span></a>
+        <a href="#keyboard-heading" class="jack-keyboard" title="Teclado virtual"><i aria-hidden="true"></i><span>Keyboard</span></a>
+        <a href="#usb-inputs" data-open-panel title="Roteamento das entradas USB"><i aria-hidden="true"></i><span>USB L</span></a>
+        <a href="#usb-inputs" data-open-panel title="Roteamento das entradas USB"><i aria-hidden="true"></i><span>USB R</span></a>
+        <a href="#smk-tools" class="jack-midi" title="Conexão com o SMK‑37 Pro"><i aria-hidden="true"></i><span>MIDI</span></a>
+      </nav>
+      <div class="power-panel">
+        <button id="audio" class="power-switch" type="button">Ativar áudio</button>
+      </div>
+      <section class="panel-meter" id="monitor-strip" data-mode="signal" aria-label="Meter · coluna B da matriz">
+        <div class="vu-face" aria-hidden="true">
+          <div class="vu-rule vu-signal"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+          <div class="vu-rule vu-cv"><span>−100</span><span>−50</span><span>0</span><span>+50</span><span>+100</span></div>
+          <span id="vu-needle"></span>
+          <span class="vu-label">METER <b>B</b></span>
+        </div>
+        <fieldset class="meter-switch" aria-label="Modo do medidor da matriz">
+          <label><input id="meter-cv" name="meter-mode" type="radio" value="cv"> <span>Control voltage</span></label>
+          <label><input id="meter-signal" name="meter-mode" type="radio" value="signal" checked> <span>Signal levels</span></label>
+        </fieldset>
+        <output id="meter-reading" aria-live="off" title="Leitura normalizada do sintetizador no navegador">0%</output>
+      </section>
+      <div id="module-quick-controls" hidden>
+        <label class="control" data-color="blue">
+          <span>Tune</span>
+          <input id="tune" type="range" min="-24" max="24" value="0" step="any" aria-label="Afinação do Oscilador 1">
+          <output for="tune" id="tune-value">0 st</output>
+        </label>
+        <label class="control" data-color="red">
+          <span>Shape 1</span>
+          <input id="shape" type="range" min="0" max="1" value="0.5" step="any" aria-label="Forma do seno do Oscilador 1">
+          <output for="shape" id="shape-value">50%</output>
+        </label>
+        <label class="control" data-color="green">
+          <span>Master</span>
+          <input id="level" type="range" min="0" max="1" value="0.7" step="any" aria-label="Nível geral">
+          <output for="level" id="level-value">70%</output>
+        </label>
+        <label class="control" data-color="blue">
+          <span>Mix OSC 1</span>
+          <input id="mix" type="range" min="0" max="1" step="any" value="0" aria-label="Mistura do seno e rampa do Oscilador 1">
+          <output id="mix-value" for="mix"></output>
+        </label>
+        <div class="control" data-color="ochre">
+          <span>Freq. OSC 3</span>
+          <input id="lfo" type="range" min="0.02" max="500" step="any" value="3.5" aria-label="Frequência base do Oscilador 3">
+          <output id="lfo-value" for="lfo"></output>
+        </div>
+        <div class="control" data-color="green">
+          <span>Corte</span>
+          <input id="cutoff" type="range" min="5" max="10000" step="any" value="1200" aria-label="Frequência de corte do filtro">
+          <output id="cutoff-value" for="cutoff"></output>
+        </div>
+      </div>
+      <div id="module-controls" class="module-banks"></div>
+      <section id="patch-panel" class="module patch" aria-labelledby="matrix-heading">
+        <div class="section-head">
+          <h2 id="matrix-heading">Patch Matrix</h2>
+          <span id="matrix-patch-name">Inicial</span>
+        </div>
+        <div class="matrix-tools">
+          <button id="overview" type="button" aria-pressed="true">Overview · 16 × 16</button>
+          <button id="edit" type="button" aria-pressed="false">Edit · 4 × 4</button>
+          <meter id="matrix-meter" min="0" max="1" value="0" aria-label="Pico de sinal no Meter B" title="Pico de sinal no Meter B"></meter>
+
+        </div>
+        <div class="matrix-content">
+          <div class="matrix" id="matrix" role="group" aria-label="Matriz de pinos"></div>
+        </div>
+        <div class="pin-rack" role="group" aria-label="Bandeja de 21 pinos">
+          <div id="pin-stock" class="pin-stock" aria-hidden="true"></div>
+          <div class="pin-actions">
+            <button type="button" data-pin-type="white" aria-pressed="true"><i class="symbol" aria-hidden="true"></i> Branco</button>
+            <button type="button" data-pin-type="red" aria-pressed="false"><i class="symbol" aria-hidden="true"></i> Vermelho</button>
+            <button type="button" data-pin-type="green" aria-pressed="false"><i class="symbol" aria-hidden="true"></i> Verde</button>
+            <button type="button" data-pin-type="" aria-pressed="false">Retirar</button>
+            <output id="pin-selection"></output>
+          </div>
+        </div>
+        <p id="route-status" class="feedback"></p>
+        <p id="pin-status" class="feedback" role="status" hidden></p>
+        <div class="matrix-region" id="matrix-region" hidden>
+          <h3>Região</h3>
+          <div id="regions" class="regions" aria-label="Regiões da matriz"></div>
+          <p id="region-status"></p>
+        </div>
+        <details class="pin-reference">
+          <summary>Guia de pinos A–P / 1–16</summary>
+          <ul class="pin-legend" aria-label="Famílias de pinos">
+            <li><i class="symbol full" data-pin-color="white" aria-hidden="true"></i> Branco · comum</li>
+            <li><i class="symbol full" data-pin-color="red" aria-hidden="true"></i> Vermelho · precisão</li>
+            <li><i class="symbol half" data-pin-color="green" aria-hidden="true"></i> Verde · atenuador</li>
+          </ul>
+          <p>Branco e vermelho têm 2,7 kΩ nominais. O vermelho é o pino de precisão para afinação por tensão de controle. O verde de 68 kΩ é o atenuador. O editor usa nível nominal para branco e vermelho e atenuação digital de 50% para o verde.</p>
+          <div id="pin-reference-grid" class="pin-reference-grid"></div>
+          <p>Uma linha fornece o sinal. A coluna recebe. H7 liga o ruído ao filtro. A12 liga o sinal da envoltória à saída 1. B11 monitora o trapézio e B15 monitora o Stick X. No medidor, 100% representa o fundo da escala digital.</p>
+          <p>A bandeja usa os 21 pinos do conjunto fornecido pela EMS em um serviço documentado, com estoque comum às três famílias. Patches importados preservam suas rotas.</p>
+          <p><a href="https://medias.audiofanzine.com/files/ems-synthi-aks-service-manual-481665.pdf#page=19" target="_blank" rel="noopener">Folha técnica da matriz</a> · <a href="https://www.hinton-instruments.co.uk/ems/essential.html" target="_blank" rel="noopener">Notas técnicas dos pinos</a> · <a href="https://www.rlmusic.co.uk/rlm3/ems-synthi-aks-5/" target="_blank" rel="noopener">Conjunto de serviço EMS</a></p>
+        </details>
+      </section>
+      <section class="stick-module" aria-labelledby="stick-heading">
+        <h3 id="stick-heading">Joystick / Attack</h3>
+        <div class="stick-range">
+          <label class="control" data-color="green"><span>Range X</span><input id="stick-range-x" type="range" min="0" max="1" step="any" value="1"><output id="stick-range-x-value" for="stick-range-x">100%</output></label>
+          <label class="control" data-color="green"><span>Range Y</span><input id="stick-range-y" type="range" min="0" max="1" step="any" value="1"><output id="stick-range-y-value" for="stick-range-y">100%</output></label>
+        </div>
+        <div id="stick-pad" class="stick-pad" tabindex="0" role="group" aria-label="Joystick X/Y"
+             aria-describedby="stick-route" aria-description="Use as setas. Home centraliza."><span aria-hidden="true"></span></div>
+        <p id="stick-route" class="stick-route">X → 15 · Y → 16</p>
+        <div class="stick-actions">
+          <button id="stick-center" type="button">Centralizar</button>
+          <button id="manual-attack" type="button">Attack</button>
+        </div>
+      </section>
+    </section>
+    <div class="case-hinge" aria-hidden="true"><i></i><i></i></div>
+    <div class="aks-deck">
+      <section class="module ks" aria-labelledby="ks-heading">
+        <div class="section-head">
+          <h2 id="ks-heading">Keyboard Sequencer</h2>
+          <span id="ks-status" role="status">Parado · 0 / 256 eventos</span>
+        </div>
+        <div class="sequence-tabs" role="group" aria-label="Modo de execução">
+          <button type="button" data-seq="ks" aria-pressed="true">KS</button>
+          <button type="button" data-seq="step" aria-pressed="false">SEQ</button>
+          <button type="button" data-seq="arp" aria-pressed="false">ARP</button>
+          <button type="button" data-seq="scale" aria-pressed="false">Scale</button>
+        </div>
+        <div id="seq-step" class="step-panel" hidden>
+          <div class="step-readout">
+            <span id="step-transport" data-state="idle">Sem leitura do SMK</span>
+            <span id="step-clock" hidden></span>
+          </div>
+          <div class="step-fields">
+            <label>Comprimento <input id="step-length" type="number" min="1" max="64" value="16"></label>
+            <label>BPM <input id="step-bpm" type="number" min="30" max="300" value="120"></label>
+            <label>Divisão
+              <select id="step-division">
+                <option value="0">1/4</option><option value="1">1/4T</option>
+                <option value="2">1/8</option><option value="3">1/8T</option>
+                <option value="4" selected>1/16</option><option value="5">1/16T</option>
+                <option value="6">1/32</option><option value="7">1/32T</option>
+              </select>
+            </label>
+            <button id="step-play" type="button">Tocar no SMK</button>
+            <button id="step-record" type="button">Gravar no SMK</button>
+            <button id="step-stop" type="button">Parar</button>
+          </div>
+          <div class="step-navigation">
+            <div class="step-pages" id="step-pages" role="group" aria-label="Páginas de 16 passos"></div>
+            <label><input id="step-live" type="checkbox" checked> Editar passos ao vivo</label>
+          </div>
+          <div class="step-grid" id="step-grid" aria-label="Posições da sequência"></div>
+          <div class="step-fields">
+            <label>Passo <output id="step-position">1</output></label>
+            <label>Nota MIDI <input id="step-note" type="number" min="0" max="127" value="60"></label>
+            <label>Velocidade <input id="step-velocity" type="number" min="0" max="127" value="0"></label>
+            <button id="step-toggle" type="button">Ligar ou silenciar passo</button>
+          </div>
+          <div class="step-workspace">
+            <section aria-labelledby="step-selection-title">
+              <h3 id="step-selection-title">Trecho</h3>
+              <div class="step-fields">
+                <label>De <input id="step-first" type="number" min="1" max="64" value="1"></label>
+                <label>Até <input id="step-last" type="number" min="1" max="64" value="1"></label>
+                <button id="step-copy" type="button">Copiar trecho</button>
+                <button id="step-paste" type="button" disabled>Colar no passo em foco</button>
+                <button id="step-clear-range" type="button">Apagar trecho</button>
+              </div>
+            </section>
+            <section aria-labelledby="step-shelf-title">
+              <h3 id="step-shelf-title">Biblioteca de sequências</h3>
+              <div class="step-fields">
+                <label>Biblioteca <select id="step-shelf"><option value="">Nova entrada</option></select></label>
+                <label>Nome <input id="step-name" type="text" maxlength="64"></label>
+                <button id="step-save-grid" type="button">Salvar SEQ</button>
+                <button id="step-save-clip" type="button">Salvar trecho</button>
+                <button id="step-load" type="button" disabled>Carregar</button>
+                <button id="step-update" type="button" disabled>Atualizar</button>
+                <button id="step-delete" type="button" disabled>Excluir da biblioteca</button>
+                <button id="step-export" type="button">Exportar JSON</button>
+                <button id="step-import" type="button">Importar JSON</button>
+                <input id="step-file" type="file" accept=".json,application/json" hidden>
+              </div>
+            </section>
+            <section aria-labelledby="step-device-title">
+              <h3 id="step-device-title">SEQ no SMK</h3>
+              <div class="step-fields">
+                <button id="smk-step-read" type="button" disabled>Ler SEQ do SMK</button>
+                <button id="smk-step-write" type="button" disabled>Enviar SEQ ao SMK</button>
+                <button id="smk-step-store" type="button" disabled>Gravar SEQ no slot selecionado</button>
+                <button id="step-clear-grid" type="button">Apagar sequência no editor</button>
+              </div>
+            </section>
+          </div>
+          <p id="step-status" class="feedback" role="status"></p>
+        </div>
+        <div class="ks-layout" id="seq-ks">
+          <div class="ks-transport">
+            <div class="ks-actions">
+              <button id="ks-record" type="button" aria-pressed="false">Record</button>
+              <button id="ks-play" type="button" aria-pressed="false" disabled>Play</button>
+              <button id="ks-stop" type="button" disabled>Stop</button>
+              <button id="ks-random" type="button">Random</button>
+            </div>
+            <div class="ks-readout">
+              <progress id="ks-progress" value="0" max="1" aria-label="Posição na sequência"></progress>
+              <span id="ks-time">0,00 / 0,00 s</span>
+            </div>
+          </div>
+          <details class="ks-options">
+            <summary>Ajustes e gráfico do KS</summary>
+            <canvas id="ks-timeline" width="640" height="100" role="img" aria-label="Notas e posição da frase KS"></canvas>
+            <div class="ks-switches">
+              <label><input id="ks-loop" type="checkbox" checked> Loop</label>
+              <label>Trigger
+                <select id="ks-trigger">
+                  <option value="live">Teclado</option>
+                  <option value="sequence">Sequência</option>
+                </select>
+              </label>
+            </div>
+            <div class="ks-controls">
+              <label>Realtime Pitch Spread <output id="ks-realtime-value" for="ks-realtime">100%</output>
+                <input id="ks-realtime" type="range" min="25" max="200" value="100">
+              </label>
+              <label>Sequence Pitch Spread <output id="ks-spread-value" for="ks-spread">100%</output>
+                <input id="ks-spread" type="range" min="25" max="200" value="100">
+              </label>
+              <label>Sequence Length <output id="ks-length-value" for="ks-length">12 s</output>
+                <input id="ks-length" type="range" min="1" max="30" value="12">
+              </label>
+              <label>Velocidade <output id="ks-speed-value" for="ks-speed">100%</output>
+                <input id="ks-speed" type="range" min="25" max="400" step="1" value="100">
+              </label>
+              <label>Transpose <output id="ks-transpose-value" for="ks-transpose">0 st</output>
+                <input id="ks-transpose" type="range" min="-24" max="24" value="0">
+              </label>
+              <details class="ks-routing">
+                <summary>Roteamento de afinação KS</summary>
+                <label><input id="ks-matrix" type="checkbox"> Modo EMS · KS na linha 16</label>
+                <div id="ks-routes" class="ks-routes"></div>
+              </details>
+            </div>
+          </details>
+        </div>
+        <div id="seq-arp" class="sequence-parameters" hidden>
+          <button type="button" id="arp-toggle" aria-pressed="false">Ativar ARP</button>
+          <label>Andamento <input type="number" id="arp-bpm" min="30" max="300" value="120"> BPM</label>
+          <label>Ordem <select id="arp-order">
+            <option value="0">Crescente</option><option value="1">Decrescente</option><option value="2">Ordem tocada</option><option value="3">Aleatória</option>
+          </select></label>
+          <label>Gate <output id="arp-gate-value">60%</output>
+            <input type="range" id="arp-gate" min="10" max="95" value="60">
+          </label>
+          <label>Divisão <select id="arp-division">
+            <option value="0">1/4</option><option value="1">1/4T</option>
+            <option value="2" selected>1/8</option><option value="3">1/8T</option>
+            <option value="4">1/16</option><option value="5">1/16T</option>
+            <option value="6">1/32</option><option value="7">1/32T</option>
+          </select></label>
+          <label>Chance <output id="arp-chance-value">100%</output>
+            <input type="range" id="arp-chance" min="0" max="100" value="100">
+          </label>
+          <label><input type="checkbox" id="arp-hold"> HOLD</label>
+          <label><input type="checkbox" id="arp-free"> FREE</label>
+          <span id="arp-note" role="status">Segure as notas</span>
+        </div>
+        <div id="seq-scale" class="sequence-parameters" hidden>
+          <label>Tônica <select id="scale-root"></select></label>
+          <label>Escala <select id="scale-mode"></select></label>
+          <div id="scale-notes" aria-label="Notas da escala"></div>
+        </div>
+      </section>
+      <section class="module keyboard" aria-labelledby="keyboard-heading">
+        <div class="section-head">
+          <h2 id="keyboard-heading">Teclado tátil</h2>
+          <span id="note-status">C3–F5</span>
+        </div>
+        <div class="ks-pad-strip">
+          <span>Transpose KS</span>
+          <div id="ks-transpose-pads" role="group" aria-label="Pads de transposição do KS"></div>
+        </div>
+        <div id="keys" class="keys" aria-label="Teclado virtual"></div>
+        <p>A W S E D F T G Y H U J K tocam de C4 a C5.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="studio-bay">
+    <details id="preset-drawer" class="module preset-drawer">
+      <summary class="preset-summary">
+        <span>Presets</span>
+        <output id="preset-drawer-current">Inicial</output>
+      </summary>
+      <div class="preset-library">
+        <section class="preset-library-card" aria-labelledby="factory-preset-heading">
+          <h3 id="factory-preset-heading">Presets de fábrica</h3>
+          <select id="preset" aria-label="Escolher patch">
+          <option value="">Patch editado</option>
+          <option value="initial" selected>Inicial</option>
+          <option value="filter">Rampa filtrada</option>
+          <option value="ring">Modulação em anel</option>
+          <option value="spring">Envelope e molas</option>
+          <option value="resonance">Filtro ressonante</option>
+          <option value="repeat">Trapezoide cíclico</option>
+          <option value="ks">KS · Sequência e teclado</option>
+          <optgroup id="factory-studio" label="Banco EMS · estúdio"></optgroup>
+          <optgroup id="factory-lab" label="Banco EMS · laboratório"></optgroup>
+          <optgroup id="factory-performance" label="Execução"></optgroup>
+          <optgroup id="factory-texture" label="Texturas"></optgroup>
+          <optgroup id="factory-sequence" label="Sequências KS"></optgroup>
+          <optgroup id="factory-instrument" label="Instrumento"></optgroup>
+          <optgroup id="factory-handbook" label="Handbook I · síntese e modulação"></optgroup>
+          <optgroup id="factory-handbook_workshop" label="Handbook II · KS, efeitos e Prestopatch"></optgroup>
+          <optgroup id="factory-keys" label="Teclas e baixos"></optgroup>
+          <optgroup id="factory-exploration" label="Exploração"></optgroup>
+          </select>
+          <p id="preset-guide" class="preset-guide" hidden></p>
+          <div class="patch-actions">
+            <button id="reset" type="button">Repor inicial</button>
+            <button id="clear" type="button">Retirar pinos</button>
+          </div>
+        </section>
+        <section class="preset-library-card" aria-labelledby="user-preset-heading">
+          <h3 id="user-preset-heading">Meus presets</h3>
+          <div class="preset-fields">
+            <label>Preset salvo <select id="user-preset"><option value="">Novo preset</option></select></label>
+            <label>Nome <input id="user-name" type="text" maxlength="64" autocomplete="off"></label>
+          </div>
+          <div class="patch-actions">
+            <button id="user-save" class="primary" type="button">Salvar como novo</button>
+            <button id="user-update" type="button" disabled>Atualizar</button>
+            <button id="user-delete" type="button" disabled>Excluir</button>
+          </div>
+        </section>
+        <div class="patch-actions preset-files">
+          <button id="export" type="button">Exportar JSON</button>
+          <button id="import" type="button">Importar JSON</button>
+          <input id="file" type="file" accept=".json,application/json" hidden>
+          <p class="feedback" id="patch-status" role="status"></p>
+        </div>
+      </div>
+    </details>
+    <section class="module digital-tools" aria-labelledby="digital-heading">
+      <h2 id="digital-heading">Controles digitais</h2>
+      <label class="studio-field">Perfil sonoro
+        <select id="aks-profile"><option value="1">AKS calibrado</option><option value="0">Legado 3.9.4</option></select>
+      </label>
+      <div id="digital-controls" class="dial-row"></div>
+      <details class="precise-controls">
+        <summary>Edição numérica</summary>
+        <form id="exact-edit">
+          <label>Parâmetro <select id="exact-param"></select></label>
+          <label>Valor <input id="exact-value" type="number" step="any" required></label>
+          <button type="submit">Aplicar valor</button>
+        </form>
+      </details>
+      <details class="ks-routing" id="usb-inputs">
+          <summary>Entradas de áudio USB</summary>
+          <button id="usb-migrate" type="button">Mover os pinos IN 1/2 para USB L/R</button>
+          <div id="usb-routes" class="usb-routes"></div>
+        </details>
+    </section>
+    <section class="module analysis" aria-labelledby="analysis-heading">
+      <div class="section-head">
+        <h2 id="analysis-heading">Meter / Scope</h2>
+        <button id="scope-toggle" type="button" aria-pressed="true">Pausar</button>
+      </div>
+      <div class="scope-tools">
+        <label for="trace-mode">Vista</label>
+        <select id="trace-mode"><option value="wave">Forma de onda</option><option value="spectrum">Espectro</option><option value="filter">Filtro teórico</option></select>
+        <label for="trace-channel">Canal</label>
+        <select id="trace-channel"><option value="0">L</option><option value="1">R</option></select>
+      </div>
+      <canvas id="signal-display" width="360" height="140" role="img" aria-label="Gráfico de sinal"></canvas>
+      <p class="trace-caption" id="signal-scale"></p>
+      <div class="meter-row">
+        <label for="meter">Saída estéreo</label>
+        <meter id="meter" min="0" max="1" value="0" aria-label="Pico de saída"></meter>
+        <output id="meter-db">−∞ dBFS</output>
+      </div>
+      <dl class="frequency-display" aria-label="Frequências após modulação">
+        <div><dt>OSC 1</dt><dd id="freq-1">—</dd></div>
+        <div><dt>OSC 2</dt><dd id="freq-2">—</dd></div>
+        <div><dt>OSC 3</dt><dd id="freq-3">—</dd></div>
+        <div><dt>Corte</dt><dd id="freq-4">—</dd></div>
+      </dl>
+      <p class="trace-caption">≈ recebe modulação pela matriz</p>
+      <div class="envelope">
+        <div class="section-head">
+          <h3>Trapezoid</h3>
+          <output id="envelope-phase">Off</output>
+        </div>
+        <canvas id="envelope-display" width="360" height="96" role="img" aria-label="Curva nominal da envoltória"></canvas>
+        <p id="envelope-scale" class="trace-caption"></p>
+        <meter id="envelope-meter" min="0" max="1" value="0" aria-label="Nível do envelope"></meter>
+      </div>
+    </section>
+    <section id="smk-tools" class="module studio-tools" aria-label="Studio USB">
+      <div class="studio-deck">
+        <section class="studio-card" aria-labelledby="smk-title">
+          <h2 id="smk-title">Conexão</h2>
+          <div class="studio-ports">
+            <label>Entrada MIDI<select id="smk-input"><option value="">Selecionar porta</option></select></label>
+            <label>Saída MIDI<select id="smk-output"><option value="">Selecionar porta</option></select></label>
+          </div>
+          <div class="studio-actions">
+            <button id="smk-access" type="button">Autorizar USB MIDI</button>
+            <button id="smk-link" type="button" disabled>Vincular SMK</button>
+          </div>
+        </section>
+        <section class="studio-card" aria-labelledby="smk-patch-title">
+          <h2 id="smk-patch-title">Patch ativo</h2>
+          <p id="studio-patch-name">Envelope e molas</p>
+          <div class="studio-actions">
+            <button id="smk-read" type="button" disabled>Carregar do SMK</button>
+            <button id="smk-apply" type="button" disabled>Aplicar patch e editar ao vivo</button>
+          </div>
+        </section>
+        <section class="studio-card" aria-labelledby="smk-storage">
+          <h2 id="smk-storage">Memória do SMK</h2>
+          <label class="studio-field">Slot
+            <select id="smk-user-slot" disabled><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
+          </label>
+          <div class="studio-actions">
+            <button id="smk-user-read" type="button" disabled>Carregar slot</button>
+            <button id="smk-user-write" type="button" disabled>Gravar preset do editor</button>
+            <button id="smk-user-save" type="button" disabled>Gravar estado do SMK</button>
+          </div>
+        </section>
+      </div>
+      <div class="studio-status">
+        <p id="smk-status" class="feedback" role="status" data-link="idle">Conecte o teclado por USB.</p>
+        <details class="studio-cc">
+          <summary>Mapeamento de CC</summary>
+          <div class="step-fields">
+            <label>Controle <select id="midi-cc-control"></select></label>
+            <label>Número de CC <input id="midi-cc-value" type="number" min="0" max="127" value="16"></label>
+            <label>Módulo do banco A <select id="midi-bank-a"><option value="">Desligado</option></select></label>
+            <label>Módulo do banco B <select id="midi-bank-b"><option value="">Desligado</option></select></label>
+            <label>Giro dos knobs <select id="midi-knob-format">
+              <option value="absolute">Absoluto</option><option value="relative">Relativo (SMK)</option>
+            </select></label>
+          </div>
+        </details>
+      </div>
+      <details id="smk-panel-config" class="studio-cc" hidden>
+        <summary>Controles do painel SMK</summary>
+        <div id="smk-panel-fields" class="panel-config"></div>
+      </details>
+      <details id="smk-profile" class="studio-cc" hidden>
+        <summary>Diagnóstico de desempenho</summary>
+        <div class="studio-actions">
+          <button id="smk-profile-reset" type="button" disabled>Iniciar medição</button>
+          <button id="smk-profile-read" type="button" disabled>Ler medição</button>
+        </div>
+        <output id="smk-profile-result" role="status">Inicie uma medição e toque no SMK antes de ler os contadores.</output>
+      </details>
+    </section>
+    <details id="firmware-drawer" class="module firmware-drawer">
+      <summary class="preset-summary">
+        <span>Firmware</span>
+        <output id="firmware-indicator">SMK‑37 Pro · USB</output>
+      </summary>
+      <div class="firmware-panel">
+        <div class="firmware-grid">
+          <section class="studio-card firmware-card" aria-labelledby="firmware-device-heading">
+            <h2 id="firmware-device-heading">Teclado</h2>
+            <label>Porta USB MIDI
+              <select id="firmware-port" disabled><option value="">Conecte o teclado por USB</option></select>
+            </label>
+            <div class="studio-actions">
+              <button id="firmware-connect" type="button">Autorizar USB MIDI</button>
+              <button id="firmware-probe" type="button" disabled>Identificar teclado</button>
+            </div>
+            <output id="firmware-device">Aguardando identificação</output>
+          </section>
+          <section class="studio-card firmware-card" aria-labelledby="firmware-package-heading">
+            <h2 id="firmware-package-heading">Versão de destino</h2>
+            <label>Pacote de firmware
+              <select id="firmware-package">
+                <option value="">Selecionar pacote</option>
+                <option value="local">Arquivo .fwsc</option>
+              </select>
+            </label>
+            <label id="firmware-file-field" hidden>Arquivo
+              <input id="firmware-file" type="file" accept=".fwsc">
+            </label>
+            <output id="firmware-target">Aguardando pacote</output>
+            <!-- PAGES_DISTRIBUTION -->
+            <div class="firmware-links">
+              <a href="https://github.com/m-vave/smk37_open#updates-and-recovery" target="_blank" rel="noopener">Procedimento para o V016 original</a>
+              <button id="firmware-export" type="button">Exportar patch do editor</button>
+            </div>
+          </section>
+        </div>
+        <div class="firmware-operation">
+          <button id="firmware-run" class="primary" type="button" disabled>Preparar gravação</button>
+          <progress id="firmware-progress" max="100" value="0" aria-label="Progresso da gravação" hidden></progress>
+          <p id="firmware-status" class="feedback" role="status">Use um cabo USB de dados e abra o editor no Chrome ou Edge do computador.</p>
+        </div>
+      </div>
+    </details>
+    <dialog id="firmware-confirm" class="firmware-confirm" aria-labelledby="firmware-confirm-heading">
+      <form method="dialog">
+        <h2 id="firmware-confirm-heading">Confirmar gravação</h2>
+        <p id="firmware-confirm-target"></p>
+        <p>Pré-lançamento independente para o SMK‑37 Pro. Salve os presets e as sequências que deseja manter. A gravação pode apagar dados. Se a operação for interrompida, o teclado pode deixar de iniciar. Mantenha a conexão USB e esta página abertas até a confirmação do reinício.</p>
+        <p lang="en">Independent pre-release for the SMK‑37 Pro. Back up your presets and sequences. Flashing can erase data, and an interrupted write can prevent startup. Keep USB connected and this page open until the restart is confirmed.</p>
+        <label><input id="firmware-consent" type="checkbox"> Conferi o modelo, a versão e minhas cópias.</label>
+        <div class="studio-actions">
+          <button type="submit" value="cancel" autofocus>Cancelar</button>
+          <button id="firmware-confirm-write" class="primary" type="submit" value="write" disabled>Gravar firmware</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+  <footer>
+    <span id="audio-status" role="status">Áudio inativo</span>
+    <div class="midi-settings">
+      <label for="channel">Canal MIDI</label>
+      <select id="channel"><option value="0">Todos</option></select>
+      <span id="midi-status" role="status">MIDI desconectado</span>
+    </div>
+  </footer>
+</main>
+<script>
+/* DSP */
+</script>
+<script>
+/* UI */
+</script>
+</body>
+</html>

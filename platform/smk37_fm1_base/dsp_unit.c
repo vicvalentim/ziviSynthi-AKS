@@ -1,0 +1,6 @@
+#include "dsp_config.h"
+#include "../../app/core/synth.c"
+#include "../../app/core/ks.c"
+#include "../../app/core/modules.c"
+#include "../../app/core/presets.c"
+#include "../../platform/smk37_pro/zivi_smk37.c"
