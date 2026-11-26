@@ -202,6 +202,7 @@ test("3.8 round-trips USB routes, timed steps, performance and MIDI CC", async (
         sent.push({ op, data });
         let answer = [];
         if (op === command.hello) answer = [1, 98, 7, 96];
+        if (op === command.user && data.length === 1 && data[0] === 0) answer = [1, 0, 1];
         if (op === command.read) {
             assert.deepEqual(json(data), [2]);
             answer = [...u14(bytes.length), ...u21(crc(bytes)), 0];
@@ -213,15 +214,32 @@ test("3.8 round-trips USB routes, timed steps, performance and MIDI CC", async (
     };
     let loaded;
     const edit = setupSmkStudio(() => current, value => { loaded = value; return true; });
+    const matrix = get("smk-matrix-preset");
+    matrix.value = "active";
+    matrix.options = ["active", "0", "1", "2"].map(value => ({value}));
+    assert.equal(matrix.disabled, true);
     get("smk-access").trigger();
     await wait(5);
     get("smk-link").trigger();
     await wait(5);
     assert.equal(get("smk-user-save").disabled, false);
+    assert.equal(matrix.disabled, false);
+    assert.equal(matrix.options[2].disabled, true);
+    matrix.value = "1";
+    get("smk-matrix-preset-form").trigger("submit");
+    assert.equal(sent.some(({ op, data }) => op === command.user && data.join() === "1,1"), false);
+    matrix.value = "active";
+    get("smk-matrix-preset-form").trigger("submit");
+    await wait(15);
+    assert.deepEqual(json(loaded.stepGrid), json(stepGrid));
+    assert.equal(get("smk-matrix-feedback").textContent, "Patch recebido do SMK.");
+    matrix.value = "2";
+    get("smk-matrix-preset-form").trigger("submit");
+    await wait(15);
+    assert.equal(get("smk-matrix-feedback").textContent, "Patch recebido do SMK.");
     get("smk-user-slot").value = "2";
     get("smk-user-read").trigger();
     await wait(15);
-    assert.deepEqual(json(loaded.stepGrid), json(stepGrid));
     edit("step-cell", [50, 79, 90]);
     edit("usb-route", [0, 6, 2]);
     edit("midi-cc", [8, 107]);
@@ -386,6 +404,21 @@ test("3.9.1 transfers a timed SEQ independently and writes the selected slot usi
     } finally {
         get("smk-link").trigger();
     }
+});
+
+test("SEQ to KS retains rests, tempo-scaled recorded timing and contiguous legato", () => {
+    const { ZiviStudioProtocol: { emptyGrid }, ZiviSequences } = environment();
+    const grid = { ...emptyGrid(), length: 5, division: 2, bpm: 120, timingBpm: 60 };
+    grid.steps[1] = [60, 80, false, 22059, 8820, 13239];
+    grid.steps[2] = [64, 92, true, 22059, 0, 8820];
+    grid.steps[4] = [67, 100, false, 0, 0, 0];
+    assert.deepEqual(json(ZiviSequences.toKs(grid)), {
+        lengthMs: 1250,
+        events: [[350, 60, 80, true], [500, 64, 92, false], [600, 64, 0, false],
+                 [1000, 67, 100, true], [1188, 67, 0, false]]
+    });
+    assert.equal(ZiviSequences.toKs(emptyGrid()), null);
+    assert.equal(ZiviSequences.toKs({ ...grid, length: 64, bpm: 30, division: 0 }), null);
 });
 
 test("red pins survive in a web patch and use the normal pin code on the SMK", () => {

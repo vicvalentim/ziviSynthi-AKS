@@ -10,6 +10,9 @@ on:
         default: smk37-pro
         options:
           - smk37-pro
+          - smk37-open-pro
+          - smk37-open-elite
+          - fm-1
           - fm-1-host
           - web-studio
           - all
@@ -25,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJSON(inputs.target == 'all' && '["smk37-pro","fm-1-host","web-studio"]' || format('["{0}"]', inputs.target)) }}
+        target: ${{ fromJSON(inputs.target == 'all' && '["smk37-pro","smk37-open-pro","smk37-open-elite","fm-1","fm-1-host","web-studio"]' || format('["{0}"]', inputs.target)) }}
     env:
       BUILD_TARGET: ${{ matrix.target }}
       ZIVI_JIELI_ARCHIVE_URL: ${{ vars.ZIVI_JIELI_ARCHIVE_URL }}

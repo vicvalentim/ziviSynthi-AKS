@@ -10,7 +10,7 @@ Create an empty repository on GitHub. Extract the package and open a terminal in
 git init -b main
 git add .
 git status --short
-git commit -m "Publish ziviSynthi AKS 3.9.6"
+git commit -m "Publish ziviSynthi AKS 3.9.7"
 git remote add origin https://github.com/USER/REPOSITORY.git
 git push -u origin main
 ```
@@ -24,11 +24,13 @@ In **Actions → Build firmware and editor → Run workflow**, select a target. 
 | Target | Output | Verification |
 |---|---|---|
 | `smk37-pro` | FWSC, editor with embedded firmware, JSON presets, manifest, SHA‑256 sums and patched base source | Felucca simulator, SysEx, FWSC inspection and updater tests. |
+| `smk37-open-pro`, `smk37-open-elite` | Separate Open development images with matching HTML updaters | Model and package checks for each image. |
+| `fm-1` | FM‑1 development firmware | FM‑1-specific package and build checks. |
 | `fm-1-host` | Linux x86‑64 simulator in a `.tar.gz` archive | Matrix, KS, modules and presets in the simulator. |
 | `web-studio` | Standalone HTML | Protocol, live editing and presets in Node.js. |
-| `all` | All three sets | Runs the three jobs independently. |
+| `all` | All six sets | Runs each target independently. |
 
-The **CI** workflow runs `make test` on pushes and pull requests. The Pages workflow publishes v3.9.6 as a pre-release using the same source revision and verified assets. The Pro target has its own flash map, USB protocol and identity check. FM‑1 is available as a host simulator. Elite, standard SMK‑37 and MKE‑P37 require their own ports and hardware validation.
+The **CI** workflow runs `make test` on pushes and pull requests. The Pages workflow publishes v3.9.7 as a pre-release using the same source revision and verified assets. The Felucca Pro uses its own flash map and USB identity. The Open and FM‑1 device builds are development targets. See [firmware targets](../usage/FIRMWARE_TARGETS.en.md) for the matching installation paths.
 
 ## Build dependencies
 
@@ -56,7 +58,7 @@ python -m pip install Pillow==13.0.0
 tools/build_github.sh all
 ```
 
-Use `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` or `JIELI_TOOLCHAIN` to reuse local dependencies. Results go to `dist/`. To embed the optional 3.9.5 rollback, run `FIRMWARE_ROLLBACK=/path/to/3.9.5.fwsc tools/build_github.sh smk37-pro`.
+Use `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` or `JIELI_TOOLCHAIN` to reuse local dependencies. Results go to `dist/`. To embed the optional 3.9.6 rollback, run `FIRMWARE_ROLLBACK=/path/to/3.9.6.fwsc tools/build_github.sh smk37-pro`.
 
 ## GitHub Pages
 
@@ -87,11 +89,11 @@ Open [the local site](http://127.0.0.1:8000/). The example URLs are only used fo
 
 [GitHub Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
 
-## First public release
+## Publishing a pre-release
 
 1. Check the root catalog URLs and screenshot path at the release revision.
 2. Run **all** and deploy Pages from the same source revision. Publish the corresponding source alongside the FWSC. The Pages source archive includes the application and the patched base with its licenses.
-3. Draft **v3.9.6** with the [release notes](../releases/v3.9.6.md). Attach the FWSC, standalone HTML, manifest, JSON preset archive, corresponding source and checksums. Record the hardware validation status. Label the FM‑1 output as a development simulator if you attach it.
+3. After Pages deploys, confirm the **v3.9.7** pre-release contains the [release notes](../releases/v3.9.7.md), FWSC, both standalone HTMLs, manifest, presets, corresponding source and checksums. The release notes record the status of physical testing.
 4. Once the release is public, submit the root `firmware.json` to the relevant firmware catalog.
 
 [GitHub Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) · [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) · [Catalog format](https://github.com/charlesvestal/fm1-base/blob/main/docs/FIRMWARE-JSON.md) · [Third-party notices](../../NOTICES.md#english)

@@ -324,6 +324,19 @@ assert.equal(peaks.at(-1).ks.mode, "stop");
 assert.equal(peaks.at(-1).ks.count, 2);
 console.log("KS: intervalos livres, disparos, velocidade, loop, Random e rotas independentes verificados em Node.");
 
+// A browser-only take on the initial patch must drive the audible oscillator via its keyboard route.
+message("patch", initial);
+message("ks-phrase", { lengthMs: 500, events: [[0, 69, 100], [120, 69, 0], [200, 81, 100], [320, 81, 0]] },
+    { sequenceTrigger: false, transpose: 0, sequenceSpread: 100, speed: 100, loop: false });
+message("ks-play", true);
+assert(Math.abs(crossings(channels(4800)[0]) - 44) <= 1);
+channels(4800);
+assert(Math.abs(crossings(channels(4800)[0]) - 88) <= 1);
+channels(9600);
+channels(128);
+assert.equal(worklet.synth.ks.mode, "stop");
+assert.equal(worklet.synth.ks.sequenceTrigger, false);
+
 const plotSource = fs.readFileSync("platform/web/visuals.js", "utf8");
 const vernierSource = scripts[1].match(/^const VernierCatalog = .+;$/m)[0];
 const { envelopeCurve, filterDb, verniers, responseTaper } = vm.runInNewContext(vernierSource + "\n" + plotSource + "\nZiviVisuals;");
@@ -374,10 +387,20 @@ for (const bank of ["performance", "texture", "sequence", "handbook", "handbook_
     assert.equal(Object.values(factory).filter(preset => preset.bank === bank).length, 16);
 assert.equal(Object.values(factory).filter(preset => preset.bank === "instrument").length, 11);
 assert.equal(Object.values(factory).filter(preset => preset.bank === "exploration").length, 7);
-assert.equal(Object.keys(factory).length, 128);
+assert.equal(Object.keys(factory).length, 132);
+const usbFx = Object.values(factory).filter(preset => preset.bank === "usb_effects");
+assert.equal(usbFx.length, 4);
+for (const preset of usbFx) assert(validatePatch(preset).usbRoutes.length);
+const usb = new Synth(48000);
+assert(usb.applyPatch(factory["usb-stereo"]));
+const usbLeft = Float32Array.from({ length: 256 }, (_, i) => 0.4 * Math.sin(i * Math.PI / 24));
+const usbOutLeft = new Float32Array(256), usbOutRight = new Float32Array(256);
+assert(usb.render(usbOutLeft, usbOutRight, usbLeft, undefined, true) > 0.04);
+assert(usbOutRight.every(sample => sample === 0));
 const demoRate = 48000;
 let factoryFrames = 0;
 for (const [key, preset] of Object.entries(factory)) {
+    if (preset.bank === "usb_effects") continue;
     const patch = JSON.parse(fs.readFileSync("build/presets/" + key + ".json"));
     assert.deepEqual(JSON.parse(JSON.stringify(validatePatch(preset))), patch);
     const synth = new Synth(demoRate);

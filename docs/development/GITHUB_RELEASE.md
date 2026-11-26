@@ -10,7 +10,7 @@ Crie um repositório vazio no GitHub. Extraia o pacote e abra o terminal em `rep
 git init -b main
 git add .
 git status --short
-git commit -m "Publish ziviSynthi AKS 3.9.6"
+git commit -m "Publish ziviSynthi AKS 3.9.7"
 git remote add origin https://github.com/USUARIO/REPOSITORIO.git
 git push -u origin main
 ```
@@ -24,13 +24,15 @@ Abra **Actions → Build firmware and editor → Run workflow** e selecione um a
 | Alvo | Saída | Verificação |
 |---|---|---|
 | `smk37-pro` | FWSC, editor com o firmware incorporado, presets JSON, metadados, SHA‑256 e fontes modificadas da base | Simulador Felucca, SysEx, inspeção do FWSC e testes do atualizador. |
+| `smk37-open-pro`, `smk37-open-elite` | Imagens Open de desenvolvimento com atualizadores HTML próprios | Conferência do modelo e do pacote de cada imagem. |
+| `fm-1` | Firmware de desenvolvimento para FM‑1 | Conferência do build e do pacote específico do FM‑1. |
 | `fm-1-host` | Executável Linux x86‑64 em `.tar.gz` | Matriz, KS, módulos e presets no simulador. |
 | `web-studio` | HTML autônomo | Protocolo, edição ao vivo e presets no Node.js. |
-| `all` | Os três conjuntos | Executa os três jobs independentemente. |
+| `all` | Os seis conjuntos | Executa cada alvo independentemente. |
 
-O workflow **CI** executa `make test` em pushes e pull requests. O pipeline de build produz artefatos para revisão. A pré-release v3.9.6 é publicada pelo workflow Pages após a implantação, com os artefatos do mesmo commit.
+O workflow **CI** executa `make test` em pushes e pull requests. O pipeline de build produz artefatos para revisão. A pré-release v3.9.7 é publicada pelo workflow Pages após a implantação, com os artefatos do mesmo commit.
 
-O alvo **SMK‑37 Pro** tem seu próprio mapa de flash, protocolo USB e verificação de identidade. O FM‑1 continua como simulador. O app e o atualizador têm guardas específicos do Pro. Um pacote instalável para Elite, SMK‑37 padrão ou MKE‑P37 depende de adaptação de hardware, identidade, mapa de flash e validação por variante.
+O alvo **Felucca Pro** tem mapa de flash e identidade USB próprios. Os builds Open e FM‑1 de dispositivo são alvos de desenvolvimento. Consulte os [alvos de firmware](../usage/FIRMWARE_TARGETS.md) para identificar o instalador correspondente.
 
 ## Dependências
 
@@ -56,7 +58,7 @@ python -m pip install Pillow==13.0.0
 tools/build_github.sh all
 ```
 
-Requisitos locais adicionais são Git, GNU Make, um compilador C11, curl e Node.js 24. Para reutilizar dependências, forneça `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` ou `JIELI_TOOLCHAIN`. Os artefatos saem em `dist/`. Para incorporar também a reversão 3.9.5 no HTML, execute `FIRMWARE_ROLLBACK=/caminho/para/3.9.5.fwsc tools/build_github.sh smk37-pro`.
+Requisitos locais adicionais são Git, GNU Make, um compilador C11, curl e Node.js 24. Para reutilizar dependências, forneça `FM1_BASE`, `FM1_HOST_BASE`, `AC79_SDK` ou `JIELI_TOOLCHAIN`. Os artefatos saem em `dist/`. Para incorporar também a reversão 3.9.6 no HTML, execute `FIRMWARE_ROLLBACK=/caminho/para/3.9.6.fwsc tools/build_github.sh smk37-pro`.
 
 ## GitHub Pages
 
@@ -87,11 +89,11 @@ Abra [o site local](http://127.0.0.1:8000/). As URLs de exemplo servem à prévi
 
 [Guia oficial do GitHub Pages](https://docs.github.com/pt/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
 
-## Primeira release pública
+## Publicação de uma pré-release
 
 1. Confira as URLs no catálogo da raiz e o endereço da captura no commit da release. O arquivo `LICENSE` estabelece GPL-3.0-only para a aplicação e os materiais autorais.
 2. Rode o alvo **all** no commit escolhido e publique o site pela branch padrão com esse mesmo conteúdo. Preserve o código-fonte correspondente ao distribuir o FWSC. O site oferece `zivisynthi-aks-source.zip` com a versão do aplicativo e a base modificada com suas licenças.
-3. Crie um rascunho para `v3.9.6` e use [as notas da versão](../releases/v3.9.6.md#português). Anexe o FWSC, o HTML, o manifesto, o ZIP dos bancos JSON, o código-fonte correspondente e os hashes dos arquivos distribuídos. Registre o estado dos testes físicos. O simulador pode ser anexado com sua descrição de alvo de desenvolvimento.
+3. Após a implantação do Pages, confira se a pré-release **v3.9.7** inclui [as notas da versão](../releases/v3.9.7.md#português), o FWSC, os dois HTMLs autônomos, o manifesto, os presets, o código-fonte correspondente e os hashes. As notas informam o estado da validação física.
 4. Após publicar, encaminhe o `firmware.json` da raiz aos catálogos de firmware.
 
 [Formato de firmware.json](https://github.com/charlesvestal/fm1-base/blob/main/docs/FIRMWARE-JSON.md) · [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) · [Avisos de terceiros](../../NOTICES.md#português)

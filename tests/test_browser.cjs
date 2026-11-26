@@ -75,7 +75,7 @@ const playwright = require(process.env.PLAYWRIGHT_MODULE || "playwright");
             navigator.requestMIDIAccess = () => { throw new Error("Try requested MIDI access"); };
         });
         await page.getByRole("button", { name: "Experimentar / Try" }).click();
-        await page.waitForFunction(() => document.activeElement.getAttribute("aria-label") === "C4");
+        await page.waitForFunction(() => document.activeElement.id === "instant-patchers-title");
         assert.ok(await page.locator("#audio").isDisabled());
         assert.equal(await page.locator("#midi-status").textContent(), "MIDI desconectado");
         await page.keyboard.down("a");
@@ -84,9 +84,9 @@ const playwright = require(process.env.PLAYWRIGHT_MODULE || "playwright");
         await page.getByRole("button", { name: /B15 · STICK X/ }).click();
         for (let i = 0; i < 6; i++) await page.locator("#stick-pad").press("ArrowLeft");
         await page.getByRole("radio", { name: "Control voltage" }).check();
-        await page.waitForFunction(() => document.querySelector("#meter-reading").value === "-60%");
+        await page.waitForFunction(() => document.querySelector("#meter-reading").value === "-70%");
         await page.getByRole("radio", { name: "Signal levels" }).check();
-        await page.waitForFunction(() => document.querySelector("#meter-reading").value === "60%");
+        await page.waitForFunction(() => document.querySelector("#meter-reading").value === "70%");
         await page.getByRole("button", { name: "Retirar", exact: true }).click();
         await page.getByRole("button", { name: /B15 · STICK X/ }).click();
         await page.getByRole("button", { name: "Branco", exact: true }).click();
@@ -124,16 +124,48 @@ const playwright = require(process.env.PLAYWRIGHT_MODULE || "playwright");
         assert.match(await page.locator("#stick-route").textContent(), /KS/);
         await page.locator("#ks-matrix").uncheck();
         await page.getByText("Roteamento de afinação KS").click();
-        await page.getByRole("button", { name: "Record", exact: true }).click();
+        await page.getByRole("button", { name: "Gravar", exact: true }).click();
         await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Armado"));
         await page.keyboard.down("a");
+        await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Gravando · 1 /"));
         await page.waitForFunction(() => document.querySelector("#meter").value > 0.10);
         await page.keyboard.up("a");
-        await page.getByRole("button", { name: "Stop", exact: true }).click();
+        await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Gravando · 2 /"));
+        await page.getByRole("button", { name: "Parar", exact: true }).click();
         await page.waitForFunction(() => /Parado · 2 \/ 256/.test(document.querySelector("#ks-status").textContent));
-        await page.getByRole("button", { name: "Play", exact: true }).click();
+        await page.getByRole("button", { name: "Reproduzir", exact: true }).click();
         await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Reproduzindo"));
-        await page.getByRole("button", { name: "Stop", exact: true }).click();
+        await page.getByRole("button", { name: "Parar", exact: true }).click();
+
+        const tryPanel = page.locator("#instant-patchers");
+        await tryPanel.getByRole("button", { name: "Inicial", exact: true }).click();
+        await page.getByRole("button", { name: "Gravar", exact: true }).click();
+        await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Armado"));
+        for (const letter of ["a", "d"]) {
+            await page.keyboard.down(letter);
+            await page.waitForFunction(() => document.querySelector("#meter").value > 0.08);
+            await page.waitForTimeout(160);
+            await page.keyboard.up(letter);
+            await page.waitForTimeout(80);
+        }
+        await page.getByRole("button", { name: "Parar", exact: true }).click();
+        await page.getByText("Editar frase KS", {exact:true}).click();
+        await page.waitForFunction(() => document.querySelector("#ks-event-list").rows.length === 4);
+        const events = page.locator("#ks-event-list");
+        assert.deepEqual(await events.getByLabel("Nota MIDI").evaluateAll(inputs => inputs.map(input => input.valueAsNumber)), [60, 60, 64, 64]);
+        await events.getByLabel("Nota MIDI").nth(2).fill("67");
+        await events.getByLabel("Nota MIDI").nth(3).fill("67");
+        await page.getByRole("button", { name: "Aplicar frase" }).click();
+        assert.equal(await page.locator("#ks-edit-status").textContent(), "Frase KS aplicada.");
+        await page.getByRole("button", { name: "Reproduzir", exact: true }).click();
+        await page.waitForFunction(() => document.querySelector("#ks-note").textContent === "C4");
+        await page.waitForFunction(() => document.querySelector("#ks-note").textContent === "G4");
+        await page.getByRole("button", { name: "Parar", exact: true }).click();
+        await tryPanel.getByRole("button", { name: "On the Run · KS", exact: true }).click();
+        await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Reproduzindo"));
+        assert.match(await page.locator("#instant-status").textContent(), /frase KS em reprodução/);
+        assert.equal(await tryPanel.getByRole("button", { name: "On the Run · KS" }).getAttribute("aria-pressed"), "true");
+        await page.getByRole("button", { name: "Parar", exact: true }).click();
 
         await page.getByRole("combobox", { name: "Escolher patch" }).selectOption("spring");
         assert.equal(await page.getByRole("button", { name: /G12 · ENV SIGNAL/ }).getAttribute("aria-pressed"), "true");
@@ -170,7 +202,8 @@ const playwright = require(process.env.PLAYWRIGHT_MODULE || "playwright");
         const response = page.locator("#response");
         await response.focus();
         await response.press("ArrowUp");
-        assert.equal(await response.inputValue(), "0.01");
+        const firstVernierStep = await page.evaluate(() => ZiviVisuals.responseTaper.value(0.01));
+        assert(Math.abs(Number(await response.inputValue()) - firstVernierStep) < 1e-10);
 
         await page.locator("#trace-mode").selectOption("filter");
         await page.waitForFunction(() => document.querySelector("#signal-scale").textContent.includes("Ganho linear"));
@@ -184,10 +217,66 @@ const playwright = require(process.env.PLAYWRIGHT_MODULE || "playwright");
         await page.waitForFunction(() => document.querySelector("#freq-4").textContent.includes("Hz"));
         assert.match(await page.locator("#freq-4").getAttribute("data-modulated"), /true/);
 
+        const matrixPreset = page.locator("#smk-matrix-preset");
+        assert.equal(await matrixPreset.locator('option[value^="factory:"]').count(), 132);
+        const grid = await page.evaluate(() => {
+            const value = { ...ZiviStudioProtocol.emptyGrid(), length: 4, division: 0 };
+            value.steps[0] = [60, 104, false, 0, 0, 0];
+            value.steps[2] = [67, 94, false, 0, 0, 0];
+            return value;
+        });
+        await page.locator("#step-file").setInputFiles({
+            name: "steps.json", mimeType: "application/json",
+            buffer: Buffer.from(JSON.stringify({ format: "zivisynthiA.seq.v1", name: "Try SEQ", kind: "seq", value: grid }))
+        });
+        await page.locator("#step-load").click();
+        await page.locator("#step-save-grid").click();
+        assert.match(await page.locator("#step-status").textContent(), /SEQ carregado no KS/);
+        await page.locator("#step-play").click();
+        await page.waitForFunction(() => document.querySelector("#step-transport").dataset.state === "play");
+        await page.waitForFunction(() => document.querySelector("#ks-note").value === "C4");
+        await page.waitForFunction(() => document.querySelector("#ks-note").value === "G4");
+        await page.locator("#step-stop").click();
+        await page.waitForFunction(() => document.querySelector("#step-transport").dataset.state === "stop");
+        await matrixPreset.selectOption("factory:on-the-run-ks");
+        await page.locator("#smk-matrix-load").click();
+        await page.waitForFunction(() => document.querySelector("#ks-status").textContent.startsWith("Reproduzindo"));
+        assert.match(await page.locator("#matrix-patch-name").textContent(), /On the Run/i);
+
+        await matrixPreset.selectOption("factory:usb-stereo");
+        await page.locator("#smk-matrix-load").click();
+        const pcm = Buffer.alloc(44 + 24000 * 4);
+        pcm.write("RIFF", 0);
+        pcm.writeUInt32LE(pcm.length - 8, 4);
+        pcm.write("WAVEfmt ", 8);
+        pcm.writeUInt32LE(16, 16);
+        pcm.writeUInt16LE(1, 20);
+        pcm.writeUInt16LE(2, 22);
+        pcm.writeUInt32LE(24000, 24);
+        pcm.writeUInt32LE(96000, 28);
+        pcm.writeUInt16LE(4, 32);
+        pcm.writeUInt16LE(16, 34);
+        pcm.write("data", 36);
+        pcm.writeUInt32LE(pcm.length - 44, 40);
+        for (let i = 0; i < 24000; i++) pcm.writeInt16LE(Math.round(18000 * Math.sin(i * Math.PI / 24)), 44 + 4 * i);
+        await page.locator("#try-audio-file").setInputFiles({ name: "audio.wav", mimeType: "audio/wav", buffer: pcm });
+        await page.locator("#try-audio-play").click();
+        await page.waitForFunction(() => document.querySelector("#meter").value > 0.04);
+        await page.locator("#try-audio-stop").click();
+
         for (const width of [360, 390, 768, 1280]) {
             await page.setViewportSize({ width, height: 800 });
             assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), width + "px");
         }
+        await page.reload();
+        await page.locator('[data-seq="step"]').click();
+        await page.locator("#step-shelf").selectOption("1");
+        await page.locator("#step-load").click();
+        await page.locator('[data-seq="ks"]').click();
+        await page.locator("#ks-play").click();
+        await page.waitForFunction(() => document.querySelector("#ks-note").value === "C4");
+        await page.waitForFunction(() => document.querySelector("#ks-note").value === "G4");
+        await page.locator("#ks-stop").click();
         assert.deepEqual(errors, []);
         console.log("Chromium: HTML local, áudio, teclado, matriz, KS, envoltória manual e layout móvel aprovados.");
     } finally {

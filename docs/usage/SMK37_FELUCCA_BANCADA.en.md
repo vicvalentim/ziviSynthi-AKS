@@ -1,8 +1,8 @@
-# ziviSynthi AKS · Felucca Pro 3.9.5 bench manual
+# ziviSynthi AKS · Controller and Web Studio manual
 
 [Português](SMK37_FELUCCA_BANCADA.md) · [Installation](INSTALL.en.md) · [USB audio](ENTRADA_AUDIO_USB.md#english) · [Handbook presets](PRESETS_HANDBOOK.md#english)
 
-The 3.9.5 bench firmware targets **M‑VAVE SMK‑37 Pro** on **fm1-base + felucca-bsp**. Its USB identity is `SMK-37 Pro_99400`.
+Firmware 3.9.7 targets **M‑VAVE SMK‑37 Pro** on **fm1-base + felucca-bsp**. Its USB identity is `SMK-37 Pro_99600`.
 
 ## USB editor and personal presets
 
@@ -11,7 +11,7 @@ The 3.9.5 bench firmware targets **M‑VAVE SMK‑37 Pro** on **fm1-base + feluc
 3. Choose **Carregar do SMK** to start with the hardware patch, or **Aplicar patch e editar ao vivo** to send the browser patch and enable live editing. The hardware controls remain available.
 4. Open **Presets** and use **Salvar como novo** to save a named patch. **Meus presets** stores patches in the current browser profile and site. Export them as JSON for use elsewhere.
 
-The Studio remembers the verified ports and attempts to relink when USB returns. Choose the direction of the first transfer when resuming editing. Live sync covers synthesis parameters, pins, KS/USB routes, KS events, SEQ grid, ARP/SCALE and 24 CC assignments. Revision 3.9.5 sends changed bytes with a full baseline for a new or missed revision. Recording data is sent on completion. The Studio retains white/red full-gain pin metadata in its JSON while the route remains present.
+The Studio remembers the verified ports and attempts to relink when USB returns. Choose the direction of the first transfer when resuming editing. Live sync covers synthesis parameters, pins, KS/USB routes, KS events, SEQ grid, ARP/SCALE and 24 CC assignments. Live sync sends changed bytes with a full baseline for a new or missed revision. Recording data is sent on completion. The Studio retains white/red full-gain pin metadata in its JSON while the route remains present.
 
 **Controles do painel SMK** synchronizes master, synth and USB return levels, USB audio routing, MIDI channels and destination, clock source and output, KS clock reference and note output, USB Thru, relative encoder mode and pad LED mode. Bluetooth pairing remains a hardware-panel operation. The encoders default to absolute CC. Select relative mode in Studio or use **FX** on **SCALE → MIDI / AUDIO** in controller mode. Relative messages use two’s complement. Map the two knob banks to modules under **Mapeamento de CC**. Default assignments are OSC 1 for bank A and OSC 3 for B.
 
@@ -19,13 +19,15 @@ The Studio remembers the verified ports and attempts to relink when USB returns.
 
 **Gravar preset do editor** saves the browser patch to USER 1–3. **Gravar estado do SMK** saves the hardware state. **Carregar slot** loads the slot into both the Pro and Studio. On the Pro, use **PATCH → KNOB BANK**, pads 1–3 and **REC** to save or **PARA** to load. Stop playback and recording and release keys before saving. Writes can briefly interrupt audio. The slots use alternating CRC-checked copies in `0xEE000–0xF3FFF`, with ownership checked before a sector is erased.
 
+In **Patch Matrix**, use **SMK preset** to choose the active patch or an occupied **USER 1–3** slot, then select **Load into matrix**. Studio reads the resulting hardware patch and resumes live editing.
+
 ## Browser panel and matrix
 
 The panel groups Noise Generator and Output Filter together. The matrix has source labels to the left, destinations above, columns A–P below, and rows 1–16 on the right. White and red pins use nominal digital gain. Green pins use 50%. The 21-pin tray represents the service set. [Pin matrix](MATRIX_REFERENCE.md#english)
 
 OSC 1/2 verniers reach 261 Hz at 6, 2,088 Hz at 8, and 10 kHz at 10. OSC 3 reaches 63 Hz at 8 and 500 Hz at 10. Reference keys set 1 kHz or 10 kHz for OSC 1/2 and 0.05 Hz or 500 Hz for OSC 3. Filter frequency 5 corresponds to approximately 261 Hz during self-oscillation at maximum Response, with a 150.855 Hz digital cutoff parameter. Response 5 denotes the onset region. Calibration uses exponential interpolation between oscillator reference points. [Circuit audit](../development/AUDITORIA_CIRCUITO_AKS.md#english)
 
-Column B drives the browser meter. **Control voltage** is bipolar with zero centered. Try B11 for the trapezoid or B15 for Stick X. **Signal levels** shows rectified peak. Try B4 for oscillator 2. **Monitor de sinal** displays stereo level in dBFS. The 240 × 240 LCD shows a B peak bar. Preview images can include margins around that native area.
+Column B drives the browser meter. **Control voltage** is bipolar with zero centered. Try B11 for the trapezoid or B15 for Stick X. **Signal levels** shows rectified peak. Try B4 for oscillator 2. **Monitor de sinal** displays stereo level in dBFS. The 240 × 240 LCD shows a B peak bar.
 
 Drag the joystick, use arrow keys while focused, or center it with Home or **Centralizar**. **Range X/Y** adjusts attenuation. On the Pro, open **SCALE → MIDI / AUDIO** and hold **KBANK** while turning K1 for X or K2 for Y. In EMS mode, line 16 receives KS pitch and Stick Y is unavailable on that row.
 
@@ -83,9 +85,11 @@ In Envelope Shaper, use **PARA + K8** for hardware master. F1 sets synth level b
 
 **PATCH** opens banks of 4 × 4 presets. Use **< / >** to change bank, pads to load, or K5 + PARA for cursor selection. **Overview → K4** cycles the 128 instruments. Bank Select 0 preserves Program Change 0–127. Send CC0 = 10 with Program Change 0–3 for USB FX. In the matrix, K5 selects row, K6 column, K7 pin type and FX magnification. Pads edit the selected 4 × 4 region from two hardware rows, with 01–08 above 09–16.
 
-**BT** opens BLE MIDI. Turn K1 right or press PLAY to enable the radio. Press PLAY to scan, K6 to select, PARA to connect and < to disconnect. **>** opens **BLUETOOTH AUDIO**, with the same scan/select/connect controls. FX switches local/Bluetooth output. This build provides A2DP/SBC transmission. A2DP reception and persistent pairings are pending.
+**BT** opens BLE MIDI. Turn K1 right or press PLAY to enable the radio. Press PLAY to scan, K6 to select, PARA to connect and < to disconnect. **>** opens **BLUETOOTH AUDIO**, with the same scan/select/connect controls. FX switches local/Bluetooth output. This build provides A2DP/SBC transmission.
 
-## LEDs, MIDI and profiling
+<span id="leds-midi-and-profiling"></span>
+
+## LEDs and MIDI
 
 **SCALE → > → REC** cycles fixed, animated and off pad LEDs. Fixed is the startup setting and waits for the synth and its tail to become quiet. Lit modes cap brightness at one-eighth, send at intervals of at least 96 ms, require four PCM blocks ready, and defer while LCD DMA is busy.
 
@@ -102,10 +106,8 @@ In Envelope Shaper, use **PARA + K8** for hardware master. F1 sets synth level b
 
 Use PARA + K8 to send K8. Holding KBANK + K8 sends CC31. The panel buttons send 127 on press and 0 on release. CC102–119 map in order to FX, SCALE, CHORD, REPEAT, PARA, GLOBE, PATCH, BT, ARP, OCTAVE −, OCTAVE +, KBANK, FBANK, SEQ REC, <, >, SEQ and SEQ PLAY.
 
-Reset diagnostics with **PARA** in **SCALE → MIDI / AUDIO** or through the Studio performance section. The nominal deadline is 2.901 ms per 128-frame block. Run a repeatable workload and record DSP maximum, blocks at deadline, PCM reserve, MISS, DMA and USB DROP. Link-map memory headroom and real-time DSP capacity are measured separately. [Hardware validation procedure](../development/HARDWARE_VALIDATION_PRO.md#english)
-
 ## Installation and recovery
 
 Use the [installation guide](INSTALL.en.md). The updater checks model, SHA‑256, package CRCs and application size. It pauses Studio editing and verifies identity after restart. If an interrupted write leaves the device in the Pro bootloader, identify it again and resume with the same package. Use the [M‑VAVE recovery procedure](https://github.com/m-vave/smk37_open#updates-and-recovery) for the factory V016 or if the unit stops enumerating.
 
-Felucca bench builds `9800` through `99400` use VM starting at `0x9D000`. Open 0.8.2-alpha2 uses `0x72000`, within Felucca’s write area. Changing layouts requires Pro-specific recovery and a valid backup. Builds 3.9.1 and 3.9.2 share a USB identity and are distinguished in the editor by package SHA‑256. [Build and dependency guide](../development/GITHUB_RELEASE.en.md)
+Felucca Pro uses VM starting at `0x9D000`. Open 0.8.2-alpha2 uses `0x72000`, within Felucca’s write area. Changing layouts requires Pro-specific recovery and a valid backup. Builds 3.9.1 and 3.9.2 share a USB identity and are distinguished in the editor by package SHA‑256. [Build and dependency guide](../development/GITHUB_RELEASE.en.md)

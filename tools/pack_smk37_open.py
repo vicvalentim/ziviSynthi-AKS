@@ -133,8 +133,8 @@ def create_flash(app, folder):
 
 
 def wrap(flash, loader, product):
-    if not re.fullmatch(r"SMK-37 Pro_8[0-9]{6}", product) or not 0 < len(loader) < 32768:
-        raise ValueError("Invalid Pro identity or update loader.")
+    if not re.fullmatch(r"SMK-37 (?:Pro|Elite)_8[0-9]{6}", product) or not 0 < len(loader) < 32768:
+        raise ValueError("Invalid SMK-37 Open identity or update loader.")
     loader_at = 1024 + round_up(len(flash), 32)
     total = loader_at + round_up(len(loader), 32)
     ufw = bytearray(b"\xff" * total)

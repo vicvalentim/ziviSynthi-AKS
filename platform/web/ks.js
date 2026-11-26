@@ -41,6 +41,7 @@ class Ks {
             this.length = last ? Math.max(this.recordFrame, last.frame + 1) : 0;
         }
         this.mode = "stop";
+        this.audition = false;
         this.rewind();
     }
 
@@ -51,7 +52,6 @@ class Ks {
             frame: Math.round(ms * this.rate / 1000), note, velocity, attack: attack ?? (velocity !== 0)
         }));
         this.limit = "";
-        this.controls({ sequenceSpread: 100, speed: 100, transpose: 0, loop: true });
     }
 
     record() {
@@ -83,10 +83,11 @@ class Ks {
         }
     }
 
-    play() {
+    play(audition = false) {
         this.stop();
         if (this.events.length === 0) return false;
         this.mode = "play";
+        this.audition = audition;
         return true;
     }
 
@@ -157,6 +158,7 @@ class Ks {
         const recording = this.mode === "record";
         return {
             mode: this.mode, count: this.events.length, limit: this.limit,
+            note: this.mode === "play" && this.velocity ? this.note : null,
             duration: (recording ? this.recordLimit : this.length) / this.rate,
             position: (recording ? this.recordFrame : this.position / 100) / this.rate
         };

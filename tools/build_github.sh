@@ -8,6 +8,7 @@ dist="${ZIVI_BUILD_DIST:-$PWD/dist}"
 fm1_ref=2bb8e74f2962475eeeefd5179420bd8d73a3da6c
 smk_ref=eafac162b4d7bc59176919a36eed179955315f93
 sdk_ref=d179b4484759423312073f5fbb232501aa491047
+open_ref=b2d6bcbcd724adb13bcf85e44cfa16bb2c8153a8
 toolchain_dir=jieli-linux-toolchains-20260730.1
 toolchain_sha=a1545cddbc451a06bac43eb5cd96d831470c42a97c5c0b1f98879a20fc7647bd
 
@@ -32,6 +33,10 @@ base() {
 smk_dependencies() {
     FM1_BASE=${FM1_BASE:-$deps/fm1-base-smk}
     if [[ "$FM1_BASE" == "$deps/fm1-base-smk" ]]; then base "$FM1_BASE" "$smk_ref"; fi
+    jieli_dependencies
+}
+
+jieli_dependencies() {
     if [[ -z "${AC79_SDK:-}" ]]; then
         AC79_SDK="$deps/ac79"
         checkout "$AC79_SDK" "${ZIVI_AC79_GIT_URL:-https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK.git}" \
@@ -76,6 +81,35 @@ build_pro() {
     checksums "$out"
 }
 
+build_fm1_device() {
+    local source=${FM1_HOST_BASE:-$deps/fm1-base-host}
+    local out="$dist/fm-1"
+    if [[ -z "${FM1_HOST_BASE:-}" ]]; then base "$source" "$fm1_ref"; fi
+    jieli_dependencies
+    make build/factory-presets.inc build/smk37-dsp-tables.inc
+    mkdir -p "$out"
+    python3 tools/build_fm1_device.py --fm1-base "$source" --sdk "$AC79_SDK" \
+        --toolchain "$JIELI_TOOLCHAIN" --output "$out"
+    cp LICENSE NOTICES.md "$out/"
+    checksums "$out"
+}
+
+build_open() {
+    local model=$1
+    local kit=${SMK37_OPEN_SDK:-$deps/smk37-open}
+    local out="$dist/smk37-open-$model"
+    if [[ -z "${SMK37_OPEN_SDK:-}" ]]; then
+        checkout "$kit" https://github.com/m-vave/smk37_open.git "$open_ref"
+    fi
+    jieli_dependencies
+    make build/factory-presets.inc build/smk37-dsp-tables.inc
+    mkdir -p "$out"
+    python3 tools/build_smk37_open.py --model "$model" --open-sdk "$kit" --toolchain "$JIELI_TOOLCHAIN" \
+        --libm "$AC79_SDK/include_lib/newlib/pi32v2-lib/libm.a" --output "$out"
+    cp LICENSE NOTICES.md "$kit/LICENSE.md" "$kit/THIRD_PARTY.md" "$out/"
+    checksums "$out"
+}
+
 build_fm1_host() {
     local source=${FM1_HOST_BASE:-$deps/fm1-base-host}
     local out="$dist/fm-1-host"
@@ -107,8 +141,11 @@ fi
 
 case "${1:-}" in
     smk37-pro) build_pro ;;
+    smk37-open-pro) build_open pro ;;
+    smk37-open-elite) build_open elite ;;
+    fm-1) build_fm1_device ;;
     fm-1-host) build_fm1_host ;;
     web-studio) build_web ;;
-    all) build_web; build_fm1_host; build_pro ;;
-    *) printf 'Uso: %s {smk37-pro|fm-1-host|web-studio|all}\n' "$0" >&2; exit 2 ;;
+    all) build_web; build_fm1_host; build_pro; build_fm1_device; build_open pro; build_open elite ;;
+    *) printf 'Uso: %s {smk37-pro|smk37-open-pro|smk37-open-elite|fm-1|fm-1-host|web-studio|all}\n' "$0" >&2; exit 2 ;;
 esac

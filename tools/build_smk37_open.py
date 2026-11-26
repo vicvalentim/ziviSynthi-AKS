@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the ziviSynthiA application against the SMK37 Open V01 Pro SDK."""
+"""Build separate ziviSynthiA packages for Pro and Elite on the SMK37 Open V01 SDK."""
 import argparse
 import base64
 from concurrent.futures import ThreadPoolExecutor
@@ -16,26 +16,24 @@ import tempfile
 from pack_smk37_open import package
 
 ROOT = Path(__file__).resolve().parents[1]
-PRODUCT = "SMK-37 Pro_8900822"
-VERSION = "0.8.2-alpha2"
+VERSION = "0.8.2-alpha3"
 BASELINE_FLASH_IMAGE = 466944
-NAME = f"ziviSynthiA-SMK37-Pro-Open-{VERSION}"
 PINNED = "07f2269d67d5"
 MANIFEST_SHA256 = "9956fb209abdf248cfe1e5404ecf1e70eb582439133dbb8510823b39589e65cd"
 CODE_FLAGS = (
     "-target", "pi32v2", "-integrated-as", "-mcpu=r3", "-mfprev1",
-    "-D__GCC_PI32V2__", "-DSMK37_MODEL_PRO=1", "-fno-common", "-fallow-pointer-null",
+    "-D__GCC_PI32V2__", "-fno-common", "-fallow-pointer-null",
     "-fprefer-gnu-section", "-femulated-tls", "-fms-extensions", "-fno-unwind-tables",
     "-ffunction-sections", "-fdata-sections", "-cl-single-precision-constant",
     "-mllvm", "-pi32v2-large-program=true", "-fwrapv", "-fno-fast-math", "-ffp-contract=off",
 )
 INCLUDES = ("sdk/include", "sdk/include/libc", "app/synth", "sdk/config", "app", "app/board")
 NO_LTO = {"device.c", "transfer.c", "midi_router.c", "panel.c", "scan.c", "audio.c"}
-HOT = {"audio.c", "audio_output.c", "scan.c", "synth.c", "modules.c", "ks.c"}
+HOT = {"audio.c", "audio_output.c", "scan.c"}
 LINK_OPTIONS = (
     "mcpu=r3", "-pi32v2-always-use-itblock=false", "-enable-ipra=true",
     "-pi32v2-merge-max-offset=4096", "-pi32v2-enable-simd=true", "-global-merge-on-const",
-    "-inline-threshold=5", "-inline-max-allocated-size=32", "-inline-normal-into-special-section=true",
+    "-inline-threshold=2", "-inline-max-allocated-size=16", "-inline-normal-into-special-section=true",
     "-pi32v2-enable-rep-memop", "-emulated-tls", "-pi32v2-large-program=true", "-pi32v2-csync-before-rti=true",
 )
 KEEP = (
@@ -64,7 +62,7 @@ def verify_sdk(source):
             raise ValueError(f"SDK checksum mismatch for {name}")
 
 
-def stage(sdk, target):
+def stage(sdk, target, model_label, product):
     shutil.copytree(sdk, target, copy_function=shutil.copyfile)
     for directory in (target / "app", target / "app/board"):
         directory.chmod(directory.stat().st_mode | 0o700)
@@ -124,8 +122,8 @@ def stage(sdk, target):
     scan = app / "board/scan.c"
     replace(scan, "for(unsigned count=0;count<256;++count)", "for(unsigned count=0;count<64;++count)")
     version = app / "version.h"
-    replace(version, '"V01"', '"V900822"')
-    replace(version, '"SMK-37 Pro_8000001"', f'"{PRODUCT}"')
+    replace(version, '"V01"', '"V900823"')
+    replace(version, f'"SMK-37 {model_label}_8000001"', f'"{product}"')
 
 
 def run(command, **kwargs):
@@ -135,12 +133,12 @@ def run(command, **kwargs):
     return result.stdout
 
 
-def link_app(kit, out, toolchain, libm, jobs):
+def link_app(kit, out, toolchain, libm, jobs, model, family, product, name):
     zivi = kit / "app/zivi"
     files = sorted(p for p in (kit / "app").rglob("*")
                    if p.suffix in (".c", ".S") and "synth" not in p.relative_to(kit / "app").parts)
     sources = sorted(p for p in (kit / "app").rglob("*") if p.is_file())
-    digest = hashlib.sha256()
+    digest = hashlib.sha256(model.encode("ascii") + b"\0")
     for path in sources + [kit / "sdk/manifest.json"]:
         digest.update(str(path.relative_to(kit)).encode() + b"\0")
         digest.update(hashlib.sha256(path.read_bytes()).digest())
@@ -153,16 +151,16 @@ def link_app(kit, out, toolchain, libm, jobs):
     identity = out / "identity.c"
     identity.write_text(
         '#include "layout.h"\n'
-        'const struct fm1_firmware_layout fm1_layout = {536576U,8U};\n'
+        f'const struct fm1_firmware_layout fm1_layout = {{536576U,{family}U}};\n'
         'const unsigned char fm1_build_id[32] = {' + ",".join(str(n) for n in build_id) + '};\n'
-        f'const unsigned char fm1_update_identity[27] = "{PRODUCT}";\n'
+        f'const unsigned char fm1_update_identity[27] = "{product}";\n'
     )
     files.append(identity)
 
     def compile_unit(path):
         name = "_".join(path.relative_to(kit).parts) if path.is_relative_to(kit) else path.name
         obj = out / (name + ".o")
-        flags = ["-O2" if path.name in HOT else "-Oz"]
+        flags = [f"-DSMK37_MODEL_{model.upper()}=1", "-O2" if path.name in HOT else "-Oz"]
         if path.parent == zivi:
             # Eight blocks cover one missed 10 ms control wake, with margin.
             flags += ["-DZIVI_SMK_NATIVE", "-DZIVI_SMK_CHECK_SDK", "-DZIVI_REAL32",
@@ -183,9 +181,9 @@ def link_app(kit, out, toolchain, libm, jobs):
     linker.write_text((kit / "sdk/config/linker.ld.in").read_text()
                       .replace("@SBC_DECODER@", "sbc_decoder\n")
                       .replace("@ACL_TX_EXTRA@", " + 1024").replace("@ACL_RX_EXTRA@", " + 4096"))
-    elf = out / f"{NAME}.elf"
+    elf = out / f"{name}.elf"
     sdk_lib = kit / "sdk/lib"
-    link_map = out / f"{NAME}.map"
+    link_map = out / f"{name}.map"
     run([toolchain / "pi32v2/bin/ld", "--plugin", toolchain / "common/bin/LLVMgold.so", "-flto",
          *["--plugin-opt=" + flag for flag in LINK_OPTIONS], "-o", elf, *objects,
          "--start-group", "--whole-archive", sdk_lib / "libfm1_engine.a", "--no-whole-archive",
@@ -293,21 +291,23 @@ def verify_symbols(elf, toolchain, elf_data, sections):
     return symbols["_MALLOC_SIZE"], usb_audio_formats(elf_data, sections, symbols)
 
 
-def write_updater(sdk, output, firmware, report):
+def write_updater(sdk, output, firmware, report, name):
     loader = sdk / "sdk/tools/pack/ota.bin"
-    meta = dict(schema=1, model="pro", family=8, product=PRODUCT, build_id=report["build_id"],
+    meta = dict(schema=1, model=report["model"], family=report["family"], product=report["product"],
+                origin=report["origin"], build_id=report["build_id"],
                 bytes=len(firmware), sha256=report["sha256"],
                 loader_sha256=hashlib.sha256(loader.read_bytes()).hexdigest(),
                 data=base64.b64encode(firmware).decode("ascii"))
     template = (ROOT / "platform/smk37_open/update.html.in").read_text()
-    template = template.replace("@@VERSION@@", VERSION)
+    template = template.replace("@@VERSION@@", VERSION).replace("@@MODEL@@", report["model"].title())
     content = template.replace("@@WEB_UPDATE@@", (sdk / "sdk/WebUpdate.js").read_text())
-    (output / f"{NAME}-atualizador.html").write_text(
+    (output / f"{name}-atualizador.html").write_text(
         content.replace("@@PACKAGE@@", json.dumps(meta, separators=(",", ":"))))
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", choices=("pro", "elite"), default="pro")
     parser.add_argument("--open-sdk", type=Path, required=True)
     parser.add_argument("--toolchain", type=Path, required=True)
     parser.add_argument("--libm", type=Path, required=True)
@@ -316,27 +316,32 @@ def main():
     args = parser.parse_args()
     sdk, toolchain, libm, output = (path.resolve() for path in
                                     (args.open_sdk, args.toolchain, args.libm, args.output))
+    model_label = {"pro": "Pro", "elite": "Elite"}[args.model]
+    family = {"pro": 8, "elite": 9}[args.model]
+    product = f"SMK-37 {model_label}_8900823"
+    name = f"ziviSynthiA-SMK37-{model_label}-Open-{VERSION}"
     verify_sdk(sdk)
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="build-", dir=output) as temp:
         work = Path(temp)
         kit = work / "sdk"
-        stage(sdk, kit)
-        elf, link_map, build_id = link_app(kit, work, toolchain, libm, args.jobs)
+        stage(sdk, kit, model_label, product)
+        elf, link_map, build_id = link_app(kit, work, toolchain, libm, args.jobs, args.model, family, product, name)
         elf_data, sections = elf_sections(elf)
         app = section_image(elf_data, sections)
         print(f"Linked Open application: {len(app)} bytes", flush=True)
         heap, usb_audio = verify_symbols(elf, toolchain, elf_data, sections)
-        package_bytes, layout = package(app, kit / "sdk/tools/pack", PRODUCT)
+        package_bytes, layout = package(app, kit / "sdk/tools/pack", product)
         if layout["flash_bytes"] != BASELINE_FLASH_IMAGE:
             raise ValueError("Candidate moves the beginning of VM from the 0.8.0 layout")
-        fw = output / f"{NAME}.fwsc"
+        fw = output / f"{name}.fwsc"
         fw.write_bytes(package_bytes)
         shutil.copyfile(elf, output / elf.name)
         map_text = link_map.read_text().replace(str(work), "<build>").replace(str(libm), "<libm>/libm.a")
         map_text = re.sub(r"/tmp/lto-llvm-[0-9a-f]+\.o", "<llvm-lto>.o", map_text)
         (output / link_map.name).write_text(map_text)
-        report = dict(product=PRODUCT, open_sdk=PINNED, app_bytes=len(app), heap_bytes=heap,
+        report = dict(product=product, model=args.model, family=family,
+                      origin=f"SMK-37 {model_label}_8000001", open_sdk=PINNED, app_bytes=len(app), heap_bytes=heap,
                       build_id=build_id, audio_codec_nominal_hz=44118, usb_audio=usb_audio, sha256=hashlib.sha256(package_bytes).hexdigest(),
                       elf_sha256=hashlib.sha256(elf.read_bytes()).hexdigest(),
                       sdk_manifest_sha256=MANIFEST_SHA256,
@@ -344,7 +349,7 @@ def main():
                                  for path in ("pi32v2/bin/clang", "pi32v2/bin/ld", "common/bin/LLVMgold.so")},
                       libm_sha256=hashlib.sha256(libm.read_bytes()).hexdigest(),
                       **layout)
-        write_updater(kit, output, package_bytes, report)
+        write_updater(kit, output, package_bytes, report, name)
         (output / "build.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(report, indent=2))
 

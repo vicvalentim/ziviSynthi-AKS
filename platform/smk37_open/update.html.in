@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ziviSynthiA · SMK-37 Pro Open</title>
+<title>ziviSynthiA · SMK-37 @@MODEL@@ Open</title>
 <style>
   :root { color-scheme: light; font: 17px/1.5 system-ui, sans-serif; background: #edece6; color: #20272a; }
   body { margin: 0; }
@@ -16,10 +16,10 @@
   #status { min-height: 3em; }
 </style>
 <main>
-  <h1>ziviSynthiA · SMK-37 Pro Open</h1>
+  <h1>ziviSynthiA · SMK-37 @@MODEL@@ Open</h1>
   <p>@@VERSION@@ · versão de bancada</p>
-  <p>Origem aceita: SMK37 Open V01 oficial para o Pro ou uma compilação verificada do ziviSynthiA 0.8.0-alpha1, 0.8.1-alpha1 ou 0.8.2-alpha1. Use Chrome ou Edge no computador e conecte o teclado por USB.</p>
-  <label><input id="backup" type="checkbox"> Fiz backup dos dados e confirmei o modelo SMK-37 Pro no teclado.</label>
+  <p>Origem aceita: SMK37 Open V01 oficial do modelo indicado. Para o Pro, também são aceitas as origens ziviSynthiA enumeradas no pacote. Use Chrome ou Edge no computador e conecte o teclado por USB.</p>
+  <label><input id="backup" type="checkbox"> Fiz backup dos dados e confirmei o modelo SMK-37 @@MODEL@@ no teclado.</label>
   <button id="connect" disabled>Verificar dispositivo</button>
   <button id="install" disabled>Instalar firmware</button>
   <button id="disconnect" disabled>Desconectar</button>
@@ -39,14 +39,14 @@ const backup = document.getElementById('backup');
 const status = document.getElementById('status');
 const progress = document.getElementById('progress');
 const meta = JSON.parse(document.getElementById('package').textContent);
-const knownBuilds = new Map([
+const knownBuilds = new Map(meta.model === 'pro' ? [
   ['SMK-37 Pro_8900800', '0c704e434b9f1b04e466b7d5c26ea97194507fdbba96cffb633f40d17bba8995'],
   ['SMK-37 Pro_8900801', 'f4b866bbc68d9df56f62a9d64348959d74bf7ab6f03d87dbe68b800fd428695a'],
   ['SMK-37 Pro_8900802', '41338dff36dc884c25f895132e08d76883ec67de61268efc9d89116a00fef4a1']
-]);
+] : []);
 function knownSource(device) {
   return !device.migration && !device.resume && /^[0-9a-f]{64}$/.test(device.current || '') &&
-    (device.identity === 'SMK-37 Pro_8000001' || knownBuilds.get(device.identity) === device.current);
+    (device.identity === meta.origin || knownBuilds.get(device.identity) === device.current);
 }
 const messages = {
   '准备升级程序': 'Preparando o carregador. Mantenha a alimentação e o cabo USB conectados.',
@@ -118,7 +118,7 @@ connect.addEventListener('click', async () => {
 });
 install.addEventListener('click', async () => {
   if (!ready || !backup.checked || busy) return;
-  if (!window.confirm('Instalar a versão de bancada no SMK-37 Pro agora?')) return;
+  if (!window.confirm('Instalar a versão de bancada no SMK-37 @@MODEL@@ agora?')) return;
   busy = true;
   ready = false;
   refresh();
@@ -142,7 +142,7 @@ install.addEventListener('click', async () => {
       throw new Error('Abra a página em Chrome ou Edge com Web MIDI habilitado.');
     }
     pkg = await FM1Web.prepare(meta);
-    status.textContent = 'Pacote conferido. Conecte o SMK-37 Pro para verificar o firmware de origem.';
+    status.textContent = 'Pacote conferido. Conecte o SMK-37 @@MODEL@@ para verificar o firmware de origem.';
   } catch (error) {
     status.textContent = error.message;
   }

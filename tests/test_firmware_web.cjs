@@ -8,8 +8,8 @@ const html = readFileSync(process.env.ZIVI_EDITOR_HTML || process.argv[2] || "bu
 const english = html.includes('<html lang="en">');
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]);
 const source = scripts[1];
-const { api, wiring, embedded } = vm.runInNewContext(
-    scripts[0] + source.slice(0, source.lastIndexOf("\n(() => {")) + "\n({api: ZiviFirmware, wiring: FeluccaFirmwareTransport, embedded: EmbeddedFirmware});",
+const { api, wiring, embedded, packages } = vm.runInNewContext(
+    scripts[0] + source.slice(0, source.lastIndexOf("\n(() => {")) + "\n({api: ZiviFirmware, wiring: FeluccaFirmwareTransport, embedded: EmbeddedFirmware, packages: FirmwarePackages});",
     { crypto: webcrypto, TextEncoder, Uint8Array, setTimeout: (f, ms) => setTimeout(f, ms / 50), clearTimeout,
         Date: class extends Date { static now() { return super.now() * 50; } } }
 );
@@ -20,7 +20,8 @@ const full = "240,0,50,69,8,0,0,64,0,126,1,247";
 const [currentVersion, previousVersion] = Object.keys(embedded);
 const stock = "SMK-37 Pro_016";
 const current = wiring.productOf(payload(currentVersion));
-const previous = previousVersion ? wiring.productOf(payload(previousVersion)) : "SMK-37 Pro_99400";
+const versions = Object.keys(packages);
+const previous = previousVersion ? wiring.productOf(payload(previousVersion)) : packages[versions[versions.indexOf(currentVersion) + 1]].id;
 const ota = "ota-SMK-37 Pro_900";
 const u32 = n => [n & 255, (n >>> 8) & 255, (n >>> 16) & 255, n >>> 24];
 const frame = (cmd, body) => [240, ...wiring.pack7([0, 0x59, cmd, body.length, body.length >> 8, 0,

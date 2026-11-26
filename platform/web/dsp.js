@@ -7,6 +7,7 @@ const ZiviDSP = (() => {
     const src = addresses(sources);
     const dst = addresses(destinations);
     const ksSignal = 16;
+    const usbSignal = ksSignal + 1;
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
     const coordinate = (row, col) => String.fromCharCode(65 + col) + (row + 1);
     const supported = (row, col) => (sources[row]?.[2] ?? -1) >= 0 && (destinations[col]?.[2] ?? -1) >= 0;
@@ -177,6 +178,7 @@ const ZiviDSP = (() => {
         }
         const patch = { version: 3, pins, controls, ksRoutes, ksMatrix: modern && value.ksMatrix === true,
                         sequenceTrigger: value.sequenceTrigger ?? false };
+        if (modern && value.ksAutoTrigger === true) patch.ksAutoTrigger = true;
         if (value.pinColors !== undefined) {
             if (!modern || !Array.isArray(value.pinColors) || value.pinColors.length > pins.length) return null;
             const fullPins = new Set(pins.filter(pin => pin[2] === 1).map(([row, col]) => row * 16 + col));
@@ -278,9 +280,10 @@ const ZiviDSP = (() => {
             this.held = [];
             this.matrix = new Uint8Array(256);
             this.ksRoutes = new Uint8Array(16);
+            this.usbRoutes = new Uint8Array(32);
             this.routes = Array.from({ length: 16 }, () => []);
-            this.signals = new Float64Array(ksSignal + 1);
-            this.nextSignals = new Float64Array(ksSignal + 1);
+            this.signals = new Float64Array(usbSignal + 2);
+            this.nextSignals = new Float64Array(usbSignal + 2);
             this.applyPatch({ ...presets.initial, version: 1 });
         }
 
@@ -289,13 +292,17 @@ const ZiviDSP = (() => {
             if (!patch) return false;
             this.matrix.fill(0);
             this.ksRoutes.fill(0);
+            this.usbRoutes.fill(0);
             this.ksMatrix = patch.ksMatrix;
             for (const [col, type] of patch.ksRoutes) this.ksRoutes[col] = type;
             for (const [row, col, pin] of patch.pins) this.matrix[row * 16 + col] = pin;
+            for (const [channel, col, amount] of patch.usbRoutes ?? []) this.usbRoutes[channel * 16 + col] = amount;
             for (let col = 0; col < 16; col++) this.rebuild(col);
             this.controls(patch.controls);
             if (!keepSequence) this.loadPhrase(patch.sequence);
-            if (patch.ks) this.ks.controls(patch.ks);
+            const settings = patch.ks ?? (!keepSequence && patch.sequence
+                ? { sequenceSpread: 100, speed: 100, transpose: 0, loop: true } : null);
+            if (settings) this.ks.controls(settings);
             this.ks.sequenceTrigger = patch.sequenceTrigger;
             return true;
         }
@@ -321,6 +328,16 @@ const ZiviDSP = (() => {
             }
             const ks = this.ksRoutes[col];
             if (ks && !this.ksMatrix) routes.push([ksSignal, false, ks === 1 ? 1 : 0.5]);
+            for (let channel = 0; channel < 2; channel++) {
+                const amount = this.usbRoutes[channel * 16 + col];
+                if (amount) routes.push([usbSignal + channel, false, amount === 1 ? 1 : 0.5]);
+            }
+        }
+
+        setUsbRoute(channel, col, amount) {
+            if (!integerIn(channel, 0, 1) || !supported(src.INPUT1, col) || !integerIn(amount, 0, 2)) return;
+            this.usbRoutes[channel * 16 + col] = amount;
+            this.rebuild(col);
         }
 
         setKsRoute(col, amount) {
@@ -499,7 +516,7 @@ const ZiviDSP = (() => {
             return clamp(sum, -limit, limit);
         }
 
-        render(left, right, input1, input2) {
+        render(left, right, input1, input2, usb = false) {
             const ks = this.ks;
             const m = this.modules;
             const p = m.p;
@@ -517,10 +534,14 @@ const ZiviDSP = (() => {
             let arpNote = arpeggiated && arp.note < 128 ? arp.note : note, arpVelocity = arp.velocity;
             let velocity = this.liveVelocity() / 127, pitch = asPitch(arpNote);
             const seqSpread = ks.sequenceSpread / 100;
+            const hasKsRouting = this.ksMatrix
+                ? this.matrix.subarray(src.STICK_Y * 16, (src.STICK_Y + 1) * 16).some(Boolean)
+                : this.ksRoutes.some(Boolean);
             const asymmetry = 0.15 + 0.70 * this.shape;
             const duty2 = 0.05 + 0.90 * p.osc2Shape;
             const duty3 = 0.05 + 0.90 * p.osc3Shape;
             const values = this.nextSignals;
+            if (!usb) values[usbSignal] = values[usbSignal + 1] = 0;
             const tau = 2 * Math.PI;
             let { phase, osc2Phase, lfoPhase, noise } = this;
             let step = 0, osc2Step = 0, lfoStep = 0, coef = 0;
@@ -545,8 +566,10 @@ const ZiviDSP = (() => {
                 }
                 const seqVelocity = recording ? velocity : ks.velocity / 127;
                 const seqNote = recording ? arpNote : ks.note;
-                let target = ks.sequenceTrigger ? seqVelocity : velocity;
-                let trigger = ks.sequenceTrigger && !recording ? ks.attack : liveTrigger;
+                const playback = ks.mode === "play";
+                const useSequence = ks.sequenceTrigger || playback && ks.audition;
+                let target = useSequence ? seqVelocity : velocity;
+                let trigger = useSequence && !recording ? ks.attack : liveTrigger;
                 this.liveAttack = false;
                 const high = Math.abs(this.thresholdProbe) >= (this.thresholdActive ? 0.10 : 0.18);
                 if (p.triggerMode === 1) {
@@ -562,11 +585,19 @@ const ZiviDSP = (() => {
                 const color = p.noiseColor;
                 values[src.NOISE] = (raw - Math.max(0, color) * m.noiseLow +
                     Math.min(0, color) * (raw - m.noiseLow)) * p.noiseLevel;
-                const in1 = input1 ? Number.isFinite(input1[i]) ? clamp(input1[i], -1, 1) : 0 : pitch;
-                const in2 = input2 ? Number.isFinite(input2[i]) ? clamp(input2[i], -1, 1) : 0 : velocity;
+                const sequencePitch = clamp((seqNote - 69 + ks.transpose) * seqSpread / 48, -1.5, 1.5);
+                const useKeyboardRouting = playback && useSequence && !hasKsRouting;
+                const external1 = input1 && Number.isFinite(input1[i]) ? clamp(input1[i], -1, 1) : 0;
+                const external2 = input2 && Number.isFinite(input2[i]) ? clamp(input2[i], -1, 1) : 0;
+                const in1 = input1 && !usb ? external1 : useKeyboardRouting ? sequencePitch : pitch;
+                const in2 = input2 && !usb ? external2 : useKeyboardRouting ? seqVelocity : velocity;
+                if (usb) {
+                    values[usbSignal] = external1;
+                    values[usbSignal + 1] = external2;
+                }
                 values[src.INPUT1] = clamp(in1 * p.in1Level, -1.5, 1.5);
                 values[src.INPUT2] = clamp(in2 * p.in2Level, -1.5, 1.5);
-                values[ksSignal] = clamp((seqNote - 69 + ks.transpose) * seqSpread / 48, -1.5, 1.5);
+                values[ksSignal] = sequencePitch;
                 values[src.STICK_X] = this.stickX * stickScale;
                 values[src.STICK_Y] = this.ksMatrix ? values[ksSignal] : this.stickY * stickScale;
                 const env = m.envelope(target, trigger, this.bus(values, dst.ENV_DECAY));

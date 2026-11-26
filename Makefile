@@ -84,10 +84,10 @@ web: build/web/index.html
 
 .PHONY: web-release
 web-release: web
-	@test -f "$(FIRMWARE_ROLLBACK)" || { echo 'Informe FIRMWARE_ROLLBACK com o FWSC da 3.9.5.'; exit 2; }
+	@test -f "$(FIRMWARE_ROLLBACK)" || { echo 'Informe FIRMWARE_ROLLBACK com o FWSC da 3.9.6.'; exit 2; }
 	python3 tools/build_web.py build/web/release.html \
-		--embed-firmware 3.9.6 build/smk37-felucca/zivisynthi-felucca-smk37.fwsc \
-		--embed-firmware 3.9.5 "$(FIRMWARE_ROLLBACK)"
+		--embed-firmware 3.9.7 build/smk37-felucca/zivisynthi-felucca-smk37.fwsc \
+		--embed-firmware 3.9.6 "$(FIRMWARE_ROLLBACK)"
 
 build/web/index.html: tools/build_web.py tools/localize_studio.py tools/build_vernier.py platform/module_panel.def platform/smk37_fm1_base/vernier.def app/core/matrix.def app/core/scales.def app/core/aks_calibration.def $(CATALOG) $(WEB)
 	mkdir -p build/web

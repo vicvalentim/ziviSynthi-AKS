@@ -15,6 +15,7 @@ from render_github_pages import render_site
 
 ROOT = Path(__file__).resolve().parents[1]
 EDITOR = "zivisynthi-aks-editor.html"
+EDITOR_PT = "zivisynthi-aks-editor-pt.html"
 SOURCE = "zivisynthi-aks-source.zip"
 BASE = "fm1-base-source.tar.gz"
 PRESETS = "zivisynthi-aks-presets.zip"
@@ -44,11 +45,8 @@ def main():
         parser.error("Esperado um pacote de firmware verificado para SMK-37 Pro.")
     package = packages[0].name
     version = package_pattern.fullmatch(package)[1]
-    html = (args.artifacts / EDITOR).read_text(encoding="utf-8")
     downloads_marker = "<!-- PAGES_DISTRIBUTION -->"
     links_marker = "<!-- PAGES_PROJECT_LINKS -->"
-    if html.count(downloads_marker) != 1 or html.count(links_marker) != 1:
-        parser.error("Gere o editor a partir do código atual antes de montar o site.")
 
     # Publish the exact application snapshot and the patched base used by the build.
     subprocess.run(["git", "diff", "--exit-code", "HEAD", "--"], cwd=ROOT, check=True)
@@ -64,29 +62,38 @@ def main():
     builder = [sys.executable, ROOT / "tools/build_web.py"]
     english_studio = args.output / "studio/index.html"
     english_studio.parent.mkdir(exist_ok=True)
-    subprocess.run([*builder, english_studio, "--language", "en", "--embed-firmware", version, packages[0]], check=True)
-    subprocess.run([*builder, args.output / EDITOR, "--language", "en"], check=True)
     portuguese_studio = args.output / "pt/studio/index.html"
     portuguese_studio.parent.mkdir(parents=True, exist_ok=True)
-    for path, source_html, back, home, other, english in (
-        (english_studio, english_studio.read_text(encoding="utf-8"), "../", "../", "../pt/studio/", True),
-        (portuguese_studio, html, "../../", "../", "../../studio/", False),
+    for path, locale, alternate in (
+        (english_studio, "en", "../pt/studio/"),
+        (portuguese_studio, "pt", "../../studio/"),
+        (args.output / EDITOR, "en", EDITOR_PT),
+        (args.output / EDITOR_PT, "pt", EDITOR),
     ):
+        subprocess.run([*builder, path, "--language", locale, "--alternate", alternate,
+                        "--embed-firmware", version, packages[0]], check=True)
+    for path, back, home, english in (
+        (english_studio, "../", "../", True),
+        (portuguese_studio, "../../", "../", False),
+    ):
+        source_html = path.read_text(encoding="utf-8")
+        if source_html.count(downloads_marker) != 1 or source_html.count(links_marker) != 1:
+            parser.error("O editor gerado deve conter os marcadores de distribuição e navegação.")
         labels = ("Firmware (.fwsc)", "Presets", "Corresponding source", "Notices") if english else (
             "Firmware (.fwsc)", "Presets", "Código-fonte correspondente", "Avisos")
         downloads = '<div class="firmware-links" aria-label="Downloads">' + "\n".join(
             f'<a href="{back}{name}" download>{label}</a>'
             for name, label in zip((package, PRESETS, SOURCE), labels[:3], strict=True)) + (
             f'<a href="{back}SHA256SUMS.txt">SHA-256</a>'
-            f'<a href="{back}docs/NOTICES.html">{labels[3]}</a></div>')
+            f'<a href="{back}{"docs/" if english else "pt/docs/"}NOTICES.html">{labels[3]}</a></div>')
         links = (f'<a href="{home}">{"Home" if english else "Início"}</a>'
-                 f'<a href="{back}docs/#{"english" if english else "português"}">{"Docs" if english else "Documentação"}</a>'
-                 f'<a href="{project_url}">GitHub</a>'
-                 f'<a href="{other}" lang="{"pt-BR" if english else "en"}">{"Português" if english else "English"}</a>')
+                 f'<a href="{back}{"docs/" if english else "pt/docs/"}">{"Docs" if english else "Documentação"}</a>'
+                 f'<a href="{project_url}">GitHub</a>')
         path.write_text(source_html.replace(downloads_marker, downloads).replace(links_marker, links), encoding="utf-8")
 
-    for name in (package, PRESETS, "LICENSE", "NOTICES.md"):
+    for name in (package, PRESETS, "LICENSE"):
         shutil.copyfile(args.artifacts / name, args.output / name)
+    shutil.copyfile(ROOT / "NOTICES.md", args.output / "NOTICES.md")
     screenshot = args.output / manifest["screenshot"]
     screenshot.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / manifest["screenshot"], screenshot)
@@ -94,7 +101,7 @@ def main():
     manifest.update(site=args.site + "/", install=args.site + "/studio/#firmware-drawer", source=args.source)
     (args.output / "firmware.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    render_site(ROOT, args.output, args.source, commit, manifest, version, (EDITOR, package, PRESETS, SOURCE))
+    render_site(ROOT, args.output, args.source, commit, manifest, version, (EDITOR, package, PRESETS, SOURCE), EDITOR_PT)
     with (args.output / "SHA256SUMS.txt").open("w", encoding="utf-8") as checksums:
         for path in sorted(args.output.rglob("*")):
             if path.is_file() and path.name != "SHA256SUMS.txt":

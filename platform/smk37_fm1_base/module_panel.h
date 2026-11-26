@@ -337,7 +337,7 @@ void app_splash(void)
     cv_rect(63, 46, 114, 114, BLACK);
     cv_rect(24, 179, 192, 1, GRAPHITE);
     cv_text((240 - text_w(&FONT_L, APP_NAME)) / 2, 186, &FONT_L, APP_NAME, IVORY);
-    const char model[] = "SMK-37 PRO   /   3.9.6";
+    const char model[] = "SMK-37 PRO   /   3.9.7";
     cv_text((240 - text_w(&FONT_XS, model)) / 2, 211, &FONT_XS, model, AMBER);
     cv_blit(0, 0);
 }

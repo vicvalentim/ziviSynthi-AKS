@@ -36,7 +36,9 @@
     const formatHz = ZiviVisuals.frequency;
     const { dialFrequency, verniers } = ZiviVisuals;
     const percent = value => Math.round(value * 100) + "%";
-    const decimal = value => String(Number(value.toFixed(2))).replace(".", ",");
+    const locale = document.documentElement.lang;
+    const numberFormat = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
+    const decimal = value => numberFormat.format(value);
     const formatAdvanced = (id, number) => {
         if (modes[id]) return modes[id][number];
         if (id.endsWith("Hz")) return dialFrequency(number);
@@ -123,7 +125,15 @@
         if (panel) panel.open = true;
     });
 
-    if (window.location?.hash === "#firmware-drawer") byId("firmware-drawer").open = true;
+    if (location.hash === "#firmware-drawer") byId("firmware-drawer").open = true;
+    function openLinkedKsEditor() {
+        if (location.hash === "#ks-editor") {
+            if (byId("seq-ks").hidden) document.querySelector('[data-seq="ks"]').click();
+            byId("ks-editor").open = true;
+        }
+    }
+    openLinkedKsEditor();
+    window.addEventListener("hashchange", openLinkedKsEditor);
 
     const exactSelect = byId("exact-param"), exactValue = byId("exact-value");
     for (const input of allControls)
@@ -152,8 +162,17 @@
         option.textContent = preset.name;
         byId("factory-" + preset.bank).append(option);
     }
+    const matrixPreset = byId("smk-matrix-preset");
+    for (const group of document.querySelectorAll("#preset optgroup")) {
+        const factoryGroup = group.cloneNode(true);
+        factoryGroup.removeAttribute("id");
+        for (const option of factoryGroup.querySelectorAll("option")) option.value = "factory:" + option.value;
+        matrixPreset.append(factoryGroup);
+    }
     const presetGuide = byId("preset-guide");
-    let portableSequence, hardwarePerformance;
+    let portableSequence, hardwarePerformance, ksState, ksFromGrid = false;
+    let ksRevision = 0;
+    const ksTrigger = byId("ks-trigger");
     let arpEnabled = false;
     const chromaticNames = ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"];
     let patchName;
@@ -178,7 +197,7 @@
     const ksMatrix = byId("ks-matrix");
     const usbRoutes = new Uint8Array(32);
     const usbRouteControls = new Map();
-    let stepGrid = ZiviStudioProtocol.emptyGrid(), activeStep = 0;
+    let stepGrid = ZiviStudioProtocol.emptyGrid(), activeStep = 0, pendingTryGrid, playingStepGrid = false;
     let midiCC = ZiviStudioProtocol.defaultCC();
     const regionButtons = [];
     let selectedRow = 11;
@@ -284,16 +303,18 @@
         midiCC,
         performance: { ...arpSettings(), root: Number(byId("scale-root").value), scale: Number(byId("scale-mode").value) },
         ...(portableSequence ? { sequence: portableSequence } : {}),
+        ...(portableSequence && ksTrigger.value === "auto" ? { ksAutoTrigger: true } : {}),
         ...(patchName ? { name: patchName } : {}),
         ...(pinColors.size ? { pinColors: [...pinColors].map(([index, color]) => [index >> 4, index % 16, color]) } : {}),
         pins: Array.from(pins).flatMap((pin, index) => pin ? [[Math.floor(index / 16), index % 16, pin]] : []),
         controls: controlValues(),
         ks: readKsSettings(),
-        sequenceTrigger: byId("ks-trigger").value === "sequence"
+        sequenceTrigger: ksTrigger.value === "sequence"
     });
 
     function markEdited() {
         byId("preset").value = "";
+        highlightInstantPatch("");
         if (byId("patch-status").textContent !== "") byId("patch-status").textContent = "";
     }
 
@@ -575,45 +596,47 @@
         }
         updateKsRoutes();
         byId("preset").value = preset;
+        highlightInstantPatch(preset);
         const keepSequence = remote && JSON.stringify(portableSequence) === JSON.stringify(patch.sequence);
-        portableSequence = patch.sequence;
+        if (!keepSequence) {
+            portableSequence = patch.sequence;
+            ksFromGrid = false;
+            playingStepGrid = false;
+            ksRevision++;
+            ksPhraseEditor.show(portableSequence);
+            updateKsStatus(phraseStatus());
+        }
         patchName = patch.name;
         byId("studio-patch-name").textContent = byId("matrix-patch-name").textContent =
             byId("preset-drawer-current").textContent = patchName || "Patch do SMK";
-        presetGuide.textContent = presets[preset]?.play ?? (patch.sequence ? "Frase carregada no KS. Pressione Play." : "");
+        if (!remote) {
+            matrixPreset.value = Object.hasOwn(FactoryCatalog, preset) ? "factory:" + preset : "";
+            liveEdit.updateActions?.();
+        }
+        updateTryAudioRoutes();
+        presetGuide.textContent = presets[preset]?.play || (patch.sequence ? "Frase carregada no KS. Pressione Play." : "");
         presetGuide.hidden = !presetGuide.textContent;
-        if (patch.ks) {
-            for (const [id, key] of ksSettings) byId("ks-" + id).value = patch.ks[key];
-            byId("ks-loop").checked = patch.ks.loop;
-        } else if (patch.sequence) {
-            byId("ks-spread").value = 100;
-            byId("ks-speed").value = 100;
-            byId("ks-transpose").value = 0;
-            byId("ks-loop").checked = true;
-        }
-        if (!remote && patch.sequence) {
-            updateKsStatus({ mode: "stop", count: patch.sequence.events.length, limit: "",
-                             duration: patch.sequence.lengthMs / 1000, position: 0 });
-        } else if (!remote) {
-            updateKsStatus({ mode: "stop", count: 0, limit: "", duration: 0, position: 0 });
-        }
-        byId("ks-trigger").value = patch.sequenceTrigger ? "sequence" : "live";
+        const settings = patch.ks ?? { realtimeSpread: 100, sequenceSpread: 100, speed: 100,
+                                       transpose: 0, limitSeconds: 12, loop: true };
+        for (const [id, key] of ksSettings) byId("ks-" + id).value = settings[key];
+        byId("ks-loop").checked = settings.loop;
+        ksTrigger.value = patch.sequenceTrigger ? "sequence" :
+            !patch.ksAutoTrigger && patch.sequence && candidate.sequenceTrigger === false ? "live" : "auto";
         knobs.forEach(knob => knob.paint());
         updateExactValue();
         drawEnvelope();
         updateMatrix();
         if (scopeActive && scopeMode.value === "filter") drawSignal();
-        send("patch", patch, keepSequence);
+        send("patch", patch, keepSequence, ksRevision);
         updateKsControls();
         paintTransposePads();
         return true;
     }
 
     function loadPreset(key) {
-        if (!presets[key]) return;
-        const patch = presets[key];
-        applyPatch({ version: 1, ...patch }, key);
+        if (!presets[key] || !applyPatch({ version: 1, ...presets[key] }, key)) return false;
         byId("patch-status").textContent = presets[key].name + " carregado.";
+        return true;
     }
 
     byId("overview").addEventListener("click", () => setZoom(false));
@@ -657,7 +680,7 @@
 
     function syncAudio() {
         processor?.port.postMessage({ type: "aks-profile", values: [aksProfile.value === "1"] });
-        processor?.port.postMessage({ type: "patch", values: [patchSnapshot()] });
+        processor?.port.postMessage({ type: "patch", values: [patchSnapshot(), false, ksRevision] });
         updateKsControls();
         for (const axis of stickAxes)
             processor?.port.postMessage({ type: axis.type, values: [axis.value] });
@@ -676,26 +699,41 @@
                 audioContext = new Audio({ latencyHint: "interactive" });
                 if (!audioContext.audioWorklet) throw new Error("Áudio indisponível. Abra no Chrome ou Edge por HTTPS ou localhost.");
                 await audioContext.resume();
-                const worklet = URL.createObjectURL(new Blob([ZIVI_WORKLET], { type: "text/javascript" }));
-                try {
-                    await audioContext.audioWorklet.addModule(worklet);
-                } finally {
-                    URL.revokeObjectURL(worklet);
+                if (location.protocol === "file:") {
+                    // Chromium rejects blob:null modules when the Studio is opened from disk.
+                    const module = "data:text/javascript;charset=utf-8," + encodeURIComponent(ZIVI_WORKLET);
+                    await audioContext.audioWorklet.addModule(module);
+                } else {
+                    const worklet = URL.createObjectURL(new Blob([ZIVI_WORKLET], { type: "text/javascript" }));
+                    try {
+                        await audioContext.audioWorklet.addModule(worklet);
+                    } finally {
+                        URL.revokeObjectURL(worklet);
+                    }
                 }
                 processor = new AudioWorkletNode(audioContext, "zivisynthi", {
-                    numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2]
+                    numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [2], channelCount: 2,
+                    channelCountMode: "explicit", channelInterpretation: "speakers"
                 });
                 processor.port.onmessage = ({ data }) => {
                     if (data.type === "ks-capture") {
-                        portableSequence = data.sequence ?? undefined;
-                        if (!portableSequence && data.eventCount) {
-                            byId("patch-status").textContent = "A gravação é curta demais para exportação em milissegundos.";
+                        if (data.revision !== ksRevision || hardwarePerformance?.editing) return;
+                        if (data.sequence) {
+                            portableSequence = data.sequence;
+                            ksFromGrid = false;
+                            ksPhraseEditor.show(portableSequence);
+                            markEdited();
+                        } else {
+                            if (portableSequence) replaceKsPhrase(portableSequence);
+                            if (data.eventCount) {
+                                byId("patch-status").textContent = "A gravação é curta demais para exportação em milissegundos.";
+                            }
                         }
                         return;
                     }
                     byId("meter").value = data.output;
                     byId("matrix-meter").value = data.matrix;
-                    if (!hardwarePerformance) {
+                    if (!hardwarePerformance?.editing) {
                         updateKsStatus(data.ks);
                         paintArpNote(data.arpNote);
                     }
@@ -721,7 +759,7 @@
                 processor.connect(audioContext.destination);
                 connectAnalyser();
                 syncAudio();
-                audioStatus.textContent = "Áudio ativo" + " · " + audioContext.sampleRate.toLocaleString("pt-BR") + " Hz";
+                audioStatus.textContent = "Áudio ativo" + " · " + audioContext.sampleRate.toLocaleString(locale) + " Hz";
                 audioButton.textContent = "Áudio ativo";
                 audioButton.disabled = true;
             } catch (error) {
@@ -735,18 +773,129 @@
         return audioStart;
     }
     audioButton.addEventListener("click", startAudio);
-    byId("try").addEventListener("click", async () => {
-        const status = byId("try-status");
+    const tryAudioFile = byId("try-audio-file"), tryAudioStatus = byId("try-audio-status");
+    const tryAudioPlay = byId("try-audio-play"), tryAudioStop = byId("try-audio-stop");
+    let tryFileBuffer, tryFileSource, tryFileRevision = 0;
+    function stopTryFile() {
+        const source = tryFileSource;
+        tryFileSource = undefined;
+        if (source) {
+            source.disconnect();
+            source.stop();
+        }
+        tryAudioStop.disabled = true;
+    }
+    function updateTryAudioRoutes() {
+        const active = usbRoutes.some(Boolean);
+        byId("try-audio-input").hidden = !active;
+        if (!active) stopTryFile();
+    }
+    tryAudioFile.addEventListener("change", async () => {
+        const file = tryAudioFile.files[0];
+        if (!file) return;
+        const revision = ++tryFileRevision;
+        stopTryFile();
+        tryFileBuffer = undefined;
+        tryAudioPlay.disabled = true;
+        tryAudioStatus.textContent = "Carregando áudio…";
+        try {
+            if (file.size > 32 * 1024 * 1024) throw new Error("Escolha um arquivo de áudio de até 32 MB.");
+            if (!await enterTry(tryAudioStatus)) return;
+            const decoded = await audioContext.decodeAudioData(await file.arrayBuffer());
+            if (revision !== tryFileRevision) return;
+            tryFileBuffer = decoded;
+            tryAudioPlay.disabled = false;
+            tryAudioStatus.textContent = file.name;
+        } catch (error) {
+            if (revision === tryFileRevision)
+                tryAudioStatus.textContent = error.message === "Escolha um arquivo de áudio de até 32 MB."
+                    ? error.message : "O navegador não conseguiu decodificar o arquivo de áudio.";
+        }
+    });
+    tryAudioPlay.addEventListener("click", async () => {
+        if (!tryFileBuffer || !await enterTry(tryAudioStatus) || byId("try-audio-input").hidden) return;
+        stopTryFile();
+        const source = audioContext.createBufferSource();
+        source.buffer = tryFileBuffer;
+        source.connect(processor);
+        source.onended = () => { if (tryFileSource === source) stopTryFile(); };
+        tryFileSource = source;
+        tryAudioStop.disabled = false;
+        source.start();
+        tryAudioStatus.textContent = "Áudio encaminhado pela matriz USB.";
+    });
+    tryAudioStop.addEventListener("click", stopTryFile);
+    const instantPanel = byId("instant-patchers");
+    const instantButtons = [...instantPanel.querySelectorAll("[data-instant-patch]")];
+    const tryButton = byId("try");
+    let choosingPatch = false;
+
+    function showInstantPatches() {
+        instantPanel.hidden = false;
+        tryButton.setAttribute("aria-expanded", "true");
+    }
+
+    function highlightInstantPatch(key) {
+        for (const button of instantButtons) {
+            button.setAttribute("aria-pressed", String(button.dataset.instantPatch === key));
+        }
+    }
+
+    async function enterTry(status) {
+        if (!liveEdit.pauseEditing()) {
+            status.textContent = "Aguarde a transferência USB para abrir o modo Try.";
+            return false;
+        }
+        if (hardwarePerformance?.editing) reportHardware({ ...hardwarePerformance, editing: false });
         status.textContent = "";
+        if (pendingTryGrid) syncSavedStepGrid(pendingTryGrid, byId("step-status"));
         await startAudio();
         if (!processor) {
             status.textContent = audioStatus.textContent;
-            return;
+            return false;
         }
         if (muted) setMuted(false);
-        keys.get(60).focus({ preventScroll: true });
-        byId("keys").scrollIntoView({ block: "center" });
+        return true;
+    }
+
+    function followTryLink() {
+        if (location.hash === "#try" || location.hash === "#instant-patchers") showInstantPatches();
+    }
+    followTryLink();
+    window.addEventListener("hashchange", followTryLink);
+    tryButton.addEventListener("click", async () => {
+        showInstantPatches();
+        if (await enterTry(byId("try-status"))) {
+            byId("instant-patchers-title").focus({ preventScroll: true });
+            instantPanel.scrollIntoView({ block: "nearest" });
+        }
     });
+    for (const button of instantButtons) button.addEventListener("click", async () => {
+        if (choosingPatch) return;
+        const status = byId("instant-status");
+        choosingPatch = true;
+        try {
+            if (!await enterTry(status)) return;
+            const key = button.dataset.instantPatch;
+            if (!loadPreset(key)) return;
+            if (portableSequence) {
+                if (byId("seq-ks").hidden) document.querySelector('[data-seq="ks"]').click();
+                await runKs("play");
+                status.textContent = presets[key].name + " · frase KS em reprodução.";
+            } else status.textContent = presets[key].name + " · toque no teclado.";
+        } finally { choosingPatch = false; }
+    });
+    async function loadLocalMatrixPreset(key, status) {
+        if (!Object.hasOwn(FactoryCatalog, key) || !await enterTry(status)) return;
+        const phrase = ksFromGrid && !presets[key].sequence ? portableSequence : undefined;
+        if (!loadPreset(key)) return;
+        if (phrase) {
+            replaceKsPhrase(phrase);
+            ksFromGrid = true;
+        }
+        status.textContent = presets[key].name + " · preset de fábrica carregado no navegador.";
+        if (presets[key].sequence) await runKs("play");
+    }
 
     const attackButton = byId("manual-attack");
     let attackHeld = false, attackKeepalive = 0, attackPulse = 0;
@@ -949,7 +1098,7 @@
         stepPage = activeStep >> 4;
         if (feedback) {
             byId("step-live").checked = false;
-            byId("step-status").textContent = feedback + " Use Enviar SEQ para atualizar o teclado.";
+            byId("step-status").textContent = feedback + (liveEdit.isEditing() ? " Use Enviar SEQ para atualizar o teclado." : "");
             markEdited();
         } else {
             byId("step-status").textContent = "SEQ lido do SMK.";
@@ -957,7 +1106,30 @@
         renderSteps();
         return true;
     }
-    ZiviSequences.setup(byId, () => stepGrid, loadStepGrid, () => activeStep, renderSteps);
+    function copyStepGridToKs(grid, status, append = false) {
+        const phrase = ZiviSequences.toKs(grid);
+        const message = phrase ? "SEQ carregado no KS." :
+            grid.steps.slice(0, grid.length).some(step => step[1])
+                ? "O SEQ ultrapassa o limite de 30 s do KS."
+                : "O SEQ não contém notas ativas.";
+        if (phrase) {
+            if (ksTrigger.value === "live") ksTrigger.value = "auto";
+            replaceKsPhrase(phrase);
+            ksFromGrid = true;
+            markEdited();
+        }
+        status.textContent = append && status.textContent ? status.textContent + " " + message : message;
+        return Boolean(phrase);
+    }
+    function syncSavedStepGrid(grid, status) {
+        if (liveEdit.isEditing()) {
+            pendingTryGrid = grid;
+            return;
+        }
+        pendingTryGrid = undefined;
+        copyStepGridToKs(grid, status, true);
+    }
+    ZiviSequences.setup(byId, () => stepGrid, loadStepGrid, () => activeStep, renderSteps, syncSavedStepGrid);
     const intField = (id, low, high, fallback) => {
         const value = byId(id).valueAsNumber;
         return Number.isFinite(value) ? Math.max(low, Math.min(high, Math.round(value))) : fallback;
@@ -1090,9 +1262,27 @@
     byId("step-note").addEventListener("change", () => changeStep(false));
     byId("step-velocity").addEventListener("change", () => changeStep(false));
     byId("step-toggle").addEventListener("click", () => changeStep(true));
-    for (const play of [false, true]) byId(play ? "step-play" : "step-stop").addEventListener("click", () => {
-        byId("step-status").textContent = liveEdit("step-play", [play]) ? "" : "Vincule o SMK e aplique ou carregue o patch.";
+    for (const play of [false, true]) byId(play ? "step-play" : "step-stop").addEventListener("click", async () => {
+        const status = byId("step-status");
+        if (liveEdit.isEditing()) {
+            liveEdit("step-play", [play]);
+            status.textContent = "";
+            return;
+        }
+        if (!play) {
+            await runKs("stop");
+            return;
+        }
+        if (!copyStepGridToKs(stepGrid, status)) return;
+        playingStepGrid = true;
+        await runKs("play");
     });
+    byId("ks-use-step").addEventListener("click", () => {
+        const status = byId("ks-step-status");
+        if (liveEdit.isEditing()) status.textContent = "Abra o modo Try para carregar o SEQ no KS do navegador.";
+        else copyStepGridToKs(stepGrid, status);
+    });
+    byId("step-record").disabled = true;
     byId("step-record").addEventListener("click", () => {
         byId("step-status").textContent = liveEdit("step-record", []) ?
             "Para recuperar a tomada, pare e clique em Ler SEQ do SMK." : "Vincule o SMK e aplique ou carregue o patch.";
@@ -1113,6 +1303,7 @@
             select.addEventListener("change", () => {
                 usbRoutes[at] = Number(select.value);
                 send("usb-route", channel, col, usbRoutes[at]);
+                updateTryAudioRoutes();
                 markEdited();
             });
             label.append(select);
@@ -1133,6 +1324,7 @@
             send("usb-route", ch, col, usbRoutes[ch * 16 + col]);
             send("pin", 7 + ch, col, 0);
         }
+        updateTryAudioRoutes();
         updateMatrix();
         markEdited();
     });
@@ -1165,7 +1357,7 @@
     function readKsSettings() {
         return {
             loop: byId("ks-loop").checked,
-            sequenceTrigger: byId("ks-trigger").value === "sequence",
+            sequenceTrigger: ksTrigger.value === "sequence",
             ...Object.fromEntries(ksSettings.map(([id, key]) => [key, byId("ks-" + id).valueAsNumber]))
         };
     }
@@ -1278,7 +1470,7 @@
             tab.setAttribute("aria-pressed", selected);
             byId("seq-" + tab.dataset.seq).hidden = !selected;
         }
-        if (button.dataset.seq === "ks") renderKsTimeline(hardwarePerformance?.position ?? 0);
+        if (button.dataset.seq === "ks") renderKsTimeline(ksState?.position ?? 0);
     });
     paintScale();
 
@@ -1309,8 +1501,11 @@
     function reportHardware(state) {
         const previous = hardwarePerformance;
         hardwarePerformance = state;
-        paintStepTransport(state?.step, previous?.step);
-        if (!state || !state.editing) return;
+        const editing = Boolean(state?.editing);
+        byId("step-play").textContent = editing ? "Tocar no SMK" : "Tocar no KS";
+        byId("step-record").disabled = !editing;
+        if (editing || previous?.editing) paintStepTransport(editing ? state.step : { playing: false }, previous?.step);
+        if (!state?.editing) return;
         if (!state.sparse && (!previous?.editing || Object.keys(state.arp).some(key => state.arp[key] !== previous.arp[key]))) {
             arpEnabled = state.arp.enabled;
             byId("arp-bpm").value = state.arp.bpm;
@@ -1336,7 +1531,14 @@
         updateKsStatus(state);
     }
 
+    function phraseStatus() {
+        return { mode: "stop", count: portableSequence?.events.length ?? 0, limit: "",
+                 duration: (portableSequence?.lengthMs ?? 0) / 1000, position: 0 };
+    }
+
     function updateKsStatus(state) {
+        ksState = state;
+        ksPhraseEditor.setRecording(state.mode === "record");
         const modes = { record: "Gravando", play: "Reproduzindo", stop: "Parado" };
         const limits = { time: " · limite de tempo", memory: " · memória cheia" };
         const phase = state.mode === "record" && !state.count ? "Armado" : modes[state.mode];
@@ -1348,28 +1550,44 @@
         byId("ks-play").disabled = state.count === 0;
         byId("ks-progress").max = state.duration || 1;
         byId("ks-progress").value = Math.min(state.duration, state.position);
-        const time = value => value.toFixed(2).replace(".", ",");
-        byId("ks-time").textContent = time(state.position) + " / " + time(state.duration) + " s";
+        byId("ks-time").textContent = ksTime.format(state.position) + " / " + ksTime.format(state.duration) + " s";
+        const note = state.note == null ? "—" : chromaticNames[state.note % 12] + (Math.floor(state.note / 12) - 1);
+        if (byId("ks-note").textContent !== note) byId("ks-note").textContent = note;
+        if (!hardwarePerformance?.editing && playingStepGrid && state.mode === "play") {
+            paintStepTransport({ playing: true }, null);
+        } else if (!hardwarePerformance?.editing && state.mode === "stop" && byId("step-transport").dataset.state === "play") {
+            playingStepGrid = false;
+            paintStepTransport({ playing: false }, null);
+        }
         if (!byId("seq-ks").hidden) renderKsTimeline(state.position);
     }
 
     for (const [id] of ksSettings) byId("ks-" + id).addEventListener("input", updateKsControls);
     byId("ks-loop").addEventListener("change", updateKsControls);
-    byId("ks-trigger").addEventListener("change", () => {
+    ksTrigger.addEventListener("change", () => {
         markEdited();
         updateKsControls();
     });
-    for (const command of ["record", "play", "stop"]) {
-        byId("ks-" + command).addEventListener("click", async () => {
-            if (muted && command !== "stop") setMuted(false);
-            if (command === "record") portableSequence = undefined;
-            const type = "ks-" + command;
-            if (!send(type) && !processor) {
-                await startAudio();
-                processor?.port.postMessage({ type, values: [] });
-            }
-        });
+    async function runKs(command) {
+        if (command !== "stop" && muted) setMuted(false);
+        const type = "ks-" + command;
+        if (liveEdit.isEditing()) {
+            liveEdit(type, []);
+            return;
+        }
+        if (command !== "stop") await startAudio();
+        if (!processor) return;
+        if (command === "record") {
+            ksRevision++;
+            updateKsStatus({ mode: "record", count: 0, limit: "",
+                             duration: readKsSettings().limitSeconds, position: 0 });
+        }
+        const values = command === "record" ? [ksRevision] : command === "play" ? [ksTrigger.value === "auto"] : [];
+        processor.port.postMessage({ type, values });
     }
+
+    for (const command of ["record", "play", "stop"])
+        byId("ks-" + command).addEventListener("click", () => runKs(command));
 
     let randomHeld = false;
     async function randomPress() {
@@ -1708,7 +1926,9 @@
         for (const [at, value] of usbPins) {
             usbRoutes[at] = value;
             usbRouteControls.get(at).value = value;
+            processor?.port.postMessage({ type: "usb-route", values: [at >> 4, at & 15, value] });
         }
+        if (usbPins.length) updateTryAudioRoutes();
         edited ||= usbPins.length > 0;
         if (current.midiCC.some((value, i) => value !== previous.midiCC[i])) {
             current.midiCC.forEach((value, i) => {
@@ -1759,20 +1979,58 @@
             edited = true;
         }
         if (JSON.stringify(current.sequence) !== JSON.stringify(previous.sequence)) {
-            portableSequence = current.sequence;
-            send("ks-phrase", portableSequence, readKsSettings());
-            renderKsTimeline();
+            replaceKsPhrase(current.sequence);
             edited = true;
         }
         if (edited) markEdited();
     }
 
+    const ksTime = new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    function replaceKsPhrase(phrase) {
+        portableSequence = phrase;
+        ksFromGrid = false;
+        playingStepGrid = false;
+        ksRevision++;
+        ksPhraseEditor.show(phrase);
+        processor?.port.postMessage({ type: "ks-phrase", values: [phrase, readKsSettings(), ksRevision] });
+        updateKsStatus(phraseStatus());
+    }
+    const ksPhraseEditor = setupKsPhraseEditor(byId, phrase => {
+        replaceKsPhrase(phrase);
+        markEdited();
+        if (liveEdit.isEditing()) liveEdit("patch", [patchSnapshot()]);
+    });
+
     liveEdit = setupSmkStudio(patchSnapshot, applyPatch, reportHardware, limitPerformanceOptions, loadStepGrid,
-        receiveHardwarePatch, reportPanel, receiveHardwareDelta);
+        receiveHardwarePatch, reportPanel, receiveHardwareDelta, loadLocalMatrixPreset);
     setupFirmwarePanel(liveEdit.lockFirmware);
     resetCustomSelection = setupCustomPresets(patchSnapshot, applyPatch, validatePatch);
+    const studioLanguage = document.querySelector("[data-studio-language]");
+    const handoffKey = "zivi-aks-studio-language-draft";
+    studioLanguage?.addEventListener("click", event => {
+        if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+        const language = studioLanguage.dataset.studioLanguage;
+        studioLanguage.hash = location.hash || (instantPanel.hidden ? "" : "#try");
+        try { localStorage.setItem("zivi-aks-language", language); } catch {}
+        try {
+            sessionStorage.setItem(handoffKey, JSON.stringify({
+                language, pathname: studioLanguage.pathname, patch: patchSnapshot(),
+                preset: byId("preset").value, trigger: ksTrigger.value
+            }));
+        } catch {}
+    });
+    let handoff;
+    if (studioLanguage) try {
+        const saved = JSON.parse(sessionStorage.getItem(handoffKey) ?? "null");
+        if (saved?.language === locale && saved.pathname === location.pathname) {
+            handoff = saved;
+            sessionStorage.removeItem(handoffKey);
+        }
+    } catch {}
     drawMatrix();
-    applyPatch({ ...presets.initial, version: 1 }, "initial");
+    if (handoff && applyPatch(handoff.patch, handoff.preset)) {
+        if (["auto", "live", "sequence"].includes(handoff.trigger)) ksTrigger.value = handoff.trigger;
+    } else applyPatch({ ...presets.initial, version: 1 }, "initial");
     updateKsControls();
     connectAnalyser();
 })();

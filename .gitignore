@@ -11,3 +11,6 @@ __pycache__/
 *.map
 *.wav
 *.log
+
+/platform/fm1_device/build/
+/platform/fm1_device/web/words/

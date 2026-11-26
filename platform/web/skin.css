@@ -492,3 +492,29 @@ body { background: #252724; padding: clamp(6px, 2vw, 28px); }
 #ks-transpose-pads { display: flex; flex-wrap: wrap; gap: 3px; }
 #ks-transpose-pads button { min-width: 30px; background: #dfd9c6; border-color: #293a44; }
 #ks-transpose-pads button[aria-pressed="true"] { background: #1f3647; color: #fff4d9; border-color: #f0bc58; }
+
+.matrix-device-preset {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: .32rem .55rem;
+  padding: .45rem .55rem;
+  margin: .25rem 0 .45rem;
+  border: 1px solid #b3b3a3;
+  border-radius: .3rem;
+  background: #e3e1d6;
+  color: #303a32;
+}
+.matrix-device-preset label { font-weight: 700; }
+.matrix-device-preset select { width: 100%; min-width: 0; }
+.matrix-device-preset button, .matrix-device-preset select { min-height: 2rem; }
+.matrix-device-preset output:not(:empty) { grid-column: 1 / -1; }
+.matrix-device-preset output:empty { display: none; }
+.try-audio-input:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-block: .4rem; }
+.try-audio-input label { width: 100%; min-width: 0; }
+.try-audio-input input { display: block; width: 100%; margin-top: .2rem; }
+.try-audio-input output { overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+  .matrix-device-preset { grid-template-columns: minmax(0, 1fr) max-content; }
+  .matrix-device-preset label { grid-column: 1 / -1; }
+}

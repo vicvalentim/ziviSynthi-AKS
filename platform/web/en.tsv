@@ -1,5 +1,5 @@
 ziviSynthi AKS · Painel AKS	ziviSynthi AKS · Web Studio
-3.9.6 pré-lançamento	3.9.6 pre-release
+3.9.7 pré-lançamento	3.9.7 pre-release
 Silenciar	Mute
 Conectar MIDI	Connect MIDI
 Instalar firmware	Install firmware
@@ -239,6 +239,12 @@ Gravando	Recording
 Reproduzindo	Playing
 Parado	Stopped
 Armado	Armed
+Gravar	Record
+Reproduzir	Play
+Parar	Stop
+Aleatório	Random
+Repetir frase	Loop
+Disparo	Trigger
 Instalar Felucca	Install Felucca
 Atualizar firmware	Update firmware
 Reverter firmware	Roll back firmware
@@ -271,3 +277,65 @@ Gravando firmware…	Flashing firmware…
 Aguardando reinício e conferência da versão…	Waiting for reboot and version verification…
 Gravação USB	USB flashing
 Gravação concluída	Flashing complete
+Preset do SMK	SMK preset
+Carregar na matriz	Load into matrix
+Patch recebido do SMK.	Patch received from the SMK.
+Carregue uma montagem do Synthi. Os patches com frase KS começam a tocar na hora.	Load a Synthi patch. Patches with a KS phrase start playing immediately.
+Tocar no teclado	Play the keyboard
+Automático no navegador	Automatic in browser
+Nota atual do KS	Current KS note
+Editar frase KS	Edit KS phrase
+Duração da frase (ms)	Phrase duration (ms)
+Adicionar nota	Add note
+Adicionar soltura	Add note-off
+Eventos da frase KS	KS phrase events
+Tempo (ms)	Time (ms)
+Nota MIDI	MIDI note
+Velocidade de reprodução	Playback speed
+Vel. MIDI	MIDI velocity
+Ataque	Attack
+Ações	Actions
+Aplicar frase	Apply phrase
+Descartar edição	Discard changes
+Importar frase	Import phrase
+Exportar frase	Export phrase
+Retirar evento	Remove event
+A frase atingiu o limite de 30 segundos.	The phrase has reached the 30-second limit.
+Use uma nota com ataque no primeiro evento e tempos distintos dentro da duração.	Use an attack on the first note and unique event times within the phrase duration.
+Frase KS aplicada.	KS phrase applied.
+Frase KS removida.	KS phrase removed.
+Frase KS importada.	KS phrase imported.
+Arquivo de frase KS inválido.	Invalid KS phrase file.
+Aguarde a transferência USB para abrir o modo Try.	Wait for the USB transfer before opening Try mode.
+Modo Try · edição local. O SMK continua vinculado.	Try mode · local editing. The SMK is still linked.
+· frase KS em reprodução.	· playing the KS phrase.
+· toque no teclado.	· play the keyboard.
+A gravação é curta demais para exportação em milissegundos.	The recording is too short to export with millisecond timing.
+Mova MOD para o filtro e PITCH para as molas. Ajuste Shape de OSC 3.	Use the joystick to move between filtered noise and spring reverb.
+Inicie a sequência e toque a voz independente à direita.	Press Play in KS to hear the phrase. Play the keyboard for the live voice.
+OSC 1 substitui a entrada de guitarra. Explore filtro, mola e retorno do anel.	Play the keyboard to hear the filtered oscillator through the spring and ring feedback.
+Pressione Play no KS para iniciar o loop. F3 altera o corte e F4, a mola.	Press Play in KS to hear the 165 BPM phrase. Use the filter controls to shape it.
+Alcance do teclado	Realtime pitch spread
+Alcance da sequência	Sequence pitch spread
+Duração máxima da gravação	Recording time limit
+Transposição	Transpose
+Escolher preset	Choose a preset
+Teclado vinculado	Linked controller
+Carregar SEQ no KS	Load SEQ into KS
+Tocar no KS	Play in KS
+SEQ carregado no KS.	SEQ loaded into KS.
+O SEQ ultrapassa o limite de 30 s do KS.	SEQ exceeds the KS limit of 30 seconds.
+O SEQ não contém notas ativas.	SEQ contains no active notes.
+Abra o modo Try para carregar o SEQ no KS do navegador.	Open Try mode to load SEQ into the browser KS.
+· preset de fábrica carregado no navegador.	· factory preset loaded in the browser.
+Arquivo de áudio para USB FX	Audio file for USB FX
+Tocar arquivo	Play file
+Parar arquivo	Stop file
+Carregando áudio…	Loading audio…
+Áudio encaminhado pela matriz USB.	Audio routed through the USB matrix.
+Escolha um arquivo de áudio de até 32 MB.	Choose an audio file up to 32 MB.
+O navegador não conseguiu decodificar o arquivo de áudio.	The browser could not decode the audio file.
+Abra os dois canais do computador. B8 mede o canal esquerdo.	Play a stereo audio file in Try. The left channel also feeds the meter.
+Ajuste F3 e Response. O filtro recebe os dois canais.	The filter processes both channels. Adjust cutoff and Response.
+F4 ajusta o retorno da mola somado ao sinal estéreo.	Adjust reverb level to blend the spring with the stereo signal.
+Use o canal esquerdo como modulador. Gire a frequência do OSC 1.	The left channel modulates Oscillator 1. Adjust its frequency.

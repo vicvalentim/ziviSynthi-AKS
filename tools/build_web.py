@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from html import escape
 
 from build_presets import load as load_presets
 from build_vernier import load as load_verniers
@@ -16,6 +17,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("output", type=Path)
 parser.add_argument("--embed-firmware", action="append", nargs=2, metavar=("VERSION", "FWSC"), default=[])
 parser.add_argument("--language", choices=("en", "pt"), default="pt")
+parser.add_argument("--alternate", help="Filename or relative URL for the other language")
 args = parser.parse_args()
 english = args.language == "en"
 strings = read_strings(web / "en.tsv") if english else {}
@@ -100,12 +102,20 @@ def vernier_catalog():
 html = read("index.html")
 if english:
     html = localize_html(html, strings)
+if args.alternate:
+    language, label = ("pt-BR", "Português") if english else ("en", "English")
+    switch = (f'<a class="studio-language" data-studio-language="{language}" lang="{language}" '
+              f'hreflang="{language}" href="{escape(args.alternate, quote=True)}">{label}</a>')
+    html = html.replace("<!-- STUDIO_LANGUAGE_LINK -->", switch, 1)
 
 
 def ui_script():
-    script = "".join(read(name) for name in ("visuals.js", "studio.js", "sequence.js", "firmware.js", "ui.js"))
+    script = "".join(read(name) for name in ("visuals.js", "studio.js", "sequence.js", "ks-editor.js", "firmware.js", "ui.js"))
     return localize_js(script, strings) if english else script
-factory = {key: dict(entry.patch, play=entry.play, bank=entry.bank) for key, entry in load_presets(felucca=True).items()}
+factory = {
+    key: dict(entry.patch, play=(strings.get(entry.play, "") if english else entry.play), bank=entry.bank)
+    for key, entry in {**load_presets(felucca=True), **load_presets(usb_effects=True)}.items()
+}
 calibration = (project / "app/core/aks_calibration.def").read_text(encoding="utf-8")
 aks_catalog = "const AKSCalibration = " + json.dumps({
     name: float(value) for name, value in re.findall(r"AKS_CALIBRATION\((\w+), ([\d.]+)\)", calibration)

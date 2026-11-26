@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <title>EMS Synthi AKS</title>
+  <desc>Vector drawing of the portable synthesizer with its metal panel, pin matrix, and blue KS touch keyboard.</desc>
+  <defs>
+    <linearGradient id="metal" x1="170" y1="170" x2="836" y2="623" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fbf7e9"/><stop offset=".54" stop-color="#dcded3"/><stop offset="1" stop-color="#b8c3bd"/>
+    </linearGradient>
+    <linearGradient id="case" x1="173" y1="127" x2="872" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3f4845"/><stop offset=".4" stop-color="#171c1a"/><stop offset="1" stop-color="#282f2b"/>
+    </linearGradient>
+    <linearGradient id="blue-keys" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#2cb5df"/><stop offset="1" stop-color="#117caa"/>
+    </linearGradient>
+    <pattern id="pin-holes" x="524" y="392" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="4.5" cy="4.5" r="2.1" fill="#101513" stroke="#a59e78" stroke-width=".8"/>
+    </pattern>
+    <g id="jack">
+      <circle r="12" fill="#222826" stroke="#535e57" stroke-width="2"/>
+      <circle r="7" fill="#090d0c" stroke="#66716a" stroke-width=".9"/>
+    </g>
+    <g id="knob">
+      <path d="M-19 13a23 23 0 1 1 38 0" stroke="#8b9990" stroke-width="1.2" stroke-dasharray="1.7 3.4"/>
+      <circle r="17.2" fill="#191e1b" stroke="#3a4541" stroke-width="1.6"/>
+      <circle r="11" fill="currentColor"/>
+      <path d="M0-15v3" stroke="#f7f3d9" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+    <g id="vernier">
+      <circle r="25" fill="#9c9f8d" stroke="#59665d"/>
+      <path d="M-10-23h20v9h-20z" fill="#e7e4d0"/>
+      <use href="#knob" color="#137ca6"/>
+    </g>
+    <g id="osc">
+      <use href="#vernier"/><use href="#knob" x="59" color="#2b865a"/>
+      <use href="#knob" x="116" color="#d6dbd0"/><use href="#knob" x="172" color="#d6dbd0"/>
+    </g>
+    <pattern id="keys" width="31.6" height="70" patternUnits="userSpaceOnUse" x="238" y="809">
+      <path d="M4 0h25l2 70H1z" fill="#229ecb"/>
+      <path d="M4 1h24" stroke="#73d2e9" stroke-width="2"/>
+    </pattern>
+    <g id="black-key"><path d="M0 0h16l1 42H-1z" fill="#171a18" stroke="#23312f" stroke-width="1.3"/></g>
+  </defs>
+
+  <path d="M431 130v-22q0-13 16-18c44-11 85-11 128 0q16 5 16 18v22" stroke="#1e2421" stroke-width="25" stroke-linecap="round"/>
+  <path d="M438 107q7-11 24-13c33-6 67-6 100 0q15 3 23 12" stroke="#57645d" stroke-width="2.5"/>
+  <path d="M302 136v-13h41v13m338 0v-13h41v13" stroke="#a89d76" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M214 128h596q15 0 16 16l11 447q0 21-19 21H206q-19 0-18-21l11-447q1-16 15-16Z" fill="url(#case)" stroke="#111614" stroke-width="3"/>
+  <path d="M218 145h590l10 447H206z" fill="url(#metal)" stroke="#838a7f" stroke-width="3"/>
+  <path d="M209 264h604M211 201h600M446 145v119M584 145v119M699 145v119M304 145v119M741 145v119M454 264v327M680 330v261M210 330h605M210 392h244m226 0h135M210 454h244m226 0h135M210 516h244M329 454v62" stroke="#64716a" stroke-width="1"/>
+  <g fill="#2b3731" font-family="system-ui,sans-serif" font-size="8" font-weight="650" letter-spacing=".7" text-anchor="middle">
+    <text x="378" y="215">METER</text><text x="524" y="215">FILTER / OSCILLATOR</text><text x="641" y="215">RING MOD</text>
+    <text x="333" y="276">OSCILLATOR 1</text><text x="333" y="342">OSCILLATOR 2</text><text x="333" y="404">OSCILLATOR 3</text>
+    <text x="626" y="276">ENVELOPE SHAPER</text><text x="747" y="342">REVERBERATION</text>
+    <text x="747" y="404">INPUT LEVEL</text><text x="747" y="466">STICK RANGE</text>
+    <text x="267" y="466">NOISE</text><text x="391" y="466">OUTPUT FILTER</text><text x="333" y="528">OUTPUT CHANNELS</text>
+  </g>
+  <path d="M231 166h53m-53 12h53m-53 12h53m470-24h45m-45 12h45m-45 12h45" stroke="#262e2a" stroke-width="5" stroke-linecap="round"/>
+  <use href="#jack" x="321" y="174"/><use href="#jack" x="349" y="174"/><use href="#jack" x="377" y="174"/><use href="#jack" x="405" y="174"/>
+  <use href="#jack" x="435" y="174"/><use href="#jack" x="462" y="174"/><use href="#jack" x="550" y="174"/><use href="#jack" x="579" y="174"/>
+  <use href="#jack" x="608" y="174"/><use href="#jack" x="637" y="174"/><use href="#jack" x="713" y="180"/>
+  <rect x="316" y="222" width="66" height="33" rx="4" fill="#f7f5e8" stroke="#7e8d83" stroke-width="2"/>
+  <path d="M324 243q22-24 50 0" stroke="#596e61" stroke-width="1.4"/>
+  <path data-art-needle="" d="M333 236l16 12" stroke="#29382f" stroke-width="1.4" style="transform-origin:349px 248px"/>
+  <circle cx="349" cy="248" r="2" fill="#29382f"/>
+  <circle cx="401" cy="239" r="4" fill="#a34140"/><circle cx="714" cy="247" r="6" fill="#8c3232"/>
+  <use href="#knob" x="470" y="239" color="#1d88b0"/><use href="#knob" x="517" y="239" color="#c7b65d"/>
+  <use href="#knob" x="565" y="239" color="#d6dbd0"/><use href="#knob" x="637" y="239" color="#d6dbd0"/>
+  <use href="#osc" x="246" y="306"/><use href="#osc" x="246" y="369"/><use href="#osc" x="246" y="431"/>
+  <use href="#knob" x="479" y="306" color="#a83a48"/><use href="#knob" x="536" y="306" color="#a83a48"/>
+  <use href="#knob" x="593" y="306" color="#a83a48"/><use href="#knob" x="650" y="306" color="#a83a48"/>
+  <use href="#knob" x="714" y="306" color="#d6dbd0"/><use href="#knob" x="775" y="306" color="#d6dbd0"/>
+  <use href="#knob" x="246" y="493" color="#1d88b0"/><use href="#knob" x="305" y="493" color="#d6dbd0"/>
+  <use href="#knob" x="362" y="493" color="#c7b65d"/><use href="#knob" x="418" y="493" color="#c7b65d"/>
+  <use href="#knob" x="246" y="553" color="#d6dbd0"/><use href="#knob" x="305" y="553" color="#2b865a"/>
+  <use href="#knob" x="362" y="553" color="#2b865a"/><use href="#knob" x="418" y="553" color="#d6dbd0"/>
+  <use href="#knob" x="713" y="369" color="#2b865a"/><use href="#knob" x="775" y="369" color="#d6dbd0"/>
+  <use href="#knob" x="713" y="431" color="#d6dbd0"/><use href="#knob" x="775" y="431" color="#d6dbd0"/>
+  <use href="#knob" x="708" y="493" color="#2b865a"/><use href="#knob" x="778" y="493" color="#2b865a"/>
+  <circle cx="741" cy="551" r="31" fill="#222b27" stroke="#58655d" stroke-width="2"/>
+  <path d="m742 549-13 20" stroke="#adb6a8" stroke-width="8" stroke-linecap="round"/><circle cx="729" cy="569" r="3" fill="#e0e4d5"/>
+  <circle cx="792" cy="552" r="6" fill="#ac3e46"/>
+  <rect x="524" y="392" width="144" height="144" rx="3" fill="#212720" stroke="#788474" stroke-width="1.2"/>
+  <rect x="524" y="392" width="144" height="144" rx="3" fill="url(#pin-holes)"/>
+  <path d="M524 383h144v-33H524zM464 392h50v144h-50zM464 401h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m-50 9h50m19-144v-33m18 33v-33m18 33v-33m18 33v-33m18 33v-33m18 33v-33m18 33v-33" stroke="#899386" stroke-width=".8"/>
+  <text x="596" y="347" font-family="system-ui,sans-serif" font-size="8" text-anchor="middle" fill="#2b3731" letter-spacing="1.25">PIN MATRIX</text>
+  <rect x="473" y="548" width="195" height="19" rx="4" fill="#252b25"/>
+  <path d="M482 557h32m12 0h32m12 0h32m12 0h32" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 7" stroke="#ebe2bd"/>
+  <path d="M482 557h18" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 7" stroke="#b64b4d"/>
+  <path d="M615 557h18" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 7" stroke="#468c64"/>
+  <text x="567" y="584" font-family="system-ui,sans-serif" font-size="15" font-weight="750" text-anchor="middle" fill="#212c26" letter-spacing="2.5">SYNTHI</text>
+  <path d="M529 121c-19 5-35 24-41 55m17-26c1 54 125 63 190 34" stroke="#6d7770" stroke-width="7" stroke-linecap="round"/>
+  <path d="M337 610l-23 68m375-68 24 68" stroke="#262d2a" stroke-width="17"/>
+  <path d="M337 611l-23 67m375-67 24 67" stroke="#46534a" stroke-width="2"/>
+  <path d="M200 666h623q13 0 15 12l22 211q1 26-21 35H181q-20-7-18-35l24-211q1-12 13-12Z" fill="url(#case)" stroke="#0f1512" stroke-width="4"/>
+  <path d="M205 685h613l20 198H185z" fill="#212824" stroke="#46554d" stroke-width="1.7"/>
+  <path d="M218 712h589l6 74H208z" fill="#171e1a" stroke="#313e37" stroke-width="1.7"/>
+  <rect x="399" y="737" width="226" height="19" rx="2" fill="#136384" stroke="#5b99a9"/>
+  <text x="512" y="750.5" font-family="system-ui,sans-serif" font-size="9.5" font-weight="740" text-anchor="middle" fill="#c7ebee" letter-spacing="2.5">EMS SYNTHI AKS</text>
+  <path d="M231 792h17m10 0h17m10 0h17m10 0h17m68 2h17m14-8h17m308 2h25" stroke="#239dcb" stroke-width="7" stroke-linecap="round"/>
+  <path d="M220 807h585l8 71H211z" fill="#101613" stroke="#435149" stroke-width="3"/>
+  <path d="M223 809h579l6 66H216z" fill="url(#keys)"/>
+  <use href="#black-key" x="241" y="809"/><use href="#black-key" x="275" y="809"/><use href="#black-key" x="339" y="809"/>
+  <use href="#black-key" x="371" y="809"/><use href="#black-key" x="405" y="809"/><use href="#black-key" x="468" y="809"/>
+  <use href="#black-key" x="499" y="809"/><use href="#black-key" x="561" y="809"/><use href="#black-key" x="594" y="809"/>
+  <use href="#black-key" x="627" y="809"/><use href="#black-key" x="692" y="809"/><use href="#black-key" x="724" y="809"/>
+  <use href="#black-key" x="785" y="809"/>
+  <path d="M183 888h655" stroke="#68766a" stroke-width="1.5"/>
+  <path d="M299 897h39v23h-39zM687 897h39v23h-39z" fill="#8e876e" stroke="#b6ae95" stroke-width="2"/>
+  <path d="M309 903h19m370 0h19" stroke="#272e24" stroke-width="2"/>
+  <path d="M689 622c42-24 100 19 102 79" stroke="#77827b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M783 695h16v20h-16z" fill="#66746c" stroke="#303b33"/>
+  <g aria-hidden="true">
+    <g fill="#a9e6b3" stroke="#e4ffe7" stroke-width="1" opacity="0" data-art-route="0">
+      <circle cx="555.5" cy="414.5" r="3.5"/><circle cx="528.5" cy="495.5" r="3.5"/>
+    </g>
+    <g fill="#dfb467" stroke="#ffedb6" stroke-width="1" opacity="0" data-art-route="1">
+      <circle cx="600.5" cy="459.5" r="3.5"/><circle cx="591.5" cy="477.5" r="3.5"/>
+    </g>
+    <g fill="#7ec9de" stroke="#dcf8ff" stroke-width="1" opacity="0" data-art-route="2">
+      <circle cx="546.5" cy="495.5" r="3.5"/><circle cx="582.5" cy="513.5" r="3.5"/>
+    </g>
+    <path d="M468 815h12v53h-12z" fill="#a9eafb" opacity="0" data-art-key="0"/>
+    <path d="M532 815h14v53h-14z" fill="#a9eafb" opacity="0" data-art-key="1"/>
+    <path d="M660 815h15v53h-15z" fill="#a9eafb" opacity="0" data-art-key="2"/>
+    <circle cx="792" cy="552" r="5" fill="#ffd2a6" opacity="0" data-art-led=""/>
+  </g>
+</svg>

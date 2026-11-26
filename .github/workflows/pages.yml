@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  PRERELEASE_VERSION: '3.9.6'
+  PRERELEASE_VERSION: '3.9.7'
 
 permissions:
   contents: read
@@ -62,8 +62,8 @@ jobs:
         if: github.repository == 'vicvalentim/ziviSynthi-AKS'
         run: |
           mkdir -p build/release
-          files=("zivisynthi-felucca-smk37-${PRERELEASE_VERSION}.fwsc" zivisynthi-aks-editor.html
-            zivisynthi-aks-presets.zip zivisynthi-aks-source.zip)
+          files=("zivisynthi-felucca-smk37-${PRERELEASE_VERSION}.fwsc" zivisynthi-aks-editor.html zivisynthi-aks-editor-pt.html
+            firmware.json zivisynthi-aks-presets.zip zivisynthi-aks-source.zip)
           for file in "${files[@]}"; do cp "build/pages/$file" build/release/; done
           cd build/release
           sha256sum "${files[@]}" > SHA256SUMS.txt

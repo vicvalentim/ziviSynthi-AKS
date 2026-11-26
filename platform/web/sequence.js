@@ -3,6 +3,47 @@ const ZiviSequences = (() => {
     const { emptyGrid } = ZiviStudioProtocol;
     const header = "zivisynthiA.seq.v1";
 
+    function toKs(grid) {
+        // Recorded SEQ timings are in SMK-37 Pro DSP frames, independent of the browser's rate.
+        const rate = 44118;
+        const triplet = grid.division % 2;
+        const divisor = grid.bpm * 2 ** (grid.division >> 1) * (triplet ? 3 : 1);
+        const period = Math.round(rate * (triplet ? 120 : 60) / divisor);
+        const scale = frames => Math.round(frames * grid.timingBpm / grid.bpm);
+        const steps = grid.steps.slice(0, grid.length).map(([note, velocity, legato, span, delay, duration]) => {
+            const length = span ? Math.max(1, scale(span)) : period;
+            const start = span ? Math.min(length - 1, scale(delay)) : 0;
+            const end = span ? scale(delay + duration) : Math.floor(period * 3 / 4);
+            return { note, velocity, legato, length, start, end: Math.min(length, Math.max(start + 1, end)) };
+        });
+        const frames = steps.reduce((sum, step) => sum + step.length, 0);
+        if (frames > rate * 30 || !steps.some(step => step.velocity)) return null;
+        const lengthMs = Math.round(frames * 1000 / rate);
+        if (!lengthMs) return null;
+        const events = [];
+        function event(frame, note, velocity, attack) {
+            const ms = Math.min(lengthMs - 1, Math.round(frame * 1000 / rate));
+            const previous = events.at(-1);
+            if (previous?.[0] === ms) {
+                events.pop();
+                attack ||= Boolean(velocity && previous[3]);
+            }
+            if (velocity || events.length) events.push([ms, note, velocity, attack]);
+        }
+        let offset = 0;
+        for (const [i, step] of steps.entries()) {
+            if (step.velocity) {
+                event(offset + step.start, step.note, step.velocity, !step.legato || !events.at(-1)?.[2]);
+                const next = steps[i + 1];
+                const release = offset + step.end;
+                if (release < frames && (step.end < step.length || !next?.velocity || next.start))
+                    event(release, step.note, 0, false);
+            }
+            offset += step.length;
+        }
+        return ZiviDSP.validateSequence({ lengthMs, events });
+    }
+
     function makeClip(grid, first, last) {
         if (first < 1 || first > last || last > grid.length) throw new RangeError("Selecione um trecho da sequência.");
         return { division: grid.division, timingBpm: grid.timingBpm, steps: grid.steps.slice(first - 1, last).map(step => step.slice()) };
@@ -48,7 +89,7 @@ const ZiviSequences = (() => {
         return value ? { name, kind: entry.kind, value } : null;
     }
 
-    function setup(byId, getGrid, setGrid, getFocus, render) {
+    function setup(byId, getGrid, setGrid, getFocus, render, syncKs) {
         const select = byId("step-shelf"), name = byId("step-name"), file = byId("step-file"), status = byId("step-status");
         const report = text => { status.textContent = text; };
         let saved = [], clip;
@@ -85,6 +126,7 @@ const ZiviSequences = (() => {
             const next = [...saved];
             next[index < 0 ? saved.length : index] = entry;
             persist(next, index < 0 ? saved.length : index, "Entrada salva no navegador.");
+            if (entry.kind === "seq") syncKs(entry.value, status);
         }
         function setClip(value) {
             clip = value;
@@ -119,8 +161,9 @@ const ZiviSequences = (() => {
         action("step-load", () => {
             const entry = active();
             if (!entry) return;
-            if (entry.kind === "seq") setGrid(entry.value, "Sequência carregada no editor.");
-            else {
+            if (entry.kind === "seq") {
+                if (setGrid(entry.value, "Sequência carregada no editor.")) syncKs(entry.value, status);
+            } else {
                 setClip(entry.value);
                 report("Trecho carregado. Selecione o passo inicial e use Colar.");
             }
@@ -162,5 +205,5 @@ const ZiviSequences = (() => {
         for (const id of ["step-first", "step-last"]) byId(id).addEventListener("change", render);
         redraw();
     }
-    return { setup, makeClip, validateClip, paste, clear };
+    return { setup, makeClip, validateClip, paste, clear, toKs };
 })();

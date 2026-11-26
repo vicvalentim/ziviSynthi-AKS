@@ -18,6 +18,7 @@ class ZiviProcessor extends AudioWorkletProcessor {
                 this.synth[type === "stick-x" ? "stickX" : "stickY"] = Math.max(-1, Math.min(1, values[0]));
             }
             if (type === "ks-route") this.synth.setKsRoute(...values);
+            if (type === "usb-route") this.synth.setUsbRoute(...values);
             if (type === "ks-matrix") this.synth.setKsMatrix(Boolean(values[0]));
             if (type === "pin") this.synth.pin(...values);
             if (type === "note") this.synth.note(...values);
@@ -29,7 +30,10 @@ class ZiviProcessor extends AudioWorkletProcessor {
             if (type === "bend" && Number.isFinite(values[0])) {
                 this.synth.bend = Math.max(-2, Math.min(2, values[0]));
             }
-            if (type === "patch" && this.synth.applyPatch(values[0], values[1]) && !values[1]) this.capturing = false;
+            if (type === "patch" && this.synth.applyPatch(values[0], values[1]) && !values[1]) {
+                this.capturing = false;
+                this.ksRevision = values[2];
+            }
             if (type === "scale-settings") this.synth.configureScale(...values);
             if (type === "arp-settings") this.synth.configureArp(values[0]);
             if (type === "ks-phrase") {
@@ -37,13 +41,15 @@ class ZiviProcessor extends AudioWorkletProcessor {
                 this.synth.loadPhrase(sequence);
                 this.synth.ks.controls(settings);
                 this.capturing = false;
+                this.ksRevision = values[2];
             }
             if (type === "ks-controls") this.synth.ks.controls(values[0]);
             if (type === "ks-record") {
                 this.synth.record();
                 this.capturing = true;
+                this.ksRevision = values[0];
             }
-            if (type === "ks-play") this.synth.ks.play();
+            if (type === "ks-play") this.synth.ks.play(Boolean(values[0]));
             if (type === "ks-stop") this.synth.ks.stop();
             if (type === "ks-random") this.synth.random(Boolean(values[0]));
             if (type === "notes-off") this.synth.panic();
@@ -59,14 +65,15 @@ class ZiviProcessor extends AudioWorkletProcessor {
         };
     }
 
-    process(_inputs, outputs) {
+    process(inputs, outputs) {
         const [left, right] = outputs[0] ?? [];
         if (!left) return true;
+        const [usbLeft, usbRight] = inputs[0] ?? [];
         if (this.muted) {
             left.fill(0);
             right?.fill(0);
         } else {
-            this.peak = Math.max(this.peak, this.synth.render(left, right));
+            this.peak = Math.max(this.peak, this.synth.render(left, right, usbLeft, usbRight, true));
             this.meter = Math.max(this.meter, this.synth.meterPeak);
             this.meterSum += this.synth.meterSum;
             this.meterFrames += left.length;
@@ -75,7 +82,7 @@ class ZiviProcessor extends AudioWorkletProcessor {
             this.capturing = false;
             const ks = this.synth.ks;
             const sequence = ks.portableSequence();
-            this.port.postMessage({ type: "ks-capture", sequence, eventCount: ks.events.length });
+            this.port.postMessage({ type: "ks-capture", sequence, eventCount: ks.events.length, revision: this.ksRevision });
         }
         this.framesUntilMeter -= left.length;
         if (this.framesUntilMeter <= 0) {

@@ -1,0 +1,17 @@
+name = "zivisynthi-fm1"
+id_prefix = "FM-1_847"
+usb_product = "ziviSynthi AKS FM-1"
+description = "Pin-matrix synthesizer and KS sequencer for the M-VAVE FM-1."
+tagline = "EMS-inspired pin-matrix synthesis"
+author = "Victor Valentim"
+licence = "GPL-3.0-only"
+tags = ["synth"]
+repo = "https://github.com/vicvalentim/ziviSynthi-AKS"
+install = "https://vicvalentim.github.io/ziviSynthi-AKS/docs/usage/FIRMWARE_TARGETS.en.html"
+screenshot = "platform/fm1_device/screen.png"
+o2 = ["synth_unit.c", "ks_unit.c", "modules_unit.c", "presets_unit.c"]
+o2_cflags = ["-ffp-contract=off"]
+ram_layout = "packed"
+font_trim = true
+ble = false
+words = "../fm1_base/words.tsv"

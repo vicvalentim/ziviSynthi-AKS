@@ -212,7 +212,7 @@ const ZiviStudioProtocol = (() => {
     return { command, edits, ks, message, patch, unpack, reply, u14, u21, read14, read21, read32, readDelta, applyDiff, crc, emptyGrid, defaultCC, encodeGrid, decodeGrid };
 })();
 
-function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOptions, onGrid, onRemotePatch, onPanel, onDelta) {
+function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOptions, onGrid, onRemotePatch, onPanel, onDelta, loadLocalPreset) {
     const { command, edits, ks, message, patch, unpack, reply, u14, u21, read14, read21, read32, readDelta, applyDiff, crc } = ZiviStudioProtocol;
     const get = id => document.getElementById("smk-" + id);
     const button = get("access"), link = get("link"), apply = get("apply"), read = get("read");
@@ -221,6 +221,10 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
     const userSlot = get("user-slot"), userRead = get("user-read"), userSave = get("user-save");
     const userWrite = get("user-write"), stepRead = get("step-read"), stepWrite = get("step-write");
     const stepStore = get("step-store");
+    const matrixForm = get("matrix-preset-form"), matrixPreset = get("matrix-preset");
+    const matrixLoad = get("matrix-load"), matrixFeedback = get("matrix-feedback");
+    const matrixHardware = get("matrix-hardware");
+    let matrixLoading = false;
     const profile = get("profile"), profileRead = get("profile-read"), profileReset = get("profile-reset");
     let supportsExtended = false, supportsStepTelemetry = false, supportsGrid = false, supportsSync = false;
     let syncAfter = 0, revision = 0, supportsDelta = false;
@@ -264,6 +268,12 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
 
     function updateActions() {
         const transfer = patchPending || readPending || busy;
+        if (matrixPreset && matrixLoad) {
+            if (matrixHardware) matrixHardware.disabled = !input;
+            if (!input && loadLocalPreset && matrixPreset.value && !matrixPreset.value.startsWith("factory:")) matrixPreset.value = "";
+            matrixPreset.disabled = (!input && !loadLocalPreset) || transfer || matrixLoading;
+            matrixLoad.disabled = matrixPreset.disabled || (loadLocalPreset && !matrixPreset.value);
+        }
         apply.disabled = read.disabled = !input || transfer;
         link.disabled = firmwareLock || transfer || (!input && !wantLink && (!rx.value || !tx.value));
         rx.disabled = tx.disabled = firmwareLock || !access || Boolean(input) || busy;
@@ -279,6 +289,8 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
 
     function disconnect(reason, mode = "idle") {
         if (input) input.removeEventListener("midimessage", receive);
+        setMatrixSlots([]);
+        if (matrixFeedback) matrixFeedback.textContent = "";
         input = output = undefined;
         request?.finish(new Error(reason));
         clearTimeout(timer);
@@ -435,7 +447,7 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
             supportsSparse = supportsDelta && model[2] >= 12;
             onPerformanceOptions?.(scaleCount, scaleCount > 6, advancedArp);
             link.textContent = "Desvincular SMK";
-            if (supportsGrid) await refreshSlots();
+            if (supportsExtended) await refreshSlots();
             if (!input) return;
             telemetryReadout = supportsGrid;
             subscribe();
@@ -742,7 +754,7 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
                     subscribe();
                     report("Patch do SMK carregado · edição ao vivo via USB", "live");
                     apply.textContent = "Reenviar patch completo";
-                    return;
+                    return true;
                 }
             }
             let header, baseline = 0;
@@ -764,6 +776,7 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
                 ? "Patch recebido · encerre a gravação KS e carregue novamente para incluí-la."
                 : "Patch do SMK carregado · edição ao vivo via USB", "live");
             apply.textContent = "Reenviar patch completo";
+            return true;
         } catch (error) {
             if (error.timeout) disconnect(error.message + " Tentando restabelecer o vínculo USB.", "error");
             else {
@@ -789,8 +802,20 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
         return bytes;
     }
 
+    function setMatrixSlots(occupied) {
+        if (!matrixPreset) return;
+        for (const option of matrixPreset.options) {
+            if (!/^[0-2]$/.test(option.value)) continue;
+            const slot = Number(option.value);
+            option.disabled = !occupied[slot];
+            option.textContent = slotLabel(slot) + (occupied.length && !occupied[slot] ? " · vazio" : "");
+            if (option.disabled && matrixPreset.value === option.value) matrixPreset.value = "active";
+        }
+    }
+
     async function refreshSlots() {
         const occupied = await send(command.user, [0]);
+        if (occupied.length === 3) setMatrixSlots(occupied);
         if (occupied.length === 3 && userSlot?.options.length === 3) {
             for (let i = 0; i < occupied.length; i++)
                 userSlot.options[i].textContent = "Slot " + (i + 1) + (occupied[i] ? " · ocupado" : " · vazio");
@@ -821,9 +846,8 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
     }
 
     read.addEventListener("click", readPatch);
-    async function useSlot(mode) {
+    async function useSlot(mode, slot = Number(userSlot.value)) {
         if (!supportsExtended) return;
-        const slot = Number(userSlot.value);
         const done = await deviceAction(async () => {
             if (mode === "read") {
                 await send(command.user, [1, slot]);
@@ -840,9 +864,44 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
             }
             return true;
         });
-        if (done && mode === "read") await readPatch();
+        if (done && mode === "read") return readPatch();
     }
     userRead?.addEventListener("click", () => useSlot("read"));
+    matrixPreset?.addEventListener("change", updateActions);
+    matrixForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (matrixLoad.disabled) return;
+        const choice = matrixPreset.value;
+        if (choice.startsWith("factory:")) {
+            matrixLoading = true;
+            updateActions();
+            try { await loadLocalPreset?.(choice.slice(8), matrixFeedback); }
+            finally {
+                matrixLoading = false;
+                updateActions();
+            }
+            return;
+        }
+        if (!input) return;
+        if (writePending()) {
+            if (matrixFeedback) matrixFeedback.textContent = "Aguarde a operação USB em andamento.";
+            return;
+        }
+        const slot = Number(choice);
+        if (choice !== "active" && ![...matrixPreset.options].some(option => option.value === choice && !option.disabled)) return;
+        matrixLoading = true;
+        updateActions();
+        if (matrixFeedback) matrixFeedback.textContent = "";
+        try {
+            const loaded = choice === "active" ? await readPatch() : await useSlot("read", slot);
+            if (matrixFeedback && input) {
+                matrixFeedback.textContent = loaded ? "Patch recebido do SMK." : readPending ? "" : status.textContent;
+            }
+        } finally {
+            matrixLoading = false;
+            updateActions();
+        }
+    });
     userSave?.addEventListener("click", () => useSlot("active"));
     userWrite?.addEventListener("click", () => useSlot("editor"));
     stepStore?.addEventListener("click", () => useSlot("sequence"));
@@ -976,6 +1035,16 @@ function setupSmkStudio(snapshot, loadPatch, performanceState, onPerformanceOpti
             else queue("patch", snapshot());
         }
         return live;
+    };
+    edit.isEditing = () => live;
+    edit.updateActions = updateActions;
+    edit.pauseEditing = () => {
+        if (!live) return true;
+        if ((busy && request?.code !== command.performance) || patchPending || readPending || writePending()) return false;
+        live = false;
+        apply.textContent = "Aplicar patch e editar ao vivo";
+        report("Modo Try · edição local. O SMK continua vinculado.", "linked");
+        return true;
     };
     edit.lockFirmware = () => {
         if (busy || patchPending || readPending || writePending())

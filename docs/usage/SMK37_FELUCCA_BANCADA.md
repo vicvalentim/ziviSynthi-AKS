@@ -1,12 +1,12 @@
-# ziviSynthi AKS · Felucca Pro 3.9.5
+# ziviSynthi AKS · Manual do controlador e do Web Studio
 
 [English](SMK37_FELUCCA_BANCADA.en.md) · [Instalação](INSTALL.md) · [Entrada USB](ENTRADA_AUDIO_USB.md) · [Presets do Handbook](PRESETS_HANDBOOK.md)
 
-Firmware de bancada para o **SMK-37 Pro**, na base **fm1-base + felucca-bsp**. A versão 3.9.5 tem identidade `SMK-37 Pro_99400`.
+O firmware 3.9.7 é destinado ao **M‑VAVE SMK‑37 Pro** e usa a base **fm1-base + felucca-bsp**. A identidade USB é `SMK-37 Pro_99600`.
 
 ## Editor USB e presets pessoais
 
-1. Conecte o SMK-37 Pro por USB com o Felucca Pro 3.9.5 instalado.
+1. Conecte o SMK-37 Pro por USB com o ziviSynthi AKS instalado.
 2. Abra o editor em Chrome ou Edge por localhost ou HTTPS. Do pacote extraído, execute o comando abaixo e abra [127.0.0.1:8000](http://127.0.0.1:8000/). A compilação do código-fonte também disponibiliza `make serve`.
 3. Selecione **Autorizar USB MIDI**, permita SysEx, escolha as duas portas USB do SMK e clique em **Vincular SMK**.
 4. Use **Carregar do SMK** para editar o timbre do teclado ou **Aplicar patch e editar ao vivo** para enviar o patch aberto no navegador. Os botões do painel continuam funcionais.
@@ -18,11 +18,11 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory web
 
 O editor lembra as portas após confirmação pelo protocolo. Se a porta USB voltar depois de uma interrupção, ele tenta vincular novamente. O vínculo reaberto permite ler o SMK ou aplicar o rascunho do editor. Confirme o sentido da transferência para retomar a edição ao vivo.
 
-Depois de carregar ou aplicar um patch, o Studio sincroniza em ambos os sentidos os parâmetros de síntese, a matriz de pinos e as rotas KS e USB, os eventos KS, a grade SEQ, ARP, escala e os 24 endereços de CC. Na 3.9.5, o retorno envia só os bytes alterados nos campos de síntese, pinos, rotas, painel e sequências. A leitura completa serve para obter a primeira referência e recuperar uma revisão perdida. Durante a gravação, a sequência é transmitida na conclusão. As versões 3.9.4 e 3.9.3 usam os protocolos incrementais anteriores. O firmware representa pinos brancos e vermelhos pelo mesmo ganho. O editor conserva a indicação vermelha em seu JSON enquanto a rota permanece válida.
+Depois de carregar ou aplicar um patch, o Studio sincroniza em ambos os sentidos os parâmetros de síntese, a matriz de pinos e as rotas KS e USB, os eventos KS, a grade SEQ, ARP, escala e os 24 endereços de CC. O retorno envia só os bytes alterados nos campos de síntese, pinos, rotas, painel e sequências. A leitura completa serve para obter a primeira referência e recuperar uma revisão perdida. Durante a gravação, a sequência é transmitida na conclusão. As versões 3.9.4 e 3.9.3 usam os protocolos incrementais anteriores. O firmware representa pinos brancos e vermelhos pelo mesmo ganho. O editor conserva a indicação vermelha em seu JSON enquanto a rota permanece válida.
 
 **Controles do painel SMK** sincroniza Master, nível do sintetizador, retorno USB, fonte de áudio USB, canais MIDI de entrada e saída, destino, clock interno/externo, transmissão de clock, referência e saída de notas do KS, USB Thru, modo de CC dos knobs e LEDs dos pads. Escolha o modo relativo no editor ou pressione **FX** na tela **SCALE → MIDI / AUDIO** em modo controlador. O modo absoluto permanece o padrão ao ligar. Serviço Bluetooth e associação de portas continuam operações do próprio painel.
 
-**Perfil DSP** seleciona a calibração AKS ou o comportamento legado 3.9.4 para a sessão. No teclado, use **SCALE → MIDI / AUDIO → KBANK + FX**. O perfil AKS é o padrão de inicialização e a referência do banco 3.9.5. Para comparar exatamente os presets originais da 3.9.4, use a reversão ou os JSON daquela versão com o perfil legado.
+**Perfil DSP** seleciona a calibração AKS ou o comportamento legado 3.9.4 para a sessão. No teclado, use **SCALE → MIDI / AUDIO → KBANK + FX**. O perfil AKS é o padrão de inicialização. Para comparar exatamente os presets originais da 3.9.4, use a reversão ou os JSON daquela versão com o perfil legado.
 
 Em **Mapeamento de CC**, associe um módulo a cada banco A/B. Os padrões são OSC 1 em A e OSC 3 em B. Os CC configurados para K1–K8 seguem o módulo escolhido. O giro relativo usa complemento de dois e parte da posição atual do parâmetro. Pitch Bend e CC1 continuam controlando os eixos do joystick pelo MIDI.
 
@@ -30,15 +30,17 @@ A coleção de presets persiste no mesmo perfil e endereço do navegador. Use **
 
 A gravação em flash é manual. Cada slot possui duas cópias alternadas com CRC. O build usa somente os setores `0xEE000–0xF3FFF` e verifica se o setor escolhido está vazio ou pertence ao ziviSynthiA antes de apagar. A memória salva matriz, controles, rotas USB, KS, grade SEQ, ARP/SCALE e os CC programáveis. A gravação em flash pode interromper brevemente o áudio.
 
+Na **Patch Matrix**, use **Preset do SMK** para escolher o patch ativo ou um slot **USER 1–3** ocupado e clique em **Carregar na matriz**. O Studio lê o patch do teclado e retoma a edição ao vivo.
+
 ## Painel AKS no navegador
 
 O painel reúne os módulos e concentra Noise Generator e Output Filter na mesma faixa. A matriz segue a folha de patch AKS. As fontes ficam à esquerda, os destinos acima da grade, as letras A–P no rodapé e as linhas 1–16 à direita. O foco ilumina a linha e a coluna. O guia identifica três famílias de pinos. Branco comum e vermelho de precisão operam com nível digital nominal. O verde opera com atenuação digital de 50%. A bandeja de 21 pinos segue o conjunto EMS documentado em serviço.
 
 Os mostradores de frequência usam uma curva contínua calibrada pelo manual de serviço. OSC 1 e 2 têm 261 Hz na posição 6, 2.088 Hz na posição 8 e 10 kHz na posição 10. No OSC 3, a posição 8 corresponde a 63 Hz e a 10 corresponde a 500 Hz. As teclas junto ao knob aplicam as referências de 1 kHz e 10 kHz, ou 0,05 Hz e 500 Hz no OSC 3. Os nós entre os pontos do manual usam interpolação exponencial. Consulte o [manual de serviço, ajustes dos osciladores](https://medias.audiofanzine.com/files/ems-synthi-aks-service-manual-481665.pdf#page=56).
 
-No filtro, a posição 5 produz cerca de 261 Hz em auto-oscilação com **Response** no máximo. O parâmetro digital de corte nessa posição é 150,855 Hz. A posição 5 do botão **Response** indica a região de início da auto-oscilação. Os valores gravados nos presets permanecem em unidades do DSP. [Manual de serviço, teste Filter/Oscillator](https://medias.audiofanzine.com/files/ems-synthi-aks-service-manual-481665.pdf#page=50)
+No filtro, a posição 5 produz cerca de 261 Hz em auto-oscilação com **Response** no máximo. O parâmetro digital de corte nessa posição é 150,855 Hz. A posição 5 do botão **Response** indica a região de início da auto-oscilação. Os valores gravados nos presets permanecem em unidades do DSP. [Manual de serviço, Filter/Oscillator](https://medias.audiofanzine.com/files/ems-synthi-aks-service-manual-481665.pdf#page=50)
 
-O medidor do painel web acompanha a soma das rotas da coluna **B** no áudio gerado pelo navegador. Em **Control voltage**, a leitura é bipolar, com zero central. Use B11 para acompanhar TRAPEZOID ou B15 para testar Stick X. Em **Signal levels**, a escala começa à esquerda e mostra o pico retificado. Use B4 para medir o oscilador 2. A escala mostra porcentagem normalizada. Para ler o nível estéreo em dBFS, abra **Monitor de sinal**.
+O medidor do painel web acompanha a soma das rotas da coluna **B** no áudio gerado pelo navegador. Em **Control voltage**, a leitura é bipolar, com zero central. Use B11 para acompanhar TRAPEZOID ou B15 para acompanhar Stick X. Em **Signal levels**, a escala começa à esquerda e mostra o pico retificado. Use B4 para medir o oscilador 2. A escala mostra porcentagem normalizada. Para ler o nível estéreo em dBFS, abra **Monitor de sinal**.
 
 O LCD trabalha em 240 × 240. O pacote inclui prévias de 256 × 256 com margem em torno da captura nativa. A barra B no LCD mostra o pico da coluna do medidor.
 
@@ -111,7 +113,7 @@ As famílias visuais seguem o painel de referência. **Azul** sinaliza frequênc
 - Na matriz **16×16**, **K5** move a linha, **K6** a coluna e **K7** muda o tipo de pino. **FX** alterna a ampliação. Pressionar um pad edita a célula correspondente na região 4×4. A fileira física de cima contém os pads 01–08 e a de baixo contém 09–16.
 - A matriz usa círculo âmbar para pino cheio, traço branco para meio pino e contorno para ponto disponível. O quadrado azul marca o foco. Os LEDs dos pads mantêm as cores dos estados. **PITCH** controla Stick X na linha 15 e **MOD** controla Stick Y na linha 16. O modo **EMS** atribui a linha 16 à afinação do KS.
 - **BT** abre BLE MIDI. K1 à direita ou PLAY liga o rádio. Com o rádio pronto, PLAY busca dispositivos, K6 seleciona e PARA conecta. **<** desconecta o dispositivo MIDI remoto.
-- Na tela **BT**, pressione **>** para **BLUETOOTH AUDIO**. Coloque o fone ou a caixa em pareamento e use **PLAY** para buscar, **K6** para selecionar e **PARA** para conectar. **FX** alterna o áudio entre Bluetooth e saída local quando conectado. **<** encerra a transmissão. O perfil A2DP/SBC envia áudio. A recepção A2DP e a persistência de pareamentos aguardam implementação.
+- Na tela **BT**, pressione **>** para **BLUETOOTH AUDIO**. Coloque o fone ou a caixa em pareamento e use **PLAY** para buscar, **K6** para selecionar e **PARA** para conectar. **FX** alterna o áudio entre Bluetooth e saída local quando conectado. **<** encerra a transmissão. O perfil A2DP/SBC envia áudio.
 - Em **GLOBE**, mantenha **REC** pressionado para sustentar o Attack manual até soltar. O pedal também sustenta a envoltória.
 - **MIDI / AUDIO** reúne os canais TX e RX, a rota USB/BLE/TRS, o relógio MIDI e os indicadores de falta de PCM (`MISS`) e perdas de DMA (`DMA`). **PARA** zera o pico de renderização. **FBANK** alterna o encaminhamento USB para TRS nessa tela.
 
@@ -125,7 +127,7 @@ As famílias visuais seguem o painel de referência. **Azul** sinaliza frequênc
 
 O estágio da síntese acrescenta 6 dB antes do limiter estéreo da captura USB. A saída física usa outro limiter após a soma do sintetizador e do retorno USB. O teto digital dos dois estágios é −1 dBFS, com aproximadamente 2,9 ms de antecipação por estágio. O codec mantém 44.118 Hz nominais. O áudio USB estéreo de entrada e saída mantém 44.100 Hz e 16 bits. O build inclui Bluetooth MIDI periférico e central e transmissão A2DP/SBC.
 
-## LEDs dos pads e diagnóstico de áudio
+## LEDs dos pads
 
 A opção **SCALE → > → REC** alterna os modos abaixo. Todos os modos iluminados limitam cada canal RGB a um oitavo da escala original. O firmware envia no máximo uma atualização a cada 96 ms e exige quatro blocos de áudio prontos antes de iniciar a transferência dos LEDs. O firmware adia essa transferência se o DMA do LCD estiver ocupado.
 
@@ -134,8 +136,6 @@ A opção **SCALE → > → REC** alterna os modos abaixo. Todos os modos ilumin
 | **FIXO** | Padrão ao ligar. O painel indica a seleção em cor fixa e o LCD mostra a posição. As transferências de LED aguardam o fim da atividade do sintetizador, incluindo a cauda detectada no PCM. |
 | **ANIM.** | Permite realçar a posição e o gate, com brilho e frequência limitados. |
 | **OFF** | Envia o quadro escuro e mantém os LEDs dos pads apagados. |
-
-Para comparar em bancada, reproduza a mesma frase com volume idêntico em **FIXO** e **OFF**, primeiro na saída física e depois na captura USB. Confira **MISS** e **DMA** durante a reprodução. O simulador cobre o fluxo de áudio digital. A interferência elétrica dos LEDs exige medição no Pro.
 
 ## Controlador MIDI externo
 
@@ -166,41 +166,17 @@ Os 18 botões enviam 127 ao pressionar e 0 ao soltar.
 | 109 | BT | 118 | SEQ |
 | 110 | ARP | 119 | SEQ PLAY |
 
-## Diagnóstico de desempenho
+<span id="instalação-e-compilação"></span>
 
-No Studio USB, abra **Diagnóstico de desempenho** e clique em **Iniciar medição**. No teclado, **PARA** em **SCALE → MIDI / AUDIO** reinicia a mesma janela. Toque ou reproduza um SEQ com um patch denso, gire os knobs, altere pinos e mantenha áudio USB ativo. Repita com LEDs fixos, animados e apagados, com áudio Bluetooth em uma rodada própria. Confira o maior tempo do DSP, blocos no limite, menor fila PCM e incrementos de MISS, DMA e USB DROP. A leitura do Studio informa ainda o custo máximo de processamento de um comando. O prazo nominal é **2,901 ms** por bloco de 128 quadros a 44.118 Hz. Registre os resultados por cenário para comparar as cargas na mesma unidade. [Roteiro de bancada](../development/HARDWARE_VALIDATION_PRO.md)
-
-## Memória e expansão
-
-A verificação extrai o tamanho de `app.bin` e as seções do mapa de enlace. Consulte o relatório de inspeção da imagem gerado pela compilação para os valores e a comparação com 3.9.4. Flash, RAM para código, RAM estática e pool de buffers têm regiões distintas. A folga de memória mede capacidade de enlace. O custo por bloco de DSP de expansões precisa ser medido no instrumento a 128 amostras por bloco.
-
-## Instalação e compilação
+## Instalação e recuperação
 
 No editor distribuído, abra **Firmware** pelo menu. Conecte o SMK‑37 Pro diretamente por um cabo USB de dados e use Chrome ou Edge em um computador. Feche outros atualizadores e aplicações MIDI com acesso ao teclado.
 
 1. Clique em **Autorizar USB MIDI**, selecione a porta USB e clique em **Identificar teclado**.
-2. Escolha **Felucca 3.9.5** ou um `.fwsc` reconhecido. A reversão 3.9.4 pode ser fornecida como arquivo externo ou incorporada em um build opcional. O editor confere o SHA‑256, os CRC do pacote e o tamanho da área de aplicação. O botão indica **Instalar Felucca**, **Atualizar firmware**, **Reverter firmware** ou **Reinstalar firmware**, conforme a identidade USB e o pacote.
+2. Escolha **ziviSynthi AKS 3.9.7** ou um `.fwsc` reconhecido. A reversão 3.9.5 pode ser fornecida como arquivo externo ou incorporada em um build opcional. O editor confere o SHA‑256, os CRC do pacote e o tamanho da área de aplicação. O botão indica **Instalar Felucca**, **Atualizar firmware**, **Reverter firmware** ou **Reinstalar firmware**, conforme a identidade USB e o pacote.
 3. Confira os dados e as cópias na confirmação. **Exportar patch do editor** gera o JSON do patch ativo no navegador. Preserve os presets USER e as sequências que quiser manter antes de gravar.
 4. Mantenha o cabo e a aba abertos. A edição via Studio USB é pausada até o encerramento da operação. O editor verifica o carregador e confirma a identidade esperada depois do reinício. Para voltar ao Studio, vincule a porta novamente e leia o patch do teclado.
 
 Se a gravação for interrompida e o teclado permanecer no carregador do Pro, mantenha a aba, identifique o teclado e use o mesmo pacote em **Retomar gravação**. Se o teclado não enumerar por USB, siga o procedimento de recuperação da base. A restauração do **V016 original**, com seus recursos de fábrica, usa o procedimento M‑VAVE disponível pelo link no módulo. [M‑VAVE · Atualizações e recuperação](https://github.com/m-vave/smk37_open#updates-and-recovery)
 
-As versões Felucca Pro de bancada `9800` a `99400` usam o mapa com início da VM em `0x9D000`. A Open 0.8.2-alpha2 usa VM a partir de `0x72000`, dentro da área gravada pelo Felucca. A migração de uma unidade com a base Open exige recuperação específica do Pro com backup válido. A 3.9.1 e a 3.9.2 respondem com o mesmo identificador USB. O editor confere a versão do arquivo por SHA‑256 e o identificador compartilhado ao reiniciar nessas versões.
-
-| Componente | Revisão |
-| --- | --- |
-| fm1-base (`smk37-inhouse`) | `eafac162b4d7bc59176919a36eed179955315f93` |
-| felucca-bsp | `a702b840ae2bb7c4fbbd0a168ed509e129b2e9f7` |
-| Ferramentas | Python 3.12, Pillow, JieLi 20260730.1 e SDK AC79 V1.2.1 |
-
-```sh
-make test
-make test-smk-felucca FM1_BASE=../fm1-base
-make smk-felucca-firmware FM1_BASE=../fm1-base AC79_SDK=/caminho/ac79 \
-  JIELI_TOOLCHAIN=/caminho/jieli-linux-toolchains-20260730.1
-python3 tests/verify_felucca_image.py build/smk37-felucca ../fm1-base
-make web-release FIRMWARE_ROLLBACK=/caminho/ziviSynthiA-SMK37-Pro-Felucca-3.9.4.fwsc
-node --test tests/test_firmware_web.cjs
-```
-
-A compilação e o protocolo foram validados em host e por inspeção da imagem. A escuta analógica, o comportamento do USB no computador e a instalação na unidade física exigem teste de bancada.
+A linha Felucca Pro usa VM a partir de `0x9D000`. A Open 0.8.2-alpha2 usa VM a partir de `0x72000`, dentro da área gravada pelo Felucca. A migração de uma unidade com a base Open exige recuperação específica do Pro com backup válido. A 3.9.1 e a 3.9.2 respondem com o mesmo identificador USB. O editor confere a versão do arquivo por SHA‑256 e o identificador compartilhado ao reiniciar nessas versões.

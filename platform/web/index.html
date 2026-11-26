@@ -15,12 +15,12 @@
     <div class="identity">
       <div>
       <h1>ziviSynthi AKS</h1>
-      <p>SMK‑37 Pro <span aria-hidden="true">·</span> 3.9.6 pré-lançamento</p>
+      <p>SMK‑37 Pro <span aria-hidden="true">·</span> 3.9.7 pré-lançamento</p>
       </div>
     </div>
     <div>
       <div class="actions">
-        <button id="try" class="primary" type="button" aria-controls="keys">Experimentar / <span lang="en">Try</span></button>
+        <button id="try" class="primary" type="button" aria-controls="instant-patchers" aria-expanded="false">Experimentar / <span lang="en">Try</span></button>
         <button id="panic" type="button" aria-pressed="false">Silenciar</button>
         <button id="midi" type="button">Conectar MIDI</button>
         <a class="install-link" href="#firmware-drawer" data-open-panel>Instalar firmware</a>
@@ -37,9 +37,26 @@
       <a href="#preset-drawer" data-open-panel>Presets</a>
       <a href="#smk-tools">Studio USB</a>
       <!-- PAGES_PROJECT_LINKS -->
+      <!-- STUDIO_LANGUAGE_LINK -->
     </div>
     <span id="smk-connection" data-link="idle">USB desconectado</span>
   </nav>
+
+  <section class="instant-patchers" id="instant-patchers" aria-labelledby="instant-patchers-title" hidden>
+    <div class="instant-intro">
+      <h2 id="instant-patchers-title" tabindex="-1">Instant Patchers</h2>
+      <p>Carregue uma montagem do Synthi. Os patches com frase KS começam a tocar na hora.</p>
+    </div>
+    <div class="instant-actions">
+      <button type="button" data-instant-patch="initial" aria-pressed="false">Inicial</button>
+      <button type="button" data-instant-patch="hb17-battle" aria-pressed="false">Prestopatch Battle</button>
+      <button type="button" data-instant-patch="hb18-keyboard" aria-pressed="false">Prestopatch Keyboard</button>
+      <button type="button" data-instant-patch="hb19-guitar" aria-pressed="false">Prestopatch Guitar</button>
+      <button type="button" data-instant-patch="on-the-run-ks" aria-pressed="false">On the Run · KS</button>
+      <a href="#keyboard-heading">Tocar no teclado</a>
+    </div>
+    <p id="instant-status" class="instant-status" role="status"></p>
+  </section>
 
   <div class="aks-case" aria-label="Instrumento">
     <div class="case-handle" aria-hidden="true"></div>
@@ -117,6 +134,26 @@
           <meter id="matrix-meter" min="0" max="1" value="0" aria-label="Pico de sinal no Meter B" title="Pico de sinal no Meter B"></meter>
 
         </div>
+        <form class="matrix-device-preset" id="smk-matrix-preset-form">
+          <label for="smk-matrix-preset">Preset do SMK</label>
+          <select id="smk-matrix-preset" disabled>
+            <option value="" disabled selected>Escolher preset</option>
+            <optgroup id="smk-matrix-hardware" label="Teclado vinculado" disabled>
+              <option value="active">Patch ativo</option>
+              <option value="0" disabled>USER 1</option>
+              <option value="1" disabled>USER 2</option>
+              <option value="2" disabled>USER 3</option>
+            </optgroup>
+          </select>
+          <button id="smk-matrix-load" type="submit" disabled>Carregar na matriz</button>
+          <output id="smk-matrix-feedback" role="status"></output>
+        </form>
+        <div id="try-audio-input" class="try-audio-input" hidden>
+          <label>Arquivo de áudio para USB FX <input id="try-audio-file" type="file" accept="audio/*,.wav,.aif,.aiff,.flac,.mp3,.ogg,.m4a"></label>
+          <button id="try-audio-play" type="button" disabled>Tocar arquivo</button>
+          <button id="try-audio-stop" type="button" disabled>Parar arquivo</button>
+          <output id="try-audio-status" role="status"></output>
+        </div>
         <div class="matrix-content">
           <div class="matrix" id="matrix" role="group" aria-label="Matriz de pinos"></div>
         </div>
@@ -181,7 +218,7 @@
         </div>
         <div id="seq-step" class="step-panel" hidden>
           <div class="step-readout">
-            <span id="step-transport" data-state="idle">Sem leitura do SMK</span>
+            <span id="step-transport" data-state="stop">Parado</span>
             <span id="step-clock" hidden></span>
           </div>
           <div class="step-fields">
@@ -195,7 +232,7 @@
                 <option value="6">1/32</option><option value="7">1/32T</option>
               </select>
             </label>
-            <button id="step-play" type="button">Tocar no SMK</button>
+            <button id="step-play" type="button">Tocar no KS</button>
             <button id="step-record" type="button">Gravar no SMK</button>
             <button id="step-stop" type="button">Parar</button>
           </div>
@@ -251,42 +288,46 @@
         <div class="ks-layout" id="seq-ks">
           <div class="ks-transport">
             <div class="ks-actions">
-              <button id="ks-record" type="button" aria-pressed="false">Record</button>
-              <button id="ks-play" type="button" aria-pressed="false" disabled>Play</button>
-              <button id="ks-stop" type="button" disabled>Stop</button>
-              <button id="ks-random" type="button">Random</button>
+              <button id="ks-record" type="button" aria-pressed="false">Gravar</button>
+              <button id="ks-play" type="button" aria-pressed="false" disabled>Reproduzir</button>
+              <button id="ks-stop" type="button" disabled>Parar</button>
+              <button id="ks-random" type="button">Aleatório</button>
+              <button id="ks-use-step" type="button">Carregar SEQ no KS</button>
             </div>
             <div class="ks-readout">
               <progress id="ks-progress" value="0" max="1" aria-label="Posição na sequência"></progress>
               <span id="ks-time">0,00 / 0,00 s</span>
+              <output id="ks-note" aria-label="Nota atual do KS">—</output>
             </div>
           </div>
+          <p id="ks-step-status" class="feedback" role="status"></p>
           <details class="ks-options">
             <summary>Ajustes e gráfico do KS</summary>
             <canvas id="ks-timeline" width="640" height="100" role="img" aria-label="Notas e posição da frase KS"></canvas>
             <div class="ks-switches">
-              <label><input id="ks-loop" type="checkbox" checked> Loop</label>
-              <label>Trigger
+              <label><input id="ks-loop" type="checkbox" checked> Repetir frase</label>
+              <label>Disparo
                 <select id="ks-trigger">
+                  <option value="auto">Automático no navegador</option>
                   <option value="live">Teclado</option>
                   <option value="sequence">Sequência</option>
                 </select>
               </label>
             </div>
             <div class="ks-controls">
-              <label>Realtime Pitch Spread <output id="ks-realtime-value" for="ks-realtime">100%</output>
+              <label>Alcance do teclado <output id="ks-realtime-value" for="ks-realtime">100%</output>
                 <input id="ks-realtime" type="range" min="25" max="200" value="100">
               </label>
-              <label>Sequence Pitch Spread <output id="ks-spread-value" for="ks-spread">100%</output>
+              <label>Alcance da sequência <output id="ks-spread-value" for="ks-spread">100%</output>
                 <input id="ks-spread" type="range" min="25" max="200" value="100">
               </label>
-              <label>Sequence Length <output id="ks-length-value" for="ks-length">12 s</output>
+              <label>Duração máxima da gravação <output id="ks-length-value" for="ks-length">12 s</output>
                 <input id="ks-length" type="range" min="1" max="30" value="12">
               </label>
-              <label>Velocidade <output id="ks-speed-value" for="ks-speed">100%</output>
+              <label>Velocidade de reprodução <output id="ks-speed-value" for="ks-speed">100%</output>
                 <input id="ks-speed" type="range" min="25" max="400" step="1" value="100">
               </label>
-              <label>Transpose <output id="ks-transpose-value" for="ks-transpose">0 st</output>
+              <label>Transposição <output id="ks-transpose-value" for="ks-transpose">0 st</output>
                 <input id="ks-transpose" type="range" min="-24" max="24" value="0">
               </label>
               <details class="ks-routing">
@@ -295,6 +336,30 @@
                 <div id="ks-routes" class="ks-routes"></div>
               </details>
             </div>
+          </details>
+          <details class="ks-editor" id="ks-editor">
+            <summary>Editar frase KS</summary>
+            <form id="ks-phrase-editor">
+              <div class="ks-edit-toolbar">
+                <label>Duração da frase (ms) <input id="ks-phrase-length" type="number" min="1" max="30000" value="1000" required></label>
+                <button id="ks-add-note" type="button">Adicionar nota</button>
+                <button id="ks-add-release" type="button">Adicionar soltura</button>
+              </div>
+              <div class="ks-event-scroll" tabindex="0" role="region" aria-label="Eventos da frase KS">
+                <table>
+                  <thead><tr><th scope="col">Tempo (ms)</th><th scope="col">Nota MIDI</th><th scope="col">Vel. MIDI</th><th scope="col">Ataque</th><th scope="col">Ações</th></tr></thead>
+                  <tbody id="ks-event-list"></tbody>
+                </table>
+              </div>
+              <div class="ks-edit-toolbar">
+                <button id="ks-apply-phrase" type="submit">Aplicar frase</button>
+                <button id="ks-cancel-phrase" type="button">Descartar edição</button>
+                <button id="ks-import-phrase" type="button">Importar frase</button>
+                <button id="ks-export-phrase" type="button">Exportar frase</button>
+                <input id="ks-phrase-file" type="file" accept=".json,application/json" hidden>
+              </div>
+              <p id="ks-edit-status" class="feedback" role="status"></p>
+            </form>
           </details>
         </div>
         <div id="seq-arp" class="sequence-parameters" hidden>
@@ -368,6 +433,7 @@
           <optgroup id="factory-handbook_workshop" label="Handbook II · KS, efeitos e Prestopatch"></optgroup>
           <optgroup id="factory-keys" label="Teclas e baixos"></optgroup>
           <optgroup id="factory-exploration" label="Exploração"></optgroup>
+          <optgroup id="factory-usb_effects" label="USB FX"></optgroup>
           </select>
           <p id="preset-guide" class="preset-guide" hidden></p>
           <div class="patch-actions">

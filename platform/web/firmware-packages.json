@@ -1,4 +1,5 @@
 {
+  "3.9.7": { "id": "SMK-37 Pro_99600", "sha256": "896e8839b2991a1171d7d0f071461bbef55cff10a9259c8a46fba07581d22082" },
   "3.9.6": { "id": "SMK-37 Pro_99500", "sha256": "7caf7b03425ec5a80fc6c4f683d60ab296e64ffed7f836e1e91abc5feaea3204" },
   "3.9.5": { "id": "SMK-37 Pro_99400", "sha256": "e0d7fd2df50833953c55bcb0a70caf5d59705859807d08d2e28ba5dd0d738b2d" },
   "3.9.4": { "id": "SMK-37 Pro_99300", "sha256": "e78c30d0ea22500bd78045dc5f7bf866052682bb86720f21d82c7b34514d839c" },

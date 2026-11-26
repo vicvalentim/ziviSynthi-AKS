@@ -13,7 +13,7 @@ No SMK-37 Pro, a adaptação usa a reprodução USB estéreo de 44,1 kHz e 16 bi
 
 ## Operação
 
-1. No computador, selecione **ziviSynthiA Pro** como destino de áudio. Para voz ou instrumento, conecte a fonte à interface de áudio e encaminhe a faixa da DAW às saídas USB 1 e 2 do SMK. A DAW precisa ter acesso tanto à interface quanto ao SMK. Uma gravação ou a saída de um instrumento virtual também pode alimentar o patch.
+1. No computador, selecione o SMK‑37 Pro como destino de áudio. Para voz ou instrumento, conecte a fonte à interface de áudio e encaminhe a faixa da DAW às saídas USB 1 e 2 do SMK. A DAW precisa ter acesso tanto à interface quanto ao SMK. Uma gravação ou a saída de um instrumento virtual também pode alimentar o patch.
 2. No SMK, abra **SCALE → > → MIDI / AUDIO**. Pressione **NOTE REPEAT** até aparecer **USB > MATRIZ**. Use **F2** ou **K4 nessa tela** para acertar o ganho de entrada.
 3. Em **PATCH**, navegue para o banco **USB FX** e use os pads 1–4. O pad 1 carrega o patch estéreo e ativa o modo MATRIZ. Os JSON equivalentes estão em `presets-usb`.
 4. Ouça na saída física do SMK ou grave o retorno processado que o mesmo dispositivo oferece como entrada de áudio USB. Na DAW, deixe desligado o envio dessa faixa de retorno às saídas USB do SMK para evitar realimentação.
@@ -22,14 +22,12 @@ Em **USB > MATRIZ**, as rotas USB L/R somam-se aos destinos escolhidos sem ocupa
 
 | Arquivo | Tratamento |
 |---|---|
-| `usb-stereo.json` | Alinhamento de nível e verificação de cada canal estéreo. |
+| `usb-stereo.json` | Roteamento estéreo direto com níveis iguais. |
 | `usb-filter.json` | Soma de entrada de ganho reduzido e filtro ressonante ajustável em F3 e no módulo Filter. |
 | `usb-spring.json` | Sinal estéreo direto somado ao retorno da mola. F4 ajusta o retorno. |
 | `usb-ring.json` | Áudio esquerdo modula o oscilador 1. Ajuste a frequência do oscilador para mudar o timbre. |
 
 A matriz pode encaminhar essas fontes para a envoltória ou usar o monitor B para o disparo por limiar. Os quatro patches USB também estão no painel. A lista consultada por K4 no Overview contém os 128 timbres de fábrica.
-
-O teste no simulador verificou isolamento entre canais, controle de ganho, processamento e silêncio com os pinos de saída retirados. A estabilidade, a latência e o nível de ruído do caminho USB em uma DAW real ainda precisam ser medidos no SMK-37 Pro.
 
 ## English
 
@@ -44,9 +42,7 @@ The EMS Synthi AKS has line and low-level microphone inputs. On the SMK‑37 Pro
 
 | Patch | Processing |
 |---|---|
-| `usb-stereo.json` | Gain matching and stereo channel checks. |
+| `usb-stereo.json` | Direct stereo routing with matched levels. |
 | `usb-filter.json` | Reduced-gain input sum and resonant filter. Adjust with F3. |
 | `usb-spring.json` | Direct stereo plus spring return. Adjust mix with F4. |
 | `usb-ring.json` | Left channel modulates oscillator 1. Adjust oscillator frequency to change the spectrum. |
-
-Host tests covered channel isolation, input gain, processing and silence with output pins removed. DAW latency, noise and stability still require measurement on the Pro.

@@ -1,9 +1,21 @@
 # Histórico · Changelog
 
+## 3.9.7
+
+| Área / Area | Português | English |
+|---|---|---|
+| Try e presets | Seletor da Patch Matrix com os 128 timbres e 4 USB FX, com arquivos de áudio locais como entrada dos efeitos. | The Patch Matrix includes all 128 instrument presets and 4 USB effects, with local audio file input for the effects. |
+| KS e SEQ | Reprodução de notas gravadas, edição de eventos e sincronização de sequências salvas com o KS no Try. | Recorded pitch playback, event editing and synchronization of saved SEQ patterns with KS in Try. |
+| Site e editor | Studio em inglês e português, Instant Patchers, ilustração animada e documentação revisada. | English and Portuguese Studio, Instant Patchers, an animated instrument illustration and updated guides. |
+| Firmware | Novo pacote Felucca para o SMK‑37 Pro com identidade `SMK-37 Pro_99600`. | New Felucca package for the SMK‑37 Pro with identity `SMK-37 Pro_99600`. |
+
+[Notas da versão](docs/releases/v3.9.7.md#português) · [Release notes](docs/releases/v3.9.7.md)
+
 ## 3.9.6
 
 English-first bilingual site, a redesigned LCD splash, and a GitHub pre-release with reproducible downloads. / Site bilíngue com inglês como idioma inicial, abertura redesenhada no LCD e pré-release no GitHub com artefatos reproduzíveis.
 
+[Notas da versão 3.9.6](docs/releases/v3.9.6.md#português) · [3.9.6 release notes](docs/releases/v3.9.6.md)
 
 [Notas 3.9.5](docs/releases/v3.9.5.md) · [3.9.5 release notes](docs/releases/v3.9.5.md#english)
 
