@@ -2,6 +2,8 @@
 
 [Português](README.pt.md)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24617384.svg)](https://doi.org/10.5281/zenodo.24617384)
+
 A 16 × 16 pin-matrix synthesizer for the **M‑VAVE SMK‑37 Pro**, created by **Victor Valentim** and inspired by the EMS Synthi AKS. Three oscillators, a resonant filter, ring modulation, a trapezoid envelope and reverb. Includes a KS sequencer, a 64-step SEQ, ARP, 128 instrument presets and four USB effects.
 
 **Version 3.9.7** for the M‑VAVE SMK‑37 Pro. [Release notes](docs/releases/v3.9.7.md) · [Notices and credits](NOTICES.md#english)
