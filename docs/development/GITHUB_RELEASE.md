@@ -30,7 +30,7 @@ Abra **Actions → Build firmware and editor → Run workflow** e selecione um a
 | `web-studio` | HTML autônomo | Protocolo, edição ao vivo e presets no Node.js. |
 | `all` | Os seis conjuntos | Executa cada alvo independentemente. |
 
-O workflow **CI** executa `make test` em pushes e pull requests. O pipeline de build produz artefatos para revisão. A pré-release v3.9.7 é publicada pelo workflow Pages após a implantação, com os artefatos do mesmo commit.
+O workflow **CI** executa `make test` e verifica os metadados de citação e a geração do site em pushes e pull requests. Nas implantações comuns, o Pages usa os downloads da release publicada e os checksums originais.
 
 O alvo **Felucca Pro** tem mapa de flash e identidade USB próprios. Os builds Open e FM‑1 de dispositivo são alvos de desenvolvimento. Consulte os [alvos de firmware](../usage/FIRMWARE_TARGETS.md) para identificar o instalador correspondente.
 
@@ -93,7 +93,9 @@ Abra [o site local](http://127.0.0.1:8000/). As URLs de exemplo servem à prévi
 
 1. Confira as URLs no catálogo da raiz e o endereço da captura no commit da release. O arquivo `LICENSE` estabelece GPL-3.0-only para a aplicação e os materiais autorais.
 2. Rode o alvo **all** no commit escolhido e publique o site pela branch padrão com esse mesmo conteúdo. Preserve o código-fonte correspondente ao distribuir o FWSC. O site oferece `zivisynthi-aks-source.zip` com a versão do aplicativo e a base modificada com suas licenças.
-3. Após a implantação do Pages, confira se a pré-release **v3.9.7** inclui [as notas da versão](../releases/v3.9.7.md#português), o FWSC, os dois HTMLs autônomos, o manifesto, os presets, o código-fonte correspondente e os hashes. As notas informam o estado da validação física.
+3. Para uma nova pré-release planejada, execute manualmente o workflow Pages com `publish_new_release` na revisão escolhida da branch padrão. Depois da implantação, confira as notas, o FWSC, os dois HTMLs autônomos, o manifesto, os presets, o código-fonte correspondente e os hashes. As [notas da 3.9.7](../releases/v3.9.7.md#português) registram o estado da validação física dessa versão.
 4. Após publicar, encaminhe o `firmware.json` da raiz aos catálogos de firmware.
+
+[Publicação científica e versionamento no Zenodo](SCIENTIFIC_RELEASE.md)
 
 [Formato de firmware.json](https://github.com/charlesvestal/fm1-base/blob/main/docs/FIRMWARE-JSON.md) · [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) · [Avisos de terceiros](../../NOTICES.md#português)

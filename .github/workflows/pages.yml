@@ -4,6 +4,11 @@ on:
   push:
     branches: ['**']
   workflow_dispatch:
+    inputs:
+      publish_new_release:
+        description: Build and publish a new pre-release
+        type: boolean
+        default: false
 
 env:
   PRERELEASE_VERSION: '3.9.7'
@@ -36,12 +41,19 @@ jobs:
         with:
           python-version: "3.12"
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        if: inputs.publish_new_release
         with:
           node-version: "24"
       - name: Build and verify the SMK-37 Pro artifacts
+        if: inputs.publish_new_release
         run: |
           python -m pip install Pillow==13.0.0
           tools/build_github.sh smk37-pro
+      - name: Download the original release assets
+        if: "!inputs.publish_new_release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "v$PRERELEASE_VERSION" --repo "$GITHUB_REPOSITORY" --dir build/published
       - name: Install the documentation renderer
         run: |
           if ! command -v pandoc >/dev/null; then
@@ -51,15 +63,18 @@ jobs:
       - name: Assemble the home, documentation, editor and downloads
         env:
           PAGES_URL: ${{ steps.pages.outputs.base_url }}
+          NEW_RELEASE: ${{ inputs.publish_new_release }}
         run: |
-          python tools/stage_github_pages.py dist/smk37-pro build/pages \
+          inputs=(build/published --published)
+          if [[ "$NEW_RELEASE" == true ]]; then inputs=(dist/smk37-pro); fi
+          python tools/stage_github_pages.py "${inputs[@]}" build/pages \
             --site "$PAGES_URL" --source "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
-          (cd build/pages && sha256sum -c SHA256SUMS.txt)
+          (cd build/pages && sha256sum -c PAGES-SHA256SUMS.txt)
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: build/pages
       - name: Collect verified pre-release downloads
-        if: github.repository == 'vicvalentim/ziviSynthi-AKS'
+        if: inputs.publish_new_release && github.repository == 'vicvalentim/ziviSynthi-AKS'
         run: |
           mkdir -p build/release
           files=("zivisynthi-felucca-smk37-${PRERELEASE_VERSION}.fwsc" zivisynthi-aks-editor.html zivisynthi-aks-editor-pt.html
@@ -68,7 +83,7 @@ jobs:
           cd build/release
           sha256sum "${files[@]}" > SHA256SUMS.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: github.repository == 'vicvalentim/ziviSynthi-AKS'
+        if: inputs.publish_new_release && github.repository == 'vicvalentim/ziviSynthi-AKS'
         with:
           name: prerelease-assets
           path: build/release/
@@ -88,7 +103,7 @@ jobs:
         id: publish
 
   prerelease:
-    if: github.repository == 'vicvalentim/ziviSynthi-AKS'
+    if: inputs.publish_new_release && github.repository == 'vicvalentim/ziviSynthi-AKS'
     needs: deploy
     runs-on: ubuntu-24.04
     permissions:

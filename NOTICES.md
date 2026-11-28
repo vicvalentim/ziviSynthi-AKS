@@ -24,6 +24,8 @@ When distributing the FWSC, also make the corresponding source available. The `z
 
 ## Componentes · Components
 
+A ilustração autoral do Synthi na página do projeto identifica o exemplar da coleção MESS como referência visual. / The project's original Synthi illustration credits the MESS collection instrument as its visual reference. [MESS collection](https://mess.foundation/product/synthi-aks/)
+
 | Componente / Component | Origem e termos / Source and terms |
 |---|---|
 | Framework, simulador e transporte web / Framework, simulator and web transport | [fm1-base](https://github.com/charlesvestal/fm1-base), Charles Vestal et al. MPL-2.0 nos arquivos da base / MPL-2.0 for base files. A cópia do transporte e sua licença ficam em `platform/web/felucca-updater/` / The transport copy and its license are in `platform/web/felucca-updater/`. |

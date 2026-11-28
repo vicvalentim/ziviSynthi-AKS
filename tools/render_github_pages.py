@@ -1,12 +1,16 @@
 """Render the home and the repository's public Markdown documentation."""
 from html import escape, unescape
 from html.parser import HTMLParser
+import json
 import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
-from urllib.parse import quote, unquote, urlsplit, urlunsplit
+from urllib.parse import quote, unquote, urljoin, urlsplit, urlunsplit
+from xml.etree import ElementTree
+
+from research_metadata import format_citations, read_research_metadata
 
 
 BILINGUAL_SECTIONS = {
@@ -29,10 +33,27 @@ def relative_link(page, target):
     return escape(relative + separator + fragment, quote=True)
 
 
-def layout(page, title, content, source, english=False, home=False, translations=None):
+def public_url(site, path):
+    return urljoin(site, quote(str(path).split("#")[0].removesuffix("index.html")))
+
+
+def layout(page, title, content, source, metadata, site, english=False, home=False, translations=None):
     language = "en" if english else "pt-BR"
     defaults = ("./", "pt/") if home else ("docs/", "pt/docs/")
     en_page, pt_page = translations or defaults
+    canonical = public_url(site, "index.html" if str(page) == "en/index.html" else page)
+    en_url, pt_url = (public_url(site, target) for target in (en_page, pt_page))
+    profile_image = public_url(site, "docs/img/smk37-pro-matrix.png")
+    description = ("A digital pin-matrix instrument for the M-VAVE SMK-37 Pro with a bilingual Web Studio."
+                   if english else "Instrumento digital de matriz de pinos para o M-VAVE SMK-37 Pro com Web Studio bilíngue.")
+    if not home:
+        description = f"{title}. {description}"
+    authors = ", ".join(f"{person['givenName']} {person['familyName']}" for person in metadata["author"])
+    robots = '<meta name="robots" content="noindex,follow">' if str(page) == "en/index.html" else ""
+    structured_data = ""
+    if home and not robots:
+        schema = {**metadata, "@context": "https://schema.org"}
+        structured_data = '<script type="application/ld+json">' + json.dumps(schema).replace("<", "\\u003c") + "</script>"
     alternate = "".join(
         f'<a lang="{code}" hreflang="{code}" data-language="{code}" '
         f'href="{relative_link(page, target)}"{current}>{label}</a>'
@@ -41,7 +62,8 @@ def layout(page, title, content, source, english=False, home=False, translations
     )
     docs = "docs/" if english else "pt/docs/"
     gallery = (f'<a href="#firmware-screens">{"Screens" if english else "Telas"}</a>'
-               f'<a href="#downloads">Downloads</a>') if home else ""
+               f'<a href="#downloads">Downloads</a>'
+               f'<a href="#citation">{"Citation" if english else "Citação"}</a>') if home else ""
     restore = f' data-restore-language="{relative_link(page, pt_page)}"' if page == Path("index.html") else ""
     return f"""<!doctype html>
 <html lang="{language}"{restore}>
@@ -49,8 +71,21 @@ def layout(page, title, content, source, english=False, home=False, translations
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
-  <link rel="alternate" hreflang="en" href="{relative_link(page, en_page)}">
-  <link rel="alternate" hreflang="pt-BR" href="{relative_link(page, pt_page)}">
+  <meta name="description" content="{escape(description, quote=True)}">
+  <meta name="author" content="{escape(authors, quote=True)}">
+  <link rel="canonical" href="{escape(canonical, quote=True)}">
+  <link rel="alternate" hreflang="en" href="{escape(en_url, quote=True)}">
+  <link rel="alternate" hreflang="pt-BR" href="{escape(pt_url, quote=True)}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{escape(title, quote=True)}">
+  <meta property="og:description" content="{escape(description, quote=True)}">
+  <meta property="og:url" content="{escape(canonical, quote=True)}">
+  <meta property="og:locale" content="{'en_US' if english else 'pt_BR'}">
+  <meta property="og:locale:alternate" content="{'pt_BR' if english else 'en_US'}">
+  <meta property="og:image" content="{escape(profile_image, quote=True)}">
+  <meta name="twitter:card" content="summary_large_image">
+  {robots}
+  {structured_data}
   <script src="{relative_link(page, 'site.js')}"></script>
   <link rel="stylesheet" href="{relative_link(page, 'site.css')}">
 </head>
@@ -82,7 +117,7 @@ def layout(page, title, content, source, english=False, home=False, translations
 """
 
 
-def home_page(page, source, manifest, version, files, english, illustration):
+def home_page(page, source, manifest, version, files, english, illustration, metadata):
     if english:
         copy = {
             "edition": "Version", "title": "A pin-matrix synthesizer for the M‑VAVE SMK‑37 Pro",
@@ -177,6 +212,7 @@ def home_page(page, source, manifest, version, files, english, illustration):
                         f'tabindex="{0 if selected else -1}">{label}</button>')
     downloads = "\n".join(f'<li><a href="{link(path)}" download>{label}<span aria-hidden="true">↓</span></a></li>'
                           for path, label in zip(files, copy["downloads"], strict=True))
+    citation = citation_section(page, source, metadata, english)
     redirect = """<script>
 if (location.hash === "#firmware-drawer") location.replace("studio/#firmware-drawer");
 </script>
@@ -248,6 +284,7 @@ if (location.hash === "#firmware-drawer") location.replace("studio/#firmware-dra
       </div>
     </section>
   </div>
+  {citation}
   <section class="downloads" aria-labelledby="downloads" data-motion>
     <div>
       <h2 id="downloads">{copy['release']} <span>{escape(version)}</span></h2>
@@ -265,10 +302,55 @@ if (location.hash === "#firmware-drawer") location.replace("studio/#firmware-dra
   </section>
 </main>
 """
-    return layout(page, "ziviSynthi AKS · " + copy["title"], main, source, english, home=True)
+    return layout(page, "ziviSynthi AKS · " + copy["title"], main, source,
+                  metadata, manifest["site"], english, home=True)
 
 
-def render_markdown(root, source, commit, pages, original, page, english, translations):
+def citation_section(page, source, metadata, english):
+    citation = format_citations(metadata)
+    author, = metadata["author"]
+    doi = metadata["identifier"]
+    concept = metadata["isPartOf"]["@id"]
+    catalog = "https://altstrument.org/firmware/m-vave-smk-37/zivisynthi-aks"
+    if english:
+        heading, copy_ref, copy_bib = "How to cite", "Copy APA reference", "Copy BibTeX"
+        series, guide, code = "All archived versions", "Research and preservation", "Source code"
+        copied, failure = "Copied.", "Clipboard unavailable. Select and copy the text below."
+        reference = citation["apa"]
+        guide_path = "docs/usage/SCIENTIFIC_PUBLICATION.en.html"
+    else:
+        heading, copy_ref, copy_bib = "Como citar", "Copiar referência ABNT", "Copiar BibTeX"
+        series, guide, code = "Todas as versões depositadas", "Pesquisa e preservação", "Código-fonte"
+        copied, failure = "Copiado.", "Área de transferência indisponível. Selecione e copie o texto abaixo."
+        reference = citation["abnt"]
+        guide_path = "docs/usage/SCIENTIFIC_PUBLICATION.html"
+    return f"""<section class="research-citation" id="citation" aria-labelledby="citation-title">
+    <div>
+      <h2 id="citation-title">{heading}</h2>
+      <p><a href="{escape(author['@id'], quote=True)}">{escape(author['givenName'])} {escape(author['familyName'])}</a> ·
+        {escape(author['affiliation']['name'])} · <a href="{relative_link(page, 'LICENSE')}">GPL-3.0-only</a></p>
+      <div class="release-links">
+        <a class="version" href="{escape(doi, quote=True)}">DOI {escape(doi.removeprefix('https://doi.org/'))}</a>
+        <a href="{escape(metadata['sameAs'], quote=True)}">Zenodo</a>
+        <a href="{escape(concept, quote=True)}">{series}</a>
+        <a href="{relative_link(page, guide_path)}">{guide}</a>
+        <a href="{escape(source, quote=True)}">{code}</a>
+        <a href="{catalog}">altstrument</a>
+      </div>
+    </div>
+    <div>
+      <p id="citation-reference">{escape(reference)}</p>
+      <div class="release-links" data-enhanced>
+        <button type="button" data-copy-citation="citation-reference">{copy_ref}</button>
+        <button type="button" data-copy-citation="citation-bibtex">{copy_bib}</button>
+      </div>
+      <p class="copy-status" role="status" data-copy-status data-copied="{copied}" data-failed="{failure}"></p>
+      <details><summary>BibTeX</summary><pre><code id="citation-bibtex">{escape(citation['bibtex'])}</code></pre></details>
+    </div>
+  </section>"""
+
+
+def render_markdown(root, source, commit, pages, original, page, english, translations, metadata, site):
     text = (root / original).read_text(encoding="utf-8")
     title = text.splitlines()[0].removeprefix("# ")
     result = subprocess.run(["pandoc", "-f", "gfm", "-t", "html5", "--no-highlight", "--wrap=none"],
@@ -297,7 +379,7 @@ def render_markdown(root, source, commit, pages, original, page, english, transl
         content = '<span id="english"></span><span id="português"></span>' + content
     content = content.replace("<table>", '<div class="table-scroll"><table>').replace("</table>", "</table></div>")
     return layout(page, title + " · ziviSynthi AKS", f'<main id="main-content" class="docs">{content}</main>',
-                  source, english, translations=translations)
+                  source, metadata, site, english, translations=translations)
 
 
 class PageReferences(HTMLParser):
@@ -337,6 +419,8 @@ def verify_links(output, pages):
 
 
 def render_site(root, output, source, commit, manifest, version, files, editor_pt):
+    metadata = read_research_metadata(root)
+    site = manifest["site"]
     for asset in ("site.css", "site.js"):
         shutil.copyfile(root / "platform/pages" / asset, output / asset)
     pages = {path.relative_to(root): path.relative_to(root).with_suffix(".html")
@@ -364,21 +448,25 @@ def render_site(root, output, source, commit, manifest, version, files, editor_p
             counterpart = output / other
             counterpart.parent.mkdir(parents=True, exist_ok=True)
             counterpart.write_text(render_markdown(root, source, commit, pages, original, other, False,
-                                                   translations), encoding="utf-8")
+                                                   translations, metadata, site), encoding="utf-8")
         elif original.parent == Path("docs/usage"):
             base = original.name.replace(".en.md", ".md")
             pt = original.with_name(base)
             en = pt.with_suffix(".en.md")
             if pt in pages and en in pages:
                 translations = (str(pages[en]), str(pages[pt]))
-        path.write_text(render_markdown(root, source, commit, pages, original, page, english, translations),
-                        encoding="utf-8")
+        path.write_text(render_markdown(root, source, commit, pages, original, page, english,
+                                        translations, metadata, site), encoding="utf-8")
     illustration = (root / "docs/img/ems-synthi-aks-illustration.svg").read_text(encoding="utf-8")
     home, portuguese, legacy = Path("index.html"), Path("pt/index.html"), Path("en/index.html")
     for page, english in ((home, True), (portuguese, False), (legacy, True)):
         (output / page.parent).mkdir(parents=True, exist_ok=True)
         downloads = files if english else (editor_pt, *files[1:])
-        (output / page).write_text(home_page(page, source, manifest, version, downloads, english, illustration),
+        (output / page).write_text(home_page(page, source, manifest, version, downloads, english, illustration, metadata),
                                    encoding="utf-8")
     verify_links(output, [home, portuguese, legacy, Path("studio/index.html"),
                           Path("pt/studio/index.html"), *pages.values(), *local_articles])
+    sitemap = ElementTree.Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
+    for page in sorted({home, portuguese, *pages.values(), *local_articles}):
+        ElementTree.SubElement(ElementTree.SubElement(sitemap, "url"), "loc").text = public_url(site, page)
+    ElementTree.ElementTree(sitemap).write(output / "sitemap.xml", encoding="utf-8", xml_declaration=True)

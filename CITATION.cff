@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: >-
+  If you use ziviSynthi AKS in academic research, artistic production,
+  software development, or derived projects, please cite the corresponding
+  archived software release.
+type: software
+title: "ziviSynthi AKS: An Open-Source Pin-Matrix Synthesizer Firmware Inspired by the EMS Synthi AKS"
+authors:
+  - family-names: Soares Valentim
+    given-names: Victor Hugo
+    affiliation: Universidade Federal do Recôncavo da Bahia
+    orcid: https://orcid.org/0000-0002-0282-7947
+version: 3.9.7
+date-released: 2026-11-26
+doi: 10.5281/zenodo.24617384
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24617383
+    description: Concept DOI for the series of archived versions
+repository-code: https://github.com/vicvalentim/ziviSynthi-AKS
+url: https://vicvalentim.github.io/ziviSynthi-AKS/
+license: GPL-3.0-only
+abstract: >-
+  ziviSynthi AKS is an independent research instrument for digital lutherie
+  and embedded music computing. Inspired by the EMS Synthi AKS, it pairs a
+  16 × 16 signal and modulation matrix with a C synthesis engine for the
+  M-VAVE SMK-37 Pro and a bilingual Web Studio for browser synthesis, patch
+  editing and communication over USB MIDI.
+keywords:
+  - digital lutherie
+  - computer music
+  - pin-matrix synthesis
+  - digital signal processing
+  - embedded audio
+  - Web MIDI

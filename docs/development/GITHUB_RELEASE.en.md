@@ -30,7 +30,7 @@ In **Actions → Build firmware and editor → Run workflow**, select a target. 
 | `web-studio` | Standalone HTML | Protocol, live editing and presets in Node.js. |
 | `all` | All six sets | Runs each target independently. |
 
-The **CI** workflow runs `make test` on pushes and pull requests. The Pages workflow publishes v3.9.7 as a pre-release using the same source revision and verified assets. The Felucca Pro uses its own flash map and USB identity. The Open and FM‑1 device builds are development targets. See [firmware targets](../usage/FIRMWARE_TARGETS.en.md) for the matching installation paths.
+The **CI** workflow runs `make test` and checks the citation metadata and site generation on pushes and pull requests. Pages uses the published release downloads and original checksums on ordinary deployments. The Felucca Pro uses its own flash map and USB identity. The Open and FM‑1 device builds are development targets. See [firmware targets](../usage/FIRMWARE_TARGETS.en.md) for the matching installation paths.
 
 ## Build dependencies
 
@@ -93,7 +93,9 @@ Open [the local site](http://127.0.0.1:8000/). The example URLs are only used fo
 
 1. Check the root catalog URLs and screenshot path at the release revision.
 2. Run **all** and deploy Pages from the same source revision. Publish the corresponding source alongside the FWSC. The Pages source archive includes the application and the patched base with its licenses.
-3. After Pages deploys, confirm the **v3.9.7** pre-release contains the [release notes](../releases/v3.9.7.md), FWSC, both standalone HTMLs, manifest, presets, corresponding source and checksums. The release notes record the status of physical testing.
+3. For a planned new pre-release, run the Pages workflow manually with `publish_new_release` enabled on the chosen default-branch revision. After deployment, confirm the pre-release contains the notes, FWSC, both standalone HTMLs, manifest, presets, corresponding source and checksums. The [3.9.7 release notes](../releases/v3.9.7.md) record its physical validation status.
 4. Once the release is public, submit the root `firmware.json` to the relevant firmware catalog.
+
+[Scientific release and Zenodo versioning](SCIENTIFIC_RELEASE.en.md)
 
 [GitHub Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) · [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) · [Catalog format](https://github.com/charlesvestal/fm1-base/blob/main/docs/FIRMWARE-JSON.md) · [Third-party notices](../../NOTICES.md#english)

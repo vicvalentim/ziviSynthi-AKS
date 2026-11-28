@@ -21,6 +21,7 @@ On the controller, **K4** in Overview changes the preset. **GLOBE** opens module
 
 | Task | Guide |
 |---|---|
+| Cite the archived software | [Research, citation and preservation](usage/SCIENTIFIC_PUBLICATION.en.md) |
 | Install, update or recover the Pro | [Installation and recovery](usage/INSTALL.en.md) |
 | Work with the controller and Studio | [Controller and Web Studio manual](usage/SMK37_FELUCCA_BANCADA.en.md) |
 | Route signals and choose pins | [Pin matrix reference](usage/MATRIX_REFERENCE.md#english) |
