@@ -195,7 +195,7 @@
     if (language && !event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey) {
       write(languageKey, language.dataset.language);
       if (location.hash && language.closest("header") && root.dataset.restoreLanguage && language.dataset.language === "pt-BR") {
-        if (["#main-content", "#firmware-screens", "#downloads", "#instrument", "#play"].includes(location.hash)) {
+        if (["#main-content", "#firmware-screens", "#downloads", "#instrument", "#play", "#citation"].includes(location.hash)) {
           language.hash = location.hash;
         }
       }
@@ -220,6 +220,26 @@
       image.src = source.currentSrc || source.src;
       image.alt = source.alt;
       dialog.showModal();
+    }
+  });
+
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-copy-citation]");
+    if (!button) return;
+    const citation = document.getElementById(button.dataset.copyCitation);
+    const status = button.closest(".research-citation").querySelector("[data-copy-status]");
+    try {
+      await navigator.clipboard.writeText(citation.textContent.trim());
+      status.textContent = status.dataset.copied;
+    } catch {
+      const details = citation.closest("details");
+      if (details) details.open = true;
+      const range = document.createRange();
+      range.selectNodeContents(citation);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = status.dataset.failed;
     }
   });
 })();

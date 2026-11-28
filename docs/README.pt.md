@@ -21,6 +21,7 @@ No controlador, **K4** no Overview troca o preset. **GLOBE** abre os módulos, *
 
 | Para | Guia |
 |---|---|
+| Citar o software depositado | [Pesquisa, citação e preservação](usage/SCIENTIFIC_PUBLICATION.md) |
 | Instalar, atualizar ou recuperar o Pro | [Instalação e recuperação](usage/INSTALL.md) |
 | Usar o controlador e o Studio | [Manual do controlador e do Web Studio](usage/SMK37_FELUCCA_BANCADA.md) |
 | Encaminhar sinais e escolher pinos | [Referência da matriz](usage/MATRIX_REFERENCE.md) |
